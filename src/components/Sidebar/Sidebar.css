@@ -1,0 +1,23 @@
+.sidebar {
+  background-color: #181818;
+  padding: 10px;
+  color: white;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-item h2 {
+  margin-left: 10px;
+}
+
+.sidebar li {
+  padding: 5px 0;
+}

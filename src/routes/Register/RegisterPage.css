@@ -1,0 +1,115 @@
+.register-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #121212;
+  color: #fff;
+}
+
+.register-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.register-form-container {
+  width: 400px;
+  padding: 40px;
+  background-color: #181818;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  margin-bottom: 1rem;
+  padding: 15px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #333;
+  color: #fff;
+}
+
+.input.invalid {
+  border-color: #f53b57;
+}
+
+.input.valid {
+  border-color: #1db954;
+}
+
+.validation-message {
+  color: #f53b57;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.validation-message.valid {
+  color: #1db954;
+}
+
+.error {
+  color: #f53b57;
+  margin-top: 0.5rem;
+}
+
+.register-button {
+  padding: 15px;
+  font-size: 1rem;
+  background-color: #1db954;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.register-button:hover {
+  background-color: #1ed760;
+}
+
+.google-login-button {
+  background: #121212;
+  color: #f1f1f1;
+  padding: 10px 20px;
+  border: 1px solid white;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-bottom: 20px;
+}
+
+.google-login-button img {
+  height: 20px;
+  margin-right: 10px;
+}
+
+.google-login-button:hover {
+  background: #f1f1f1;
+  color: black;
+}
+
+.haveAccount {
+  font-size: 0.875rem;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.haveAccount a {
+  color: #1db954;
+  text-decoration: none;
+}
+
+.haveAccount a:hover {
+  text-decoration: underline;
+}
