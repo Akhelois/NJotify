@@ -6,10 +6,10 @@ import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
 function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [navigate, setNavigate] = useState(false);
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [navigate, setNavigate] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const handleLogin = async (e: SyntheticEvent) => {
     e.preventDefault();

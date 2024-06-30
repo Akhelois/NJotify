@@ -38,6 +38,8 @@ func (c *UserRepositoryImpl) FindUser(email string) (model.User, error) {
 	return user, result.Error
 }
 
-func (c *UserRepositoryImpl) UpdatePassword(email, password string) error {
-	return c.Db.Model(&model.User{}).Where("email = ?", email).Update("password", password).Error
+func (c *UserRepositoryImpl) UpdatePassword(email, hashedPassword string) error {
+	query := "UPDATE users SET password = ? WHERE email = ?"
+	err := c.Db.Exec(query, hashedPassword, email).Error
+	return err
 }

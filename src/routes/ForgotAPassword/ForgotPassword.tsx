@@ -13,7 +13,7 @@ interface Errors {
   general?: string;
 }
 
-function ForgotAccount() {
+function ForgotPassword() {
   const [formData, setFormData] = useState<FormData>({ email: "" });
   const [errors, setErrors] = useState<Errors>({ email: "" });
   const [emailSent, setEmailSent] = useState(false);
@@ -80,9 +80,7 @@ function ForgotAccount() {
 
   return (
     <div className="forgot-account-page">
-      <div className="navbar">
-        <Navbar />
-      </div>
+      <Navbar />
       <div className="forgot-account-form-container">
         <h2 className="forgot-account-title">Find Your Account</h2>
         <form className="forgot-account-form" onSubmit={handleSubmit}>
@@ -109,4 +107,4 @@ function ForgotAccount() {
   );
 }
 
-export default ForgotAccount;
+export default ForgotPassword;

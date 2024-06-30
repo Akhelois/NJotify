@@ -129,26 +129,17 @@ func isValidEmail(email string) bool {
 	return regexp.MustCompile(`\S+@\S+\.\S+`).MatchString(email)
 }
 
-func (controller *UserController) ResetPassword(ctx *gin.Context) {
-	resetPasswordReq := request.ResetPasswordRequest{}
-	err := ctx.ShouldBindJSON(&resetPasswordReq)
-	helper.CheckPanic(err)
-
-	err = controller.userService.ResetPassword(resetPasswordReq)
-	if err != nil {
-		webResponse := response.WebResponse{
-			Code:   http.StatusInternalServerError,
-			Status: "Internal Server Error",
-			Data:   err.Error(),
-		}
-		ctx.JSON(http.StatusInternalServerError, webResponse)
+func (uc *UserController) ResetPassword(c *gin.Context) {
+	var resetRequest request.ResetPasswordRequest
+	if err := c.ShouldBindJSON(&resetRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload", "details": err.Error()})
 		return
 	}
 
-	webResponse := response.WebResponse{
-		Code:   http.StatusOK,
-		Status: "Ok",
-		Data:   nil,
+	if err := uc.userService.ResetPassword(resetRequest); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to reset password"})
+		return
 	}
-	ctx.JSON(http.StatusOK, webResponse)
+
+	c.JSON(http.StatusOK, gin.H{"message": "Password reset successful"})
 }

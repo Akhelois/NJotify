@@ -79,9 +79,7 @@ function ResetPassword() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({
-          password: formData.password,
-        }),
+        body: JSON.stringify({ password: formData.password }),
       });
 
       if (!response.ok) {

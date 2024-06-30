@@ -125,7 +125,7 @@ func (c *UserServiceImpl) Login(email string, password string) (response.UserRes
 }
 
 func (c *UserServiceImpl) ResetPassword(request request.ResetPasswordRequest) error {
-	fmt.Printf("Resetting password for email: %s", request.Email)
+	fmt.Printf("Resetting password for email: %s\n", request.Email)
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
@@ -136,7 +136,6 @@ func (c *UserServiceImpl) ResetPassword(request request.ResetPasswordRequest) er
 		return err
 	}
 
-	fmt.Printf("Password reset successful for email: %s", request.Email)
-
+	fmt.Printf("Password reset successful for email: %s\n", request.Email)
 	return nil
 }

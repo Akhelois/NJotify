@@ -1,6 +1,6 @@
 package request
 
 type ResetPasswordRequest struct {
-	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"new_password" validate:"required"`
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required,min=8"`
 }

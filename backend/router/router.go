@@ -33,7 +33,7 @@ func NewRouter(userController *controller.UserController) *gin.Engine {
 		MaxAge:           12 * time.Hour,
 	}))	
 
-	router.GET("/find", userController.FindAll)
+	router.GET("/users", userController.FindAll)
 	router.POST("/users", userController.Create)
 	router.POST("/login", userController.Login)
 	router.POST("/register", userController.Register)
