@@ -28,6 +28,7 @@
 }
 
 .sidebar-nav ul li a:hover {
+  text-decoration: underline;
   color: #fff;
 }
 
@@ -45,4 +46,10 @@
 .sidebar-nav ul li a .icon {
   font-size: 20px;
   margin-right: 10px;
+  margin-top: 10px;
+}
+
+.sidebar-nav ul li a span {
+  font-size: 16px;
+  margin-bottom: 15px;
 }

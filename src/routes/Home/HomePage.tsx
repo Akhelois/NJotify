@@ -1,22 +1,22 @@
 import "./HomePage.css";
 import Header from "../../components/Header/Header";
 import Sidebar from "../../components/Sidebar/Sidebar";
-import Library from "../../components/Libary/Libary";
-import Play from "../../components/Play/Play";
 import MusicControl from "../../components/MusicControl/MusicControl";
+import Playlist from "../../components/Playlist/Playlist";
+import FooterHome from "../../components/Footer/FooterHome";
 
 const HomePage = () => {
   return (
     <div className="home-page">
-      <Header />
-      <div className="content">
-        <Sidebar />
-        <div className="main">
-          <Library />
-          <Play />
+      <Sidebar />
+      <div className="main">
+        <Header />
+        <div className="content-wrapper">
+          <Playlist />
+          <FooterHome />
         </div>
       </div>
-      <MusicControl />
+      {/* <MusicControl /> */}
     </div>
   );
 };

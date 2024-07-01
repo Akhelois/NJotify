@@ -30,6 +30,7 @@
 .sidebar-scroll:hover::-webkit-scrollbar-thumb {
   background: #5f5e5e;
   width: 5px;
+  animation-delay: 0.5s;
 }
 
 .create-playlist h4 {

@@ -1,23 +1,32 @@
 .header {
+  padding: 25px 30px;
+  background: #030303;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background-color: #121212;
+  justify-content: space-between;
+}
+
+.header .prev-btn button {
+  background: transparent;
+  border: 0;
+  outline: 0;
+}
+
+.header .prev-btn button .icon {
+  color: #a9a2a2;
+  font-size: 25px;
+  margin-right: 10px;
+}
+
+.header .profile button {
+  background: #141212;
   color: white;
-  padding: 10px 20px;
+  border: 0;
+  outline: 0;
+  border-radius: 10px;
 }
 
-.header button {
-  background-color: white;
-  color: #121212;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-}
-
-.profile {
-  width: 40px;
-  height: 40px;
-  background-color: gray;
+.header .profile button img {
+  width: 30px;
   border-radius: 50%;
 }
