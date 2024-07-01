@@ -1,8 +1,8 @@
 import { SyntheticEvent, useState, useEffect } from "react";
+import { useLocation, Navigate } from "react-router-dom";
 import "./ResetPassword.css";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
-import { Navigate } from "react-router-dom";
 
 interface FormData {
   password: string;
@@ -29,6 +29,7 @@ function ResetPassword() {
     confirmPassword: false,
   });
   const [navigate, setNavigate] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     validateForm();
@@ -72,6 +73,18 @@ function ResetPassword() {
       return;
     }
 
+    const params = new URLSearchParams(location.search);
+    const email = params.get("email");
+
+    if (!email) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        general:
+          "Email is missing. Please try the reset password process again.",
+      }));
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:8080/reset_password", {
         method: "POST",
@@ -79,7 +92,7 @@ function ResetPassword() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ password: formData.password }),
+        body: JSON.stringify({ email, password: formData.password }),
       });
 
       if (!response.ok) {

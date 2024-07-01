@@ -1,24 +1,37 @@
 import "./Libary.css";
+import { IoLibrary } from "react-icons/io5";
+import Privacy from "../Privacy/Privacy";
 
-function Library() {
+const Libary = () => {
   return (
-    <div className="main-content">
-      <h1>Recent Searches</h1>
-      <div className="search-items">
-        <div className="search-item">Radwimps</div>
-        <div className="search-item">Surprisingly found in Discover Weekly</div>
-        <div className="search-item">Super Real Me</div>
-        <div className="search-item">Mood Booster</div>
-      </div>
-      <h1>Explore your genres</h1>
-      <div className="genres">
-        <div className="genre-item">Genre 1</div>
-        <div className="genre-item">Genre 2</div>
-        <div className="genre-item">Genre 3</div>
-        <div className="genre-item">Genre 4</div>
-      </div>
+    <div className="sidebar-nav v2">
+      <ul>
+        <li>
+          <a href="">
+            <span className="icon">
+              <IoLibrary />
+            </span>
+            <span className="libary">Your Libary</span>
+          </a>
+        </li>
+        <li>
+          <div className="sidebar-scroll">
+            <div className="create-playlist">
+              <h4>Create Your First Playlist</h4>
+              <p>EASYYY</p>
+              <button>Create Playlist</button>
+            </div>
+            <div className="create-playlist">
+              <h4>Create Your First Playlist</h4>
+              <p>EASYYY</p>
+              <button>Create Playlist</button>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <Privacy />
     </div>
   );
-}
+};
 
-export default Library;
+export default Libary;

@@ -1,5 +1,5 @@
 import { SyntheticEvent, useState } from "react";
-import { Navigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./ForgotPassword.css";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -16,7 +16,8 @@ interface Errors {
 function ForgotPassword() {
   const [formData, setFormData] = useState<FormData>({ email: "" });
   const [errors, setErrors] = useState<Errors>({ email: "" });
-  const [emailSent, setEmailSent] = useState(false);
+  // const [emailSent, setEmailSent] = useState(false);
+  const navigate = useNavigate();
 
   const handleInputChange = (event: SyntheticEvent) => {
     const target = event.target as HTMLInputElement;
@@ -58,7 +59,7 @@ function ForgotPassword() {
       const content = await response.json();
 
       if (content.status === "Ok") {
-        setEmailSent(true);
+        navigate(`/reset_password?email=${formData.email}`);
       } else {
         setErrors({
           email: "",
@@ -73,10 +74,6 @@ function ForgotPassword() {
       });
     }
   };
-
-  if (emailSent) {
-    return <Navigate to="/reset_password" />;
-  }
 
   return (
     <div className="forgot-account-page">

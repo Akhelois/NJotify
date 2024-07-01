@@ -1,0 +1,41 @@
+.privacy ul li a {
+  text-decoration: none;
+  color: #6c6868;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0 5px;
+}
+
+.privacy ul li a:hover {
+  text-decoration: underline;
+  color: #dbdada;
+}
+
+.privacy ul {
+  list-style: none;
+  margin-top: 10px;
+}
+
+.privacy ul li {
+  padding: 0 12px;
+  padding-bottom: 8px;
+}
+
+.eng-btn {
+  padding: 20px 30px;
+}
+
+.eng-btn button {
+  padding: 10px 30px;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: #fff;
+  border: 3px solid #9d9d9a;
+  border-radius: 20px;
+}
+
+.eng-btn button:hover {
+  padding: 11px 30px;
+  border: 1px solid #fff;
+}

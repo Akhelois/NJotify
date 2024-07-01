@@ -1,18 +1,11 @@
 import "./Play.css";
 
-function Play() {
+const Play = () => {
   return (
-    <div className="right-bar">
-      <h2>Now Playing</h2>
-      <div className="now-playing">
-        <img src="path_to_image" alt="Album Art" />
-        <div className="track-info">
-          <h3>Sparkle - movie ver.</h3>
-          <p>RADWIMPS</p>
-        </div>
-      </div>
+    <div className="play">
+      <h2>Play</h2>
     </div>
   );
-}
+};
 
 export default Play;

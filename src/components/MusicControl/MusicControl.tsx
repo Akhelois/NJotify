@@ -1,27 +1,48 @@
+import { useState, useRef } from "react";
 import "./MusicControl.css";
 
-function MusicControl() {
+const MusicControl = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const togglePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
   return (
-    <div className="music-controls">
-      <div className="track-details">
-        <img src="path_to_image" alt="Album Art" className="track-image" />
+    <div className="music-control">
+      <div className="left-section">
+        <img src="album_cover_url" alt="Album cover" className="album-cover" />
         <div className="track-info">
-          <h3>Sparkle - movie ver.</h3>
-          <p>RADWIMPS</p>
+          <div className="track-name">Every Breath You Take</div>
+          <div className="artist-name">The Police</div>
         </div>
       </div>
-      <div className="controls">
-        <button className="control-btn">Previous</button>
-        <button className="control-btn">Play</button>
-        <button className="control-btn">Next</button>
+      <div className="center-section">
+        <button onClick={togglePlayPause} className="play-pause-button">
+          {isPlaying ? (
+            <svg viewBox="0 0 24 24" className="pause-icon">
+              <path d="M14 19H18V5H14V19ZM6 19H10V5H6V19Z"></path>
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" className="play-icon">
+              <path d="M8 5V19L19 12L8 5Z"></path>
+            </svg>
+          )}
+        </button>
       </div>
-      <div className="progress-bar">
-        <span>0:00</span>
-        <input type="range" min="0" max="100" value="0" className="slider" />
-        <span>3:45</span>
+      <div className="right-section">
+        <audio ref={audioRef} src="song_url"></audio>
       </div>
     </div>
   );
-}
+};
 
 export default MusicControl;

@@ -5,18 +5,20 @@ import Library from "../../components/Libary/Libary";
 import Play from "../../components/Play/Play";
 import MusicControl from "../../components/MusicControl/MusicControl";
 
-function HomePage() {
+const HomePage = () => {
   return (
     <div className="home-page">
       <Header />
       <div className="content">
         <Sidebar />
-        <Library />
-        <Play />
+        <div className="main">
+          <Library />
+          <Play />
+        </div>
       </div>
       <MusicControl />
     </div>
   );
-}
+};
 
 export default HomePage;

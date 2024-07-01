@@ -1,32 +1,44 @@
 import "./Sidebar.css";
-import { GoHomeFill } from "react-icons/go";
+import { AiFillHome } from "react-icons/ai";
+import { IoSearchSharp } from "react-icons/io5";
+import Libary from "../Libary/Libary";
 
-function Sidebar() {
+const SideBar = () => {
   return (
     <div className="sidebar">
-      <ul>
-        <li>
-          <div className="sidebar-item">
-            <GoHomeFill />
-            <h2>Home</h2>
-          </div>
-        </li>
-        <li>
-          <div className="sidebar-item">
-            <GoHomeFill />
-            <h2>Your Library</h2>
-          </div>
-        </li>
-      </ul>
-      <ul>
-        <li>Playlists</li>
-        <li>Podcasts & Shows</li>
-        <li>Albums</li>
-        <li>Artists</li>
-        <li>Liked Songs</li>
-      </ul>
+      {/* Navbar atas */}
+      <div className="sidebar-nav">
+        <div className="logo">
+          <a href="">
+            <span>
+              <img src="./src/assets/spotify_logo.webp" alt="logo" />
+            </span>
+          </a>
+        </div>
+
+        <ul>
+          <li>
+            <a href="">
+              <span className="icon">
+                <AiFillHome />
+              </span>
+              <span>Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="">
+              <span className="icon">
+                <IoSearchSharp />
+              </span>
+              <span>Search</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <Libary />
     </div>
   );
-}
+};
 
-export default Sidebar;
+export default SideBar;
