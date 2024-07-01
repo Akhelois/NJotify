@@ -41,6 +41,8 @@
 
 .center-section {
   display: flex;
+  flex-direction: column;
+  margin-right: 50px;
   align-items: center;
 }
 
@@ -50,7 +52,7 @@
   color: white;
   cursor: pointer;
   padding: 0;
-  margin: 0;
+  margin-bottom: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,6 +63,25 @@
   width: 24px;
   height: 24px;
   fill: white;
+}
+
+.time-info {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+}
+
+.progress-slider {
+  flex-grow: 1;
+  margin: 0 10px;
+  background: #1db954;
+  width: 1000px;
+}
+
+.time {
+  color: white;
+  font-size: 12px;
 }
 
 .right-section {

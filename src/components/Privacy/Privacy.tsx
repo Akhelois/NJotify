@@ -1,6 +1,6 @@
 import "./Privacy.css";
 
-const Privacy = () => {
+function Privacy() {
   return (
     <div className="privacy">
       <ul>
@@ -24,6 +24,6 @@ const Privacy = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Privacy;

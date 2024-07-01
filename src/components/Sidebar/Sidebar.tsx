@@ -3,7 +3,7 @@ import { AiFillHome } from "react-icons/ai";
 import { IoSearchSharp } from "react-icons/io5";
 import Libary from "../Libary/Libary";
 
-const SideBar = () => {
+function SideBar() {
   return (
     <div className="sidebar">
       {/* Navbar atas */}
@@ -36,9 +36,10 @@ const SideBar = () => {
         </ul>
       </div>
 
+      {/* Navbar Bawahnya */}
       <Libary />
     </div>
   );
-};
+}
 
 export default SideBar;

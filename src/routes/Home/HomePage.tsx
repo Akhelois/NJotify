@@ -5,7 +5,7 @@ import MusicControl from "../../components/MusicControl/MusicControl";
 import Playlist from "../../components/Playlist/Playlist";
 import FooterHome from "../../components/Footer/FooterHome";
 
-const HomePage = () => {
+function HomePage() {
   return (
     <div className="home-page">
       <Sidebar />
@@ -14,9 +14,9 @@ const HomePage = () => {
         <Playlist />
         <FooterHome />
       </div>
-      {/* <MusicControl /> */}
+      <MusicControl />
     </div>
   );
-};
+}
 
 export default HomePage;

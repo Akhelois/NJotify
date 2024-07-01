@@ -2,7 +2,7 @@ import "./Header.css";
 import { GoChevronLeft } from "react-icons/go";
 import { GoChevronRight } from "react-icons/go";
 
-const Header = () => {
+function Header() {
   return (
     <div className="header">
       <div className="prev-btn">
@@ -27,6 +27,6 @@ const Header = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Header;

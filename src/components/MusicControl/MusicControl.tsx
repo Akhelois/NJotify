@@ -1,8 +1,10 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./MusicControl.css";
 
-const MusicControl = () => {
+function MusicControl() {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const togglePlayPause = () => {
@@ -15,6 +17,47 @@ const MusicControl = () => {
       setIsPlaying(!isPlaying);
     }
   };
+
+  const onTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  const onLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const onSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Number(event.target.value);
+      setCurrentTime(Number(event.target.value));
+    }
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+  };
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.addEventListener("timeupdate", onTimeUpdate);
+      audioRef.current.addEventListener("loadedmetadata", onLoadedMetadata);
+      return () => {
+        if (audioRef.current) {
+          audioRef.current.removeEventListener("timeupdate", onTimeUpdate);
+          audioRef.current.removeEventListener(
+            "loadedmetadata",
+            onLoadedMetadata
+          );
+        }
+      };
+    }
+  }, []);
 
   return (
     <div className="music-control">
@@ -37,12 +80,23 @@ const MusicControl = () => {
             </svg>
           )}
         </button>
+        <div className="time-info">
+          <div className="time">{formatTime(currentTime)}</div>
+          <input
+            type="range"
+            min="0"
+            max={duration}
+            value={currentTime}
+            onChange={onSliderChange}
+            className="progress-slider"
+          />
+          <div className="time">{formatTime(duration)}</div>
+        </div>
       </div>
-      <div className="right-section">
-        <audio ref={audioRef} src="song_url"></audio>
-      </div>
+      <div className="right-section"></div>
+      <audio ref={audioRef} src="./src/assets/song/Starboy.mp3"></audio>
     </div>
   );
-};
+}
 
 export default MusicControl;

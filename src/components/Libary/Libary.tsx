@@ -2,7 +2,7 @@ import "./Libary.css";
 import { IoLibrary } from "react-icons/io5";
 import Privacy from "../Privacy/Privacy";
 
-const Libary = () => {
+function Libary() {
   return (
     <div className="sidebar-nav v2">
       <ul>
@@ -32,6 +32,6 @@ const Libary = () => {
       <Privacy />
     </div>
   );
-};
+}
 
 export default Libary;

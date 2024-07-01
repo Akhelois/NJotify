@@ -1,7 +1,7 @@
 import "./Playlist.css";
 import { FaPlay } from "react-icons/fa";
 
-const Playlist = () => {
+function Playlist() {
   return (
     <div className="playlist">
       <h2>Popular Album</h2>
@@ -32,6 +32,6 @@ const Playlist = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Playlist;
