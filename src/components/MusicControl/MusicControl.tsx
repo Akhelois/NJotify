@@ -62,10 +62,14 @@ function MusicControl() {
   return (
     <div className="music-control">
       <div className="left-section">
-        <img src="album_cover_url" alt="Album cover" className="album-cover" />
+        <img
+          src="./src/assets/starboy.jpeg"
+          alt="Album cover"
+          className="album-cover"
+        />
         <div className="track-info">
-          <div className="track-name">Every Breath You Take</div>
-          <div className="artist-name">The Police</div>
+          <div className="track-name">Starboy</div>
+          <div className="artist-name">The Weekend</div>
         </div>
       </div>
       <div className="center-section">
