@@ -1,5 +1,5 @@
 import { SyntheticEvent, useState, useEffect } from "react";
-import { useLocation, Navigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "./ResetPassword.css";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -28,7 +28,6 @@ function ResetPassword() {
     password: false,
     confirmPassword: false,
   });
-  const [navigate, setNavigate] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -86,6 +85,7 @@ function ResetPassword() {
     }
 
     try {
+      console.log("Starting fetch request...");
       const response = await fetch("http://localhost:8080/reset_password", {
         method: "POST",
         headers: {
@@ -106,9 +106,11 @@ function ResetPassword() {
       }
 
       const content = await response.json();
+      console.log("Response content:", content);
 
-      if (content.status === "Ok") {
-        setNavigate(true);
+      if (content.message === "Password reset successful") {
+        console.log("Password reset successful, navigating...");
+        window.location.href = "/"; // Directly set the window location to navigate
       } else {
         setErrors((prevErrors) => ({
           ...prevErrors,
@@ -125,10 +127,6 @@ function ResetPassword() {
 
     setFormData({ password: "", confirmPassword: "" });
   };
-
-  if (navigate) {
-    return <Navigate to="/" />;
-  }
 
   return (
     <div className="reset-password-page">
