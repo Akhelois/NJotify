@@ -11,10 +11,8 @@ const HomePage = () => {
       <Sidebar />
       <div className="main">
         <Header />
-        <div className="content-wrapper">
-          <Playlist />
-          <FooterHome />
-        </div>
+        <Playlist />
+        <FooterHome />
       </div>
       {/* <MusicControl /> */}
     </div>
