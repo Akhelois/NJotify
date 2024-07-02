@@ -1,9 +1,12 @@
 package controller
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"fmt"
 	"net/http"
 	"regexp"
+	"strconv"
 
 	"github.com/Akhelois/tpaweb/data/request"
 	"github.com/Akhelois/tpaweb/data/response"
@@ -11,6 +14,7 @@ import (
 	"github.com/Akhelois/tpaweb/service"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"gopkg.in/gomail.v2"
 )
 
 type UserController struct {
@@ -89,20 +93,85 @@ func (controller *UserController) Login(ctx *gin.Context) {
 }
 
 func (controller *UserController) Register(c *gin.Context) {
-	var registerRequest request.RegisterRequest
-	if err := c.ShouldBindJSON(&registerRequest); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "Bad Request", "data": err.Error()})
-		return
-	}
+    var registerRequest request.RegisterRequest
+    if err := c.ShouldBindJSON(&registerRequest); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"status": "Bad Request", "data": err.Error()})
+        return
+    }
 
-	err := controller.userService.Insert(registerRequest)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"status": "Internal Server Error", "data": err.Error()})
-		return
-	}
+    token := generateToken()
 
-	c.JSON(http.StatusOK, gin.H{"status": "Ok"})
+    err := controller.userService.Insert(registerRequest, token)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"status": "Internal Server Error", "data": err.Error()})
+        return
+    }
+
+    err = sendVerificationEmail(registerRequest.Email, token)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"status": "Internal Server Error", "data": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"status": "Ok"})
 }
+
+func (controller *UserController) ActivateUser(c *gin.Context) {
+    token := c.Query("token")
+    if token == "" {
+        c.JSON(http.StatusBadRequest, gin.H{"status": "Bad Request", "data": "Token is required"})
+        return
+    }
+
+    err := controller.userService.ActivateUser(token)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"status": "Internal Server Error", "data": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"status": "Ok"})
+}
+
+func generateToken() string {
+    bytes := make([]byte, 16)
+    rand.Read(bytes)
+    return hex.EncodeToString(bytes)
+}
+
+func sendVerificationEmail(email string, token string) error {
+    from := "akhelois80@gmail.com"
+    password := "tuynqvnbslsidjjf"
+    smtpHost := "smtp.gmail.com"
+    smtpPort := "587"
+
+    verificationLink := fmt.Sprintf("http://localhost:5173/activate?token=%s", token)
+    body := fmt.Sprintf("Please click the following link to activate your account: %s", verificationLink)
+
+    msg := gomail.NewMessage()
+    msg.SetHeader("From", from)
+    msg.SetHeader("To", email)
+    msg.SetHeader("Subject", "Account Verification")
+    msg.SetBody("text/plain", body)
+
+    port, err := strconv.Atoi(smtpPort)
+    if err != nil {
+        return err
+    }
+
+    d := gomail.NewDialer(smtpHost, port, from, password)
+    return d.DialAndSend(msg)
+}
+
+func (controller *UserController) Activate(c *gin.Context) {
+    token := c.Query("token")
+    err := controller.userService.ActivateUser(token)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"status": "Internal Server Error", "data": err.Error()})
+        return
+    }
+    c.JSON(http.StatusOK, gin.H{"status": "Ok"})
+}
+
 
 func (controller *UserController) ForgotPassword(ctx *gin.Context) {
 	var forgotPasswordRequest request.ForgotPasswordRequest

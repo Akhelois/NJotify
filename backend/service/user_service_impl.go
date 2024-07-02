@@ -47,23 +47,37 @@ func (c *UserServiceImpl) Create(users request.CreateUserRequest) error {
 	return c.UserRepository.Save(userModel)
 }
 
-func (c *UserServiceImpl) Insert(users request.RegisterRequest) error {
-	err := c.Validate.Struct(users)
-	if err != nil {
-		return err
-	}
+func (c *UserServiceImpl) Insert(users request.RegisterRequest, token string) error {
+    err := c.Validate.Struct(users)
+    if err != nil {
+        return err
+    }
 
-	hashPass, err := bcrypt.GenerateFromPassword([]byte(users.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
+    hashPass, err := bcrypt.GenerateFromPassword([]byte(users.Password), bcrypt.DefaultCost)
+    if err != nil {
+        return err
+    }
 
-	userModel := model.User{
-		Email:    users.Email,
-		Password: string(hashPass),
-	}
+    userModel := model.User{
+        Email:    users.Email,
+        Password: string(hashPass),
+        Token:    token,
+        Active:   false,
+    }
 
-	return c.UserRepository.Insert(userModel)
+    return c.UserRepository.Insert(userModel)
+}
+
+func (c *UserServiceImpl) ActivateUser(token string) error {
+    user, err := c.UserRepository.FindByToken(token)
+    if err != nil {
+        return err
+    }
+
+    user.Active = true
+    user.Token = ""
+
+    return c.UserRepository.Save(user)
 }
 
 func (c *UserServiceImpl) FindAll() []response.UserResponse {
@@ -98,6 +112,18 @@ func (c *UserServiceImpl) FindUser(email string) (response.UserResponse, error) 
 		Password: user.Password,
 	}
 	return userResponse, nil
+}
+
+func (service *UserServiceImpl) FindByToken(token string) (response.UserResponse, error) {
+	userModel, err := service.UserRepository.FindByToken(token)
+	if err != nil {
+		return response.UserResponse{}, err
+	}
+	return response.UserResponse{
+		Id:     userModel.Id,
+		Email:  userModel.Email,
+		Active: userModel.Active,
+	}, nil
 }
 
 func (c *UserServiceImpl) Login(email string, password string) (response.UserResponse, error) {

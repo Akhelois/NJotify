@@ -50,9 +50,7 @@ function RegisterPage() {
   };
 
   const validateForm = () => {
-    const email = formData.email;
-    const password = formData.password;
-    const confirmPassword = formData.confirmPassword;
+    const { email, password, confirmPassword } = formData;
 
     const emailIsValid = /\S+@\S+\.\S+/.test(email);
     const passwordIsValid =
@@ -114,6 +112,7 @@ function RegisterPage() {
 
       if (content.status === "Ok") {
         setNavigate(true);
+        <Navigate to="/" />;
       } else {
         setErrors((prevErrors) => ({
           ...prevErrors,

@@ -10,9 +10,11 @@ type CreateUserRequest struct {
 	Email    string `validate:"required,email" json:"email"`
 	Username string `validate:"required" json:"username"`
 	Gender   string `validate:"required" json:"gender"`
-	DOB      string `validate:"required" json:"dob"`
+	DOB      string `validate:"required,date" json:"dob"`
 	Country  string `validate:"required" json:"country"`
 	Password string `validate:"required,password" json:"password"`
+	Role string `validate:"required" json:"role"`
+	ProfilePicture string  `validate:"required" json:"profile_picture"`
 }
 
 var validate *validator.Validate

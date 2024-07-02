@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/Akhelois/tpaweb/model"
 	"gorm.io/gorm"
 )
@@ -21,9 +19,19 @@ func (c *UserRepositoryImpl) Save(user model.User) error {
 }
 
 func (c *UserRepositoryImpl) Insert(user model.User) error {
-	query := `INSERT INTO users (email, password) VALUES ('%s', '%s')`
-	err := c.Db.Exec(fmt.Sprintf(query, user.Email, user.Password)).Error
-	return err
+    return c.Db.Create(&user).Error
+}
+
+func (c *UserRepositoryImpl) ActivateUser(token string) error {
+    return c.Db.Model(&model.User{}).Where("token = ?", token).Update("active", true).Error
+}
+
+func (c *UserRepositoryImpl) FindByToken(token string) (model.User, error) {
+    var user model.User
+    if err := c.Db.Where("token = ?", token).First(&user).Error; err != nil {
+        return user, err
+    }
+    return user, nil
 }
 
 func (c *UserRepositoryImpl) FindAll() ([]model.User, error) {

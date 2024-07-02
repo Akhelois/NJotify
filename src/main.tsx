@@ -7,6 +7,7 @@ import RegisterPage from "./routes/Register/RegisterPage";
 import HomePage from "./routes/Home/HomePage";
 import ForgotAccount from "./routes/ForgotAPassword/ForgotPassword";
 import ResetPassword from "./routes/ResetPassword/ResetPassword";
+import ActivationPage from "./routes/ActivitionPage/ActivitionPage";
 import "./index.css";
 
 const container = document.getElementById("root");
@@ -22,6 +23,7 @@ root.render(
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot_account" element={<ForgotAccount />} />
           <Route path="/reset_password" element={<ResetPassword />} />
+          <Route path="/activate" element={<ActivationPage />} />
         </Routes>
       </BrowserRouter>
     </GoogleOAuthProvider>
