@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/Akhelois/tpaweb/model"
 	"gorm.io/gorm"
 )
@@ -47,7 +49,12 @@ func (c *UserRepositoryImpl) FindUser(email string) (model.User, error) {
 }
 
 func (c *UserRepositoryImpl) UpdatePassword(email, hashedPassword string) error {
-	query := "UPDATE users SET password = ? WHERE email = ?"
-	err := c.Db.Exec(query, hashedPassword, email).Error
-	return err
+    query := "UPDATE users SET password = ? WHERE email = ?"
+    err := c.Db.Exec(query, hashedPassword, email).Error
+    if err != nil {
+        fmt.Println("Failed to update password:", err)
+    } else {
+        fmt.Println("Password updated successfully for email:", email)
+    }
+    return err
 }

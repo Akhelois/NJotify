@@ -6,21 +6,20 @@ import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
 function LoginPage() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [navigate, setNavigate] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [navigate, setNavigate] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: SyntheticEvent) => {
     e.preventDefault();
-
     if (!email || !password) {
       setError("Please fill in all fields.");
       return;
     }
-
+    setLoading(true);
     try {
-      console.log("Sending login request with:", { email, password });
       const response = await fetch("http://localhost:8080/login", {
         method: "POST",
         headers: {
@@ -38,7 +37,6 @@ function LoginPage() {
       }
 
       const content = await response.json();
-
       if (content.status === "Ok") {
         setNavigate(true);
       } else {
@@ -47,6 +45,8 @@ function LoginPage() {
     } catch (error) {
       console.error("Error during fetch:", error);
       setError("Error occurred during login. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -81,7 +81,6 @@ function LoginPage() {
             onChange={(e) => setEmail(e.target.value)}
             className="input"
           />
-
           <input
             type="password"
             name="password"
@@ -91,7 +90,7 @@ function LoginPage() {
             className="input"
           />
           {error && <p className="error">{error}</p>}
-          <button type="submit" className="login-button">
+          <button type="submit" className="login-button" disabled={loading}>
             Log In
           </button>
         </form>

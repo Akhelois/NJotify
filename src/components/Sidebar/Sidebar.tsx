@@ -1,9 +1,14 @@
+import React from "react";
 import "./Sidebar.css";
 import { AiFillHome } from "react-icons/ai";
 import { IoSearchSharp } from "react-icons/io5";
 import Libary from "../Libary/Libary";
 
-function SideBar() {
+interface SidebarProps {
+  setCurrentPage: (page: string) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ setCurrentPage }) => {
   return (
     <div className="sidebar">
       {/* Navbar atas */}
@@ -18,7 +23,7 @@ function SideBar() {
 
         <ul>
           <li>
-            <a href="">
+            <a href="#" onClick={() => setCurrentPage("home")}>
               <span className="icon">
                 <AiFillHome />
               </span>
@@ -26,7 +31,7 @@ function SideBar() {
             </a>
           </li>
           <li>
-            <a href="">
+            <a href="#" onClick={() => setCurrentPage("search")}>
               <span className="icon">
                 <IoSearchSharp />
               </span>
@@ -40,6 +45,6 @@ function SideBar() {
       <Libary />
     </div>
   );
-}
+};
 
-export default SideBar;
+export default Sidebar;

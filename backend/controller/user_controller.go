@@ -58,38 +58,50 @@ func (controller *UserController) FindAll(ctx *gin.Context) {
 }
 
 func (controller *UserController) Login(ctx *gin.Context) {
-	loginRequest := request.LoginRequest{}
-	err := ctx.ShouldBindJSON(&loginRequest)
-	helper.CheckPanic(err)
+    var loginReq request.LoginRequest
+    err := ctx.ShouldBindJSON(&loginReq)
+    if err != nil {
+        ctx.JSON(http.StatusBadRequest, response.WebResponse{
+            Code:   http.StatusBadRequest,
+            Status: "Bad Request",
+            Data:   err.Error(),
+        })
+        return
+    }
 
-	user, err := controller.userService.FindUser(loginRequest.Email)
-	if err != nil {
-		webResponse := response.WebResponse{
-			Code:   http.StatusUnauthorized,
-			Status: "Unauthorized",
-			Data:   nil,
-		}
-		ctx.JSON(http.StatusUnauthorized, webResponse)
-		return
-	}
+    fmt.Println("Login attempt for email:", loginReq.Email)
+    userResponse, err := controller.userService.FindUser(loginReq.Email)
+    if err != nil {
+        fmt.Println("User not found:", err)
+        ctx.JSON(http.StatusUnauthorized, response.WebResponse{
+            Code:   http.StatusUnauthorized,
+            Status: "Unauthorized",
+            Data:   "Invalid email or password",
+        })
+        return
+    }
 
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginRequest.Password))
-	if err != nil {
-		webResponse := response.WebResponse{
-			Code:   http.StatusUnauthorized,
-			Status: "Unauthorized",
-			Data:   nil,
-		}
-		ctx.JSON(http.StatusUnauthorized, webResponse)
-		return
-	}
+    fmt.Println("User found:", userResponse.Email)
+    fmt.Printf("Stored hashed password: %s\n", userResponse.Password)
+    fmt.Printf("Provided password: %s\n", loginReq.Password)
 
-	webResponse := response.WebResponse{
-		Code:   http.StatusOK,
-		Status: "Ok",
-		Data:   user,
-	}
-	ctx.JSON(http.StatusOK, webResponse)
+    err = bcrypt.CompareHashAndPassword([]byte(userResponse.Password), []byte(loginReq.Password))
+    if err != nil {
+        fmt.Println("Password comparison failed:", err)
+        ctx.JSON(http.StatusUnauthorized, response.WebResponse{
+            Code:   http.StatusUnauthorized,
+            Status: "Unauthorized",
+            Data:   "Invalid email or password",
+        })
+        return
+    }
+
+    fmt.Println("Password comparison succeeded")
+    ctx.JSON(http.StatusOK, response.WebResponse{
+        Code:   http.StatusOK,
+        Status: "Ok",
+        Data:   userResponse,
+    })
 }
 
 func (controller *UserController) Register(c *gin.Context) {
@@ -139,8 +151,8 @@ func generateToken() string {
 }
 
 func sendVerificationEmail(email string, token string) error {
-    from := "akhelois80@gmail.com"
-    password := "tuynqvnbslsidjjf"
+    from := "jlee211004@gmail.com"
+    password := "dzmn brna gizn lgok"
     smtpHost := "smtp.gmail.com"
     smtpPort := "587"
 
@@ -172,43 +184,92 @@ func (controller *UserController) Activate(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{"status": "Ok"})
 }
 
+func sendResetEmail(email, resetLink string) error {
+    from := "jlee211004@gmail.com"
+    password := "dzmnbrnagiznlgok"
+    smtpHost := "smtp.gmail.com"
+    smtpPort := 587
+
+    m := gomail.NewMessage()
+    m.SetHeader("From", from)
+    m.SetHeader("To", email)
+    m.SetHeader("Subject", "Password Reset")
+    m.SetBody("text/html", fmt.Sprintf("Click <a href=\"%s\">here</a> to reset your password.", resetLink))
+
+    d := gomail.NewDialer(smtpHost, smtpPort, from, password)
+
+    if err := d.DialAndSend(m); err != nil {
+        fmt.Println("Failed to send reset email:", err)
+        return err
+    }
+
+    fmt.Println("Reset email sent successfully to:", email)
+    return nil
+}
 
 func (controller *UserController) ForgotPassword(ctx *gin.Context) {
-	var forgotPasswordRequest request.ForgotPasswordRequest
-	if err := ctx.ShouldBindJSON(&forgotPasswordRequest); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+    var forgotPasswordRequest request.ForgotPasswordRequest
+    if err := ctx.ShouldBindJSON(&forgotPasswordRequest); err != nil {
+        ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
 
-	if !isValidEmail(forgotPasswordRequest.Email) {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email format"})
-		return
-	}
+    if !isValidEmail(forgotPasswordRequest.Email) {
+        ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email format"})
+        return
+    }
 
-	_, err := controller.userService.FindUser(forgotPasswordRequest.Email)
-	if err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": "Email address not found"})
-		return
-	}
+    user, err := controller.userService.FindUser(forgotPasswordRequest.Email)
+    if err != nil {
+        ctx.JSON(http.StatusNotFound, gin.H{"error": "Email address not found"})
+        return
+    }
 
-	ctx.JSON(http.StatusOK, gin.H{"status": "Ok", "message": "Reset link sent successfully"})
+    resetLink := fmt.Sprintf("http://localhost:5173/reset_password?email=%s", user.Email)
+    err = sendResetEmail(user.Email, resetLink)
+    if err != nil {
+        ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send reset email"})
+        return
+    }
+
+    ctx.JSON(http.StatusOK, gin.H{"status": "Ok", "message": "Reset link sent successfully"})
 }
 
 func isValidEmail(email string) bool {
 	return regexp.MustCompile(`\S+@\S+\.\S+`).MatchString(email)
 }
 
-func (uc *UserController) ResetPassword(c *gin.Context) {
-	var resetRequest request.ResetPasswordRequest
-	if err := c.ShouldBindJSON(&resetRequest); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload", "details": err.Error()})
-		return
-	}
+func (controller *UserController) ResetPassword(ctx *gin.Context) {
+    var req request.ResetPasswordRequest
+    if err := ctx.ShouldBindJSON(&req); err != nil {
+        ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
 
-	if err := uc.userService.ResetPassword(resetRequest); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to reset password"})
-		return
-	}
+    fmt.Printf("ResetPassword: original password: %s\n", req.Password)
 
-	c.JSON(http.StatusOK, gin.H{"message": "Password reset successful"})
+    passwordPattern := `^[a-zA-Z0-9!@#$%^&*()_\-+=.]{10,}$`
+    if !regexp.MustCompile(passwordPattern).MatchString(req.Password) {
+        ctx.JSON(http.StatusBadRequest, gin.H{"error": "Password must contain at least 1 letter, 1 number or special character, and be at least 10 characters long."})
+        return
+    }
+
+    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+    if err != nil {
+        ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
+        return
+    }
+
+    fmt.Printf("ResetPassword: new hashed password: %s\n", hashedPassword)
+
+    err = controller.userService.ResetPassword(request.ResetPasswordRequest{
+        Email:    req.Email,
+        Password: string(hashedPassword),
+    })
+    if err != nil {
+        ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update password"})
+        return
+    }
+
+    ctx.JSON(http.StatusOK, gin.H{"message": "Password reset successful"})
 }

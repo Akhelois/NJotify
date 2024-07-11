@@ -150,18 +150,18 @@ func (c *UserServiceImpl) Login(email string, password string) (response.UserRes
 	return userResponse, nil
 }
 
-func (c *UserServiceImpl) ResetPassword(request request.ResetPasswordRequest) error {
-	fmt.Printf("Resetting password for email: %s\n", request.Email)
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
+func (c *UserServiceImpl) ResetPassword(req request.ResetPasswordRequest) error {
+    fmt.Printf("Resetting password for email: %s\n", req.Email)
+    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+    if err != nil {
+        return err
+    }
 
-	err = c.UserRepository.UpdatePassword(request.Email, string(hashedPassword))
-	if err != nil {
-		return err
-	}
+    err = c.UserRepository.UpdatePassword(req.Email, string(hashedPassword))
+    if err != nil {
+        return err
+    }
 
-	fmt.Printf("Password reset successful for email: %s\n", request.Email)
-	return nil
+    fmt.Printf("Password reset successful for email: %s\n", req.Email)
+    return nil
 }

@@ -1,0 +1,66 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.prev-btn {
+  display: flex;
+}
+
+.prev-btn button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.icon {
+  font-size: 20px;
+  color: white;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.search-bar input[type="text"] {
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  width: 700px;
+  outline: none;
+}
+
+.profile button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.profile img {
+  width: 50px;
+  border-radius: 50%;
+}
+
+.header .search-bar .audio-input-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 45%;
+  margin-left: 10px;
+  background: #fff;
+}
+
+.header .search-bar .audio-input-btn:hover {
+  background: #3e3c3c;
+  color: #fff;
+}
+
+.header .audio-input-btn .FaMicrophone {
+  font-size: 1.5em;
+  color: #fff;
+}

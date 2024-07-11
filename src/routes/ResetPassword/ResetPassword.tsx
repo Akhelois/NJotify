@@ -37,19 +37,13 @@ function ResetPassword() {
   const handleInputChange = (event: SyntheticEvent) => {
     const target = event.target as HTMLInputElement;
     const { name, value } = target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
   const validateForm = () => {
     const { password, confirmPassword } = formData;
-
     const passwordIsValid =
-      /[a-zA-Z]/.test(password) &&
-      /[0-9!@#$%^&*()_\-+=.]/.test(password) &&
-      password.length >= 10;
+      /^(?=.*[a-zA-Z])(?=.*[0-9!@#$%^&*()_\-+=.]).{10,}$/.test(password);
     const passwordsMatch = password === confirmPassword;
 
     setErrors({
@@ -85,7 +79,6 @@ function ResetPassword() {
     }
 
     try {
-      console.log("Starting fetch request...");
       const response = await fetch("http://localhost:8080/reset_password", {
         method: "POST",
         headers: {
@@ -97,20 +90,17 @@ function ResetPassword() {
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error(`HTTP error! Status: ${response.status} - ${errorText}`);
         setErrors((prevErrors) => ({
           ...prevErrors,
-          general: "Failed to reset password. Please try again.",
+          general: `Failed to reset password. (${response.status}: ${errorText})`,
         }));
         return;
       }
 
       const content = await response.json();
-      console.log("Response content:", content);
 
       if (content.message === "Password reset successful") {
-        console.log("Password reset successful, navigating...");
-        window.location.href = "/"; // Directly set the window location to navigate
+        window.location.href = "/";
       } else {
         setErrors((prevErrors) => ({
           ...prevErrors,
@@ -118,10 +108,9 @@ function ResetPassword() {
         }));
       }
     } catch (error) {
-      console.error("Error during fetch:", error);
       setErrors((prevErrors) => ({
         ...prevErrors,
-        general: "Error occurred during request. Please try again.",
+        general: "An error occurred during request. Please try again.",
       }));
     }
 
@@ -138,6 +127,7 @@ function ResetPassword() {
             type="password"
             name="password"
             placeholder="New Password"
+            aria-label="New Password"
             value={formData.password}
             onChange={handleInputChange}
             className={`input ${validations.password ? "valid" : "invalid"}`}
@@ -153,6 +143,7 @@ function ResetPassword() {
             type="password"
             name="confirmPassword"
             placeholder="Confirm New Password"
+            aria-label="Confirm New Password"
             value={formData.confirmPassword}
             onChange={handleInputChange}
             className={`input ${validations.confirmPassword ? "valid" : "invalid"}`}
