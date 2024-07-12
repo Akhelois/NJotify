@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import "./EditProfile.css";
+import { Link } from "react-router-dom";
 
 const EditProfileForm = () => {
   const [id, setId] = useState("");
@@ -79,57 +81,67 @@ const EditProfileForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        ID:
-        <input type="text" value={id} readOnly />
-      </label>
-      <label>
-        Email:
-        <input type="email" value={email} readOnly />
-      </label>
-      <label>
-        Username:
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-      </label>
-      <label>
-        Gender:
-        <select
-          value={gender}
-          onChange={(e) => setGender(e.target.value)}
-          required
-        >
-          <option value="">Select gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="other">Other</option>
-        </select>
-      </label>
-      <label>
-        Date of Birth:
-        <input
-          type="date"
-          value={dob}
-          onChange={(e) => setDob(e.target.value)}
-          required
-        />
-      </label>
-      <label>
-        Country:
-        <input
-          type="text"
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          required
-        />
-      </label>
-      <button type="submit">Update Profile</button>
-    </form>
+    <div className="editprofilecontainer">
+      <form onSubmit={handleSubmit}>
+        <div className="title">
+          <h1>Edit Profile</h1>
+        </div>
+        <label>
+          ID:
+          <input type="text" value={id} readOnly />
+        </label>
+        <label>
+          Email:
+          <input type="email" value={email} readOnly />
+        </label>
+        <label>
+          Username:
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          Gender:
+          <select
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            required
+          >
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+        <label>
+          Date of Birth:
+          <input
+            type="date"
+            value={dob}
+            onChange={(e) => setDob(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          Country:
+          <input
+            type="text"
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            required
+          />
+        </label>
+        <div className="buttons">
+          <button type="submit">
+            <Link to="/home">Cancel</Link>
+          </button>
+          <button type="submit">Update Profile</button>
+        </div>
+      </form>
+    </div>
   );
 };
 

@@ -32,26 +32,26 @@ func validateDate(fl validator.FieldLevel) bool {
 }
 
 func (c *UserServiceImpl) Create(users request.CreateUserRequest) error {
-	err := c.Validate.Struct(users)
-	if err != nil {
-		return err
-	}
+    err := c.Validate.Struct(users)
+    if err != nil {
+        return err
+    }
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(users.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
+    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(users.Password), bcrypt.DefaultCost)
+    if err != nil {
+        return err
+    }
 
-	userModel := model.User{
-		Email:    users.Email,
-		Username: users.Username,
-		Gender:   users.Gender,
-		DOB:      users.DOB,
-		Country:  users.Country,
-		Password: string(hashedPassword),
-	}
+    userModel := model.User{
+        Email:    users.Email,
+        Username: users.Username,
+        Gender:   users.Gender,
+        DOB:      users.DOB,
+        Country:  users.Country,
+        Password: string(hashedPassword),
+    }
 
-	return c.UserRepository.Save(userModel)
+    return c.UserRepository.Save(userModel)
 }
 
 func (c *UserServiceImpl) Insert(users request.RegisterRequest, token string) error {
