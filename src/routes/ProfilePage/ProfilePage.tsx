@@ -1,7 +1,44 @@
-// import React from "react";
+// ProfilePage.tsx
+
+import { useEffect, useState } from "react";
 import "./ProfilePage.css";
 
 function ProfilePage() {
+  const [username, setUsername] = useState<string>("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/find", {
+          credentials: "include",
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const result = await response.json();
+        console.log("Fetched User Data:", result);
+
+        if (result.data && result.data.length > 0) {
+          const user = result.data.find(
+            (userData: any) => userData.email === localStorage.getItem("email")
+          );
+          if (user && user.username) {
+            setUsername(user.username);
+          } else {
+            console.warn("User object does not contain a username field", user);
+            setUsername("-");
+          }
+        } else {
+          console.warn("Result data is empty or not an array", result.data);
+        }
+      } catch (error) {
+        console.error("There was an error fetching the user data!", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
     <div className="profile-page">
       <header className="profile-header">
@@ -10,7 +47,7 @@ function ProfilePage() {
           alt="profile"
           className="profile-pic"
         />
-        <h1>{/*Nama*/}</h1>
+        <h1>{username || "-"}</h1>{" "}
       </header>
       <section className="public-playlists">
         <h2>Public Playlists</h2>

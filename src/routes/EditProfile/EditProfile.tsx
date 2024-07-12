@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./EditProfile.css";
 import { Link } from "react-router-dom";
 
-const EditProfileForm = () => {
+function EditProfile() {
   const [id, setId] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -143,6 +143,6 @@ const EditProfileForm = () => {
       </form>
     </div>
   );
-};
+}
 
-export default EditProfileForm;
+export default EditProfile;
