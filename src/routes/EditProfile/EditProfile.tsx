@@ -1,18 +1,44 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const EditProfileForm = () => {
+  const [id, setId] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [gender, setGender] = useState("");
   const [dob, setDob] = useState("");
   const [country, setCountry] = useState("");
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/find");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const result = await response.json();
+        console.log("Fetched User Data:", result);
+
+        const user = result.data[0];
+        setId(user.id);
+        setEmail(user.email);
+        setUsername(user.username);
+        setGender(user.gender);
+        setDob(user.dob);
+        setCountry(user.country);
+      } catch (error) {
+        console.error("There was an error fetching the user data!", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   const handleEditProfile = async (data: {
-    email: any;
-    username: any;
-    gender: any;
-    dob: any;
-    country: any;
+    email: string;
+    username: string;
+    gender: string;
+    dob: string;
+    country: string;
   }) => {
     const payload = {
       email: data.email,
@@ -36,11 +62,11 @@ const EditProfileForm = () => {
       const result = await response.json();
       console.log("Server Response:", result);
     } catch (error) {
-      console.error("There was an error fetching the user data!", error);
+      console.error("There was an error updating the user data!", error);
     }
   };
 
-  const handleSubmit = (event: { preventDefault: () => void }) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = {
       email,
@@ -55,13 +81,12 @@ const EditProfileForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <label>
+        ID:
+        <input type="text" value={id} readOnly />
+      </label>
+      <label>
         Email:
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <input type="email" value={email} readOnly />
       </label>
       <label>
         Username:

@@ -39,6 +39,9 @@ function Header() {
             <Link to="/edit_profile" className="dropdown-item">
               Edit Profile
             </Link>
+            <Link to="/" className="dropdown-item">
+              Log Out
+            </Link>
           </div>
         )}
       </div>
