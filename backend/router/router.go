@@ -35,6 +35,7 @@ func NewRouter(userController *controller.UserController) *gin.Engine {
 	router.POST("/register", userController.Register)
 	router.POST("/forgot_password", userController.ForgotPassword)
 	router.POST("/reset_password", userController.ResetPassword)
+	router.POST("/edit_profile", userController.EditUser)
 
 	return router
 }

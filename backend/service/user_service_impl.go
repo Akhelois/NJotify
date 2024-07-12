@@ -2,7 +2,7 @@ package service
 
 import (
 	"fmt"
-	"log"
+	"time"
 
 	"github.com/Akhelois/tpaweb/data/request"
 	"github.com/Akhelois/tpaweb/data/response"
@@ -18,10 +18,17 @@ type UserServiceImpl struct {
 }
 
 func NewUserServiceImpl(userRepository repository.UserRepository, validate *validator.Validate) UserService {
+	validate.RegisterValidation("date", validateDate)
+
 	return &UserServiceImpl{
 		UserRepository: userRepository,
 		Validate:       validate,
 	}
+}
+
+func validateDate(fl validator.FieldLevel) bool {
+	_, err := time.Parse("2006-01-02", fl.Field().String())
+	return err == nil
 }
 
 func (c *UserServiceImpl) Create(users request.CreateUserRequest) error {
@@ -145,7 +152,7 @@ func (c *UserServiceImpl) Login(email string, password string) (response.UserRes
 		Password: user.Password,
 	}
 
-	log.Printf("Login successful for user: %+v", userResponse)
+	fmt.Printf("Login successful for user: %+v", userResponse)
 
 	return userResponse, nil
 }
@@ -164,4 +171,21 @@ func (c *UserServiceImpl) ResetPassword(req request.ResetPasswordRequest) error 
 
     fmt.Printf("Password reset successful for email: %s\n", req.Email)
     return nil
+}
+
+func (c *UserServiceImpl) EditUser(editUserReq request.EditUserRequest) error {
+	err := c.Validate.Struct(editUserReq)
+	if err != nil {
+		return err
+	}
+
+	userModel := model.User{
+		Email:    editUserReq.Email,
+		Username: editUserReq.Username,
+		Gender:   editUserReq.Gender,
+		DOB:      editUserReq.DOB,
+		Country:  editUserReq.Country,
+	}
+
+	return c.UserRepository.UpdateUser(userModel)
 }

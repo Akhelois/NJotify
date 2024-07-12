@@ -58,3 +58,11 @@ func (c *UserRepositoryImpl) UpdatePassword(email, hashedPassword string) error 
     }
     return err
 }
+
+func (c *UserRepositoryImpl) UpdateUser(user model.User) error {
+    err := c.Db.Model(&model.User{}).Where("email = ?", user.Email).Updates(user).Error
+    if err != nil {
+        fmt.Println("Database update error:", err)
+    }
+    return err
+}

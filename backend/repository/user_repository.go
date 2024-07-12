@@ -10,4 +10,5 @@ type UserRepository interface {
 	UpdatePassword(email, password string) error
 	ActivateUser(token string) error
 	FindByToken(token string) (model.User, error)
+	UpdateUser(user model.User) error
 }

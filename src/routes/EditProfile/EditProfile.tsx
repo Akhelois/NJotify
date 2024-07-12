@@ -1,70 +1,111 @@
 import { useState } from "react";
-import "./EditProfile.css";
 
-function EditProfilePage() {
+const EditProfileForm = () => {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [gender, setGender] = useState("");
   const [dob, setDob] = useState("");
-  const [country, setCountry] = useState("Indonesia");
+  const [country, setCountry] = useState("");
 
-  const handleSave = () => {
-    console.log("Profile saved!");
+  const handleEditProfile = async (data: {
+    email: any;
+    username: any;
+    gender: any;
+    dob: any;
+    country: any;
+  }) => {
+    const payload = {
+      email: data.email,
+      username: data.username,
+      gender: data.gender,
+      dob: data.dob,
+      country: data.country,
+    };
+    console.log("Request Payload:", payload);
+    try {
+      const response = await fetch("http://localhost:8080/edit_profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("Server Response:", result);
+    } catch (error) {
+      console.error("There was an error fetching the user data!", error);
+    }
+  };
+
+  const handleSubmit = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    const formData = {
+      email,
+      username,
+      gender,
+      dob,
+      country,
+    };
+    handleEditProfile(formData);
   };
 
   return (
-    <div className="edit-profile-page">
-      <div className="header">
-        <button className="back-button">Back</button>
-        <h1>Edit Profile</h1>
-      </div>
-      <form className="edit-profile-form">
-        <div className="form-group">
-          <label>ID Pengguna</label>
-          <input type="text" value="02a3f-jw09x48a9-37j103j09sa" readOnly />
-        </div>
-        <div className="form-group">
-          <label>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label>Gender</label>
-          <select value={gender} onChange={(e) => setGender(e.target.value)}>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label>Date of Birth</label>
-          <input
-            type="date"
-            value={dob}
-            onChange={(e) => setDob(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label>Country</label>
-          <input
-            type="text"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-          />
-        </div>
-        <div className="form-buttons">
-          <button type="button" className="cancel-button">
-            Cancel
-          </button>
-          <button type="button" className="save-button" onClick={handleSave}>
-            Save Profile
-          </button>
-        </div>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <label>
+        Email:
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </label>
+      <label>
+        Username:
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+      </label>
+      <label>
+        Gender:
+        <select
+          value={gender}
+          onChange={(e) => setGender(e.target.value)}
+          required
+        >
+          <option value="">Select gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
+      </label>
+      <label>
+        Date of Birth:
+        <input
+          type="date"
+          value={dob}
+          onChange={(e) => setDob(e.target.value)}
+          required
+        />
+      </label>
+      <label>
+        Country:
+        <input
+          type="text"
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+          required
+        />
+      </label>
+      <button type="submit">Update Profile</button>
+    </form>
   );
-}
+};
 
-export default EditProfilePage;
+export default EditProfileForm;

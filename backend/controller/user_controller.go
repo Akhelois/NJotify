@@ -273,3 +273,34 @@ func (controller *UserController) ResetPassword(ctx *gin.Context) {
 
     ctx.JSON(http.StatusOK, gin.H{"message": "Password reset successful"})
 }
+
+
+func (controller *UserController) EditUser(ctx *gin.Context) {
+    var editUserReq request.EditUserRequest
+    err := ctx.ShouldBindJSON(&editUserReq)
+    if err != nil {
+        fmt.Println("Request binding error:", err)
+        ctx.JSON(http.StatusBadRequest, response.WebResponse{
+            Code:   http.StatusBadRequest,
+            Status: "Bad Request",
+            Data:   err.Error(),
+        })
+        return
+    }
+    fmt.Println("EditUserRequest received:", editUserReq)
+    err = controller.userService.EditUser(editUserReq)
+    if err != nil {
+        fmt.Println("Service error:", err)
+        ctx.JSON(http.StatusInternalServerError, response.WebResponse{
+            Code:   http.StatusInternalServerError,
+            Status: "Internal Server Error",
+            Data:   err.Error(),
+        })
+        return
+    }
+
+    ctx.JSON(http.StatusOK, response.WebResponse{
+        Code:   http.StatusOK,
+        Status: "Ok",
+    })
+}

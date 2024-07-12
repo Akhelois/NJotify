@@ -14,4 +14,5 @@ type UserService interface {
 	FindByToken(token string) (response.UserResponse, error)
 	Login(string, string) (response.UserResponse, error)
 	ResetPassword(req request.ResetPasswordRequest) error
+	EditUser(request.EditUserRequest) error
 }
