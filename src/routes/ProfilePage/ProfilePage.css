@@ -1,0 +1,44 @@
+.profile-page {
+  color: #fff;
+  padding: 20px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.profile-pic {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+
+.public-playlists {
+  margin-bottom: 40px;
+}
+
+.playlist-grid {
+  display: flex;
+  gap: 20px;
+}
+
+.follow-info {
+  display: flex;
+  gap: 20px;
+}
+
+.follow-info div {
+  flex: 1;
+}
+
+h1,
+h2 {
+  margin: 0;
+}
+
+h2 {
+  margin-bottom: 10px;
+}

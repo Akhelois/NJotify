@@ -17,7 +17,7 @@
 
 .icon {
   font-size: 20px;
-  color: white;
+  color: #fff;
 }
 
 .search-bar {
@@ -53,6 +53,7 @@
   border-radius: 45%;
   margin-left: 10px;
   background: #fff;
+  color: black;
 }
 
 .header .search-bar .audio-input-btn:hover {
