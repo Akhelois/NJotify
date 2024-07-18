@@ -1,13 +1,47 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import SongImage from "../../assets/starboy.jpeg";
+import { CiShuffle } from "react-icons/ci";
+import {
+  MdSkipPrevious,
+  MdSkipNext,
+  MdQueueMusic,
+  MdSpeaker,
+  MdOutlineCastConnected,
+  MdOutlineZoomOutMap,
+} from "react-icons/md";
+import { FaPlay, FaPause } from "react-icons/fa";
+import { FaVolumeOff, FaVolumeLow, FaVolumeHigh } from "react-icons/fa6";
+import { TiArrowLoop } from "react-icons/ti";
+import { AiOutlinePlaySquare } from "react-icons/ai";
+import { TbMicrophone2 } from "react-icons/tb";
+import { CgMiniPlayer } from "react-icons/cg";
 import "./MusicControl.css";
 
-function MusicControl() {
+const MusicControl: React.FC = () => {
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const [volume, setVolume] = useState(0.5);
+  const [volumeIcon, setVolumeIcon] = useState(<FaVolumeLow />);
 
-  const togglePlayPause = () => {
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
+
+  useEffect(() => {
+    if (volume === 0) {
+      setVolumeIcon(<FaVolumeOff />);
+    } else if (volume > 0 && volume <= 0.5) {
+      setVolumeIcon(<FaVolumeLow />);
+    } else {
+      setVolumeIcon(<FaVolumeHigh />);
+    }
+  }, [volume]);
+
+  const handlePlayPause = () => {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
@@ -18,23 +52,27 @@ function MusicControl() {
     }
   };
 
-  const onTimeUpdate = () => {
+  const handleTimeUpdate = () => {
     if (audioRef.current) {
       setCurrentTime(audioRef.current.currentTime);
     }
   };
 
-  const onLoadedMetadata = () => {
+  const handleDurationChange = () => {
     if (audioRef.current) {
       setDuration(audioRef.current.duration);
     }
   };
 
-  const onSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (audioRef.current) {
-      audioRef.current.currentTime = Number(event.target.value);
-      setCurrentTime(Number(event.target.value));
+      audioRef.current.currentTime = Number(e.target.value);
+      setCurrentTime(Number(e.target.value));
     }
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setVolume(Number(e.target.value));
   };
 
   const formatTime = (time: number) => {
@@ -43,64 +81,81 @@ function MusicControl() {
     return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
   };
 
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.addEventListener("timeupdate", onTimeUpdate);
-      audioRef.current.addEventListener("loadedmetadata", onLoadedMetadata);
-      return () => {
-        if (audioRef.current) {
-          audioRef.current.removeEventListener("timeupdate", onTimeUpdate);
-          audioRef.current.removeEventListener(
-            "loadedmetadata",
-            onLoadedMetadata
-          );
-        }
-      };
-    }
-  }, []);
-
   return (
-    <div className="music-control">
-      <div className="left-section">
-        <img
-          src="./src/assets/starboy.jpeg"
-          alt="Album cover"
-          className="album-cover"
-        />
-        <div className="track-info">
-          <div className="track-name">Starboy</div>
-          <div className="artist-name">The Weekend</div>
+    <div className="player">
+      <audio
+        ref={audioRef}
+        src="./src/assets/song/Starboy.mp3"
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleDurationChange}
+      ></audio>
+
+      {/* Left section */}
+      <div className="hidden-lg flex-row left-section">
+        <img className="w-12" src={SongImage} alt="Song" />
+        <div className="song-info">
+          <p>SongName</p>
+          <p>SongDescription</p>
         </div>
       </div>
-      <div className="center-section">
-        <button onClick={togglePlayPause} className="play-pause-button">
+
+      {/* Center section */}
+      <div className="flex-col center-section">
+        <div className="gap-4 flex-row controls">
+          <CiShuffle className="control-icon" />
+          <MdSkipPrevious className="control-icon" />
           {isPlaying ? (
-            <svg viewBox="0 0 24 24" className="pause-icon">
-              <path d="M14 19H18V5H14V19ZM6 19H10V5H6V19Z"></path>
-            </svg>
+            <FaPause className="control-icon" onClick={handlePlayPause} />
           ) : (
-            <svg viewBox="0 0 24 24" className="play-icon">
-              <path d="M8 5V19L19 12L8 5Z"></path>
-            </svg>
+            <FaPlay className="control-icon" onClick={handlePlayPause} />
           )}
-        </button>
-        <div className="time-info">
-          <div className="time">{formatTime(currentTime)}</div>
-          <input
-            type="range"
-            min="0"
-            max={duration}
-            value={currentTime}
-            onChange={onSliderChange}
-            className="progress-slider"
-          />
-          <div className="time">{formatTime(duration)}</div>
+          <MdSkipNext className="control-icon" />
+          <TiArrowLoop className="control-icon" />
+        </div>
+        <div className="gap-5 flex-row time-bar">
+          <p>{formatTime(currentTime)}</p>
+          <div className="progress-container">
+            <input
+              type="range"
+              className="progress-bar"
+              value={currentTime}
+              max={duration}
+              onChange={handleProgressChange}
+            />
+          </div>
+          <p>{formatTime(duration)}</p>
         </div>
       </div>
-      <div className="right-section"></div>
-      <audio ref={audioRef} src="./src/assets/song/Starboy.mp3"></audio>
+
+      {/* Right section */}
+      <div className="hidden-lg flex-row right-section opacity-75">
+        <div className="right-icons">
+          <AiOutlinePlaySquare className="control-icon" />
+          <TbMicrophone2 className="control-icon" />
+          <MdQueueMusic className="control-icon" />
+          <MdSpeaker className="control-icon" />
+          <div className="control-icon">{volumeIcon}</div>
+          <MdOutlineCastConnected className="control-icon" />
+        </div>
+        <div className="volume-bar-container">
+          <div className="volume-bar">
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={handleVolumeChange}
+            />
+          </div>
+        </div>
+        <div className="right-icons">
+          <CgMiniPlayer className="control-icon" />
+          <MdOutlineZoomOutMap className="control-icon" />
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default MusicControl;

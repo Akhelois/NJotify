@@ -1,29 +1,34 @@
 package controller
 
 import (
+	"context"
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
 	"net/http"
 	"regexp"
 	"strconv"
+	"time"
 
 	"github.com/Akhelois/tpaweb/data/request"
 	"github.com/Akhelois/tpaweb/data/response"
 	"github.com/Akhelois/tpaweb/helper"
 	"github.com/Akhelois/tpaweb/service"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/gomail.v2"
 )
 
 type UserController struct {
 	userService service.UserService
+    client *redis.Client
 }
 
-func NewUserController(service service.UserService) *UserController {
+func NewUserController(service service.UserService, client *redis.Client) *UserController {
 	return &UserController{
 		userService: service,
+        client : client,
 	}
 }
 
@@ -58,50 +63,82 @@ func (controller *UserController) FindAll(ctx *gin.Context) {
 }
 
 func (controller *UserController) Login(ctx *gin.Context) {
-    var loginReq request.LoginRequest
-    err := ctx.ShouldBindJSON(&loginReq)
-    if err != nil {
-        ctx.JSON(http.StatusBadRequest, response.WebResponse{
-            Code:   http.StatusBadRequest,
-            Status: "Bad Request",
-            Data:   err.Error(),
-        })
-        return
-    }
+	var loginReq request.LoginRequest
+	err := ctx.ShouldBindJSON(&loginReq)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, response.WebResponse{
+			Code:   http.StatusBadRequest,
+			Status: "Bad Request",
+			Data:   err.Error(),
+		})
+		return
+	}
 
-    fmt.Println("Login attempt for email:", loginReq.Email)
-    userResponse, err := controller.userService.FindUser(loginReq.Email)
-    if err != nil {
-        fmt.Println("User not found:", err)
-        ctx.JSON(http.StatusUnauthorized, response.WebResponse{
-            Code:   http.StatusUnauthorized,
-            Status: "Unauthorized",
-            Data:   "Invalid email or password",
-        })
-        return
-    }
+	fmt.Println("Login attempt for email:", loginReq.Email)
 
-    fmt.Println("User found:", userResponse.Email)
-    fmt.Printf("Stored hashed password: %s\n", userResponse.Password)
-    fmt.Printf("Provided password: %s\n", loginReq.Password)
+	ctxBg := context.Background()
+	cache, err := controller.client.Get(ctxBg, loginReq.Email).Result()
+	if err == redis.Nil {
+		fmt.Println("User not found in cache, querying database")
+	} else if err != nil {
+		fmt.Println("Error getting value from cache:", err)
+		ctx.JSON(http.StatusInternalServerError, response.WebResponse{
+			Code:   http.StatusInternalServerError,
+			Status: "Internal Server Error",
+			Data:   "Failed to retrieve cache",
+		})
+		return
+	} else {
+		fmt.Println("User found in cache:", cache)
+		err = bcrypt.CompareHashAndPassword([]byte(cache), []byte(loginReq.Password))
+		if err == nil {
+			fmt.Println("Password comparison succeeded (cache)")
+			ctx.JSON(http.StatusOK, response.WebResponse{
+				Code:   http.StatusOK,
+				Status: "Ok",
+				Data:   cache,
+			})
+			return
+		}
+		fmt.Println("Password comparison failed (cache):", err)
+	}
 
-    err = bcrypt.CompareHashAndPassword([]byte(userResponse.Password), []byte(loginReq.Password))
-    if err != nil {
-        fmt.Println("Password comparison failed:", err)
-        ctx.JSON(http.StatusUnauthorized, response.WebResponse{
-            Code:   http.StatusUnauthorized,
-            Status: "Unauthorized",
-            Data:   "Invalid email or password",
-        })
-        return
-    }
+	userResponse, err := controller.userService.FindUser(loginReq.Email)
+	if err != nil {
+		fmt.Println("User not found in database:", err)
+		ctx.JSON(http.StatusUnauthorized, response.WebResponse{
+			Code:   http.StatusUnauthorized,
+			Status: "Unauthorized",
+			Data:   "Invalid email or password",
+		})
+		return
+	}
 
-    fmt.Println("Password comparison succeeded")
-    ctx.JSON(http.StatusOK, response.WebResponse{
-        Code:   http.StatusOK,
-        Status: "Ok",
-        Data:   userResponse,
-    })
+	err = controller.client.Set(ctxBg, loginReq.Email, userResponse.Password, 30*time.Minute).Err()
+	if err != nil {
+		fmt.Println("Failed to cache user data:", err)
+	} else {
+		fmt.Println("User data cached successfully")
+	}
+
+	fmt.Println("User found in database:", userResponse.Email)
+	err = bcrypt.CompareHashAndPassword([]byte(userResponse.Password), []byte(loginReq.Password))
+	if err != nil {
+		fmt.Println("Password comparison failed (database):", err)
+		ctx.JSON(http.StatusUnauthorized, response.WebResponse{
+			Code:   http.StatusUnauthorized,
+			Status: "Unauthorized",
+			Data:   "Invalid email or password",
+		})
+		return
+	}
+
+	fmt.Println("Password comparison succeeded (database)")
+	ctx.JSON(http.StatusOK, response.WebResponse{
+		Code:   http.StatusOK,
+		Status: "Ok",
+		Data:   userResponse,
+	})
 }
 
 func (controller *UserController) Register(c *gin.Context) {

@@ -2,9 +2,15 @@ import React, { useState } from "react";
 import "./Search.css";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import { FaMicrophone } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Search: React.FC = () => {
   const [searchText, setSearchText] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
 
   const handleAudioInput = async () => {
     try {
@@ -78,11 +84,24 @@ const Search: React.FC = () => {
       </div>
 
       <div className="profile">
-        <button>
+        <button onClick={toggleDropdown}>
           <span>
             <img src="./src/assets/profile.png" alt="profile" />
           </span>
         </button>
+        {dropdownOpen && (
+          <div className="dropdown-menu">
+            <Link to="/profile_page" className="dropdown-item">
+              View Profile
+            </Link>
+            <Link to="/edit_profile" className="dropdown-item">
+              Edit Profile
+            </Link>
+            <Link to="/" className="dropdown-item">
+              Log Out
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

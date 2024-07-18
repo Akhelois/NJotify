@@ -9,11 +9,11 @@ import (
 )
 
 func SecurityHeaders() gin.HandlerFunc {
-    return func(c *gin.Context) {
-        c.Writer.Header().Set("Cross-Origin-Opener-Policy", "same-origin")
-        c.Writer.Header().Set("Cross-Origin-Embedder-Policy", "require-corp")
-        c.Next()
-    }
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Cross-Origin-Opener-Policy", "same-origin")
+		c.Writer.Header().Set("Cross-Origin-Embedder-Policy", "require-corp")
+		c.Next()
+	}
 }
 
 func NewRouter(userController *controller.UserController) *gin.Engine {

@@ -57,19 +57,29 @@ function FooterHome() {
             <div>Njotify Plans</div>
             <ul className="col-links">
               <li>
-                <a href="#">Premium Individual</a>
+                <a href="https://www.spotify.com/id-id/premium/?ref=spotifycom_footer_premium_individual">
+                  Premium Individual
+                </a>
               </li>
               <li>
-                <a href="#">Premium Duo</a>
+                <a href="https://www.spotify.com/id-id/duo/?ref=spotifycom_footer_premium_duo">
+                  Premium Duo
+                </a>
               </li>
               <li>
-                <a href="#">Premium Family</a>
+                <a href="https://www.spotify.com/id-id/family/?ref=spotifycom_footer_premium_family">
+                  Premium Family
+                </a>
               </li>
               <li>
-                <a href="#">Premium Student</a>
+                <a href="https://www.spotify.com/id-id/student/?ref=spotifycom_footer_premium_student">
+                  Premium Student
+                </a>
               </li>
               <li>
-                <a href="#">Njotify Free</a>
+                <a href="https://www.spotify.com/id-id/free/?ref=spotifycom_footer_free">
+                  Njotify Free
+                </a>
               </li>
             </ul>
           </div>

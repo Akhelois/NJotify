@@ -18,7 +18,9 @@ function HomePage() {
         <Playlist />
         <FooterHome />
       </div>
-      <MusicControl />
+      <div className="music-control">
+        <MusicControl />
+      </div>
     </div>
   );
 }
