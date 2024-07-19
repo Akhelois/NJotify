@@ -21,7 +21,14 @@ func (c *UserRepositoryImpl) Save(user model.User) error {
 }
 
 func (c *UserRepositoryImpl) Insert(user model.User) error {
-    return c.Db.Create(&user).Error
+    query := "INSERT INTO users (email, password, role) VALUES (?, ?, 'Listener')"
+    err := c.Db.Exec(query, user.Email, user.Password).Error
+    if err != nil {
+        fmt.Println("Failed to insert user:", err)
+    } else {
+        fmt.Println("User inserted successfully:", user.Email)
+    }
+    return err
 }
 
 func (c *UserRepositoryImpl) ActivateUser(token string) error {
