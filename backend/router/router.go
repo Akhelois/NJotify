@@ -16,7 +16,7 @@ func SecurityHeaders() gin.HandlerFunc {
 	}
 }
 
-func NewRouter(userController *controller.UserController) *gin.Engine {
+func NewRouter(userController *controller.UserController, albumController *controller.AlbumController) *gin.Engine {
 	router := gin.Default()
 
 	router.Use(SecurityHeaders())
@@ -29,6 +29,7 @@ func NewRouter(userController *controller.UserController) *gin.Engine {
 		MaxAge:           12 * time.Hour,
 	}))
 
+	// User
 	router.GET("/find", userController.FindAll)
 	router.POST("/users", userController.Create)
 	router.POST("/login", userController.Login)
@@ -36,6 +37,10 @@ func NewRouter(userController *controller.UserController) *gin.Engine {
 	router.POST("/forgot_password", userController.ForgotPassword)
 	router.POST("/reset_password", userController.ResetPassword)
 	router.POST("/edit_profile", userController.EditUser)
+
+	// Album
+	router.GET("/find_album", albumController.FindAll)
+	router.POST("/albums", albumController.Create)
 
 	return router
 }

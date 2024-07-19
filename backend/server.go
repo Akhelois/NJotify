@@ -19,7 +19,7 @@ import (
 func NewRedisClient() *redis.Client {
 	client := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",  
-		Password : "",               
+		Password: "",               
 		DB:       0,
 	})
 
@@ -27,33 +27,42 @@ func NewRedisClient() *redis.Client {
 }
 
 func main() {
-	rdb := NewRedisClient();
+	rdb := NewRedisClient()
 	fmt.Println(rdb.Context())
-	
-	ctx := context.Background();
-	
+
+	ctx := context.Background()
+
 	err_redis := rdb.Set(ctx, "foo", "bar", 0).Err()
-	
+
 	if err_redis != nil {
-		fmt.Println("Cannot set valuee");
+		fmt.Println("Cannot set value")
 	}
-	
+
 	val, err1 := rdb.Get(ctx, "foo").Result()
-	
+
 	if err1 != nil {
-		fmt.Println("Cannot get value");
+		fmt.Println("Cannot get value")
 	}
 	fmt.Println("foo", val)
 
 	db := database.ConnectDB()
+
+	// User
 	db.AutoMigrate(&model.User{})
 
 	validate := validator.New()
-
 	userRepository := repository.NewUserRepositoryImpl(db)
 	userService := service.NewUserServiceImpl(userRepository, validate)
 	userController := controller.NewUserController(userService, rdb)
-	routes := router.NewRouter(userController)
+
+	// Album
+	db.AutoMigrate(&model.Album{})
+
+	albumRepository := repository.NewAlbumRepositoryImpl(db)
+	albumService := service.NewAlbumServiceImpl(albumRepository, validate)
+	albumController := controller.NewAlbumController(albumService)
+
+	routes := router.NewRouter(userController, albumController)
 
 	server := &http.Server{
 		Addr:    ":8080",

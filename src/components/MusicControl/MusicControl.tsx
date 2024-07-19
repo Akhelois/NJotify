@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from "react";
-import SongImage from "../../assets/starboy.jpeg";
 import { CiShuffle } from "react-icons/ci";
 import {
   MdSkipPrevious,
@@ -24,6 +23,11 @@ const MusicControl: React.FC = () => {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.5);
   const [volumeIcon, setVolumeIcon] = useState(<FaVolumeLow />);
+  const [albumImage, setAlbumImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchAlbumImage();
+  }, []);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -40,6 +44,21 @@ const MusicControl: React.FC = () => {
       setVolumeIcon(<FaVolumeHigh />);
     }
   }, [volume]);
+
+  const fetchAlbumImage = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/find_album");
+      if (!response.ok) {
+        throw new Error("Failed to fetch album image");
+      }
+      const data = await response.json();
+      if (data.data && data.data.length > 0) {
+        setAlbumImage(`data:image/jpeg;base64,${data.data[0].album_image}`);
+      }
+    } catch (error) {
+      console.error("Error fetching album image:", error);
+    }
+  };
 
   const handlePlayPause = () => {
     if (audioRef.current) {
@@ -92,7 +111,7 @@ const MusicControl: React.FC = () => {
 
       {/* Left section */}
       <div className="hidden-lg flex-row left-section">
-        <img className="w-12" src={SongImage} alt="Song" />
+        {albumImage && <img className="w-12" src={albumImage} alt="Song" />}
         <div className="song-info">
           <p>SongName</p>
           <p>SongDescription</p>

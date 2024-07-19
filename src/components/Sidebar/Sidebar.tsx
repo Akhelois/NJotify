@@ -13,14 +13,6 @@ const Sidebar: React.FC<SidebarProps> = ({ setCurrentPage }) => {
     <div className="sidebar">
       {/* Navbar atas */}
       <div className="sidebar-nav">
-        <div className="logo">
-          <a href="">
-            <span>
-              <img src="./src/assets/spotify_logo.webp" alt="logo" />
-            </span>
-          </a>
-        </div>
-
         <ul>
           <li>
             <a href="#" onClick={() => setCurrentPage("home")}>
