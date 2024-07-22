@@ -3,36 +3,39 @@ import "./EditProfile.css";
 import { Link } from "react-router-dom";
 
 function EditProfile() {
-  const [id, setId] = useState("");
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [gender, setGender] = useState("");
-  const [dob, setDob] = useState("");
-  const [country, setCountry] = useState("");
+  const [id, setId] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
+  const [dob, setDob] = useState<string>("");
+  const [country, setCountry] = useState<string>("");
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const userData = localStorage.getItem("user");
+    console.log("Retrieved userData from localStorage:", userData); // Debugging
+
+    if (userData) {
       try {
-        const response = await fetch("http://localhost:8080/find");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        const parsedUserData = JSON.parse(userData);
+        console.log("Parsed userData:", parsedUserData); // Debugging
+
+        if (parsedUserData && parsedUserData.data) {
+          const userData = parsedUserData.data;
+          setId(String(userData.id || "")); // Convert ID to string to handle different formats
+          setEmail(userData.email || "");
+          setUsername(userData.username || "");
+          setGender(userData.gender || "");
+          setDob(userData.dob || "");
+          setCountry(userData.country || "");
+        } else {
+          console.error("No 'data' key found in parsed userData.");
         }
-        const result = await response.json();
-        console.log("Fetched User Data:", result);
-
-        const user = result.data[0];
-        setId(user.id);
-        setEmail(user.email);
-        setUsername(user.username);
-        setGender(user.gender);
-        setDob(user.dob);
-        setCountry(user.country);
       } catch (error) {
-        console.error("There was an error fetching the user data!", error);
+        console.error("Error parsing userData from localStorage:", error);
       }
-    };
-
-    fetchUserData();
+    } else {
+      console.error("No user data found in localStorage.");
+    }
   }, []);
 
   const handleEditProfile = async (data: {
@@ -135,7 +138,7 @@ function EditProfile() {
           />
         </label>
         <div className="buttons">
-          <button type="submit">
+          <button type="button">
             <Link to="/home">Cancel</Link>
           </button>
           <button type="submit">Update Profile</button>

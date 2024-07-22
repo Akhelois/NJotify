@@ -1,6 +1,6 @@
 import { SyntheticEvent, useState } from "react";
 import "./LoginPage.css";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -8,9 +8,9 @@ import Footer from "../../components/Footer/Footer";
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [navigate, setNavigate] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const nav = useNavigate();
 
   const handleLogin = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -29,18 +29,15 @@ function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      if (!response.ok) {
+      if (response.ok) {
+        const content = await response.json();
+        console.log("Received login response:", content); // Debugging
+        localStorage.setItem("user", JSON.stringify(content));
+        nav("/home");
+      } else {
         const errorText = await response.text();
         console.error(`HTTP error! Status: ${response.status} - ${errorText}`);
         setError("Invalid email or password. Please try again.");
-        return;
-      }
-
-      const content = await response.json();
-      if (content.status === "Ok") {
-        setNavigate(true);
-      } else {
-        setError("Invalid email or password.");
       }
     } catch (error) {
       console.error("Error during fetch:", error);
@@ -53,13 +50,9 @@ function LoginPage() {
   const login = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       console.log(tokenResponse);
-      setNavigate(true);
+      nav("/home");
     },
   });
-
-  if (navigate) {
-    return <Navigate to="/home" />;
-  }
 
   return (
     <div className="login-page">
@@ -99,8 +92,7 @@ function LoginPage() {
             Forgot your password?
           </a>
           <p className="register-link">
-            Don't have an account?{" "}
-            <Link to="/register">Sign up for Notify</Link>
+            Don't have an account? <Link to="/register">Sign up for Notify</Link>
           </p>
         </div>
       </div>

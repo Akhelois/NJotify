@@ -31,6 +31,7 @@ func NewRouter(userController *controller.UserController, albumController *contr
 
 	// User
 	router.GET("/find", userController.FindAll)
+	router.GET("/find_user", userController.FindUser)
 	router.POST("/users", userController.Create)
 	router.POST("/login", userController.Login)
 	router.POST("/register", userController.Register)
