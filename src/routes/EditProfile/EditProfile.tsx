@@ -12,16 +12,12 @@ function EditProfile() {
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
-    console.log("Retrieved userData from localStorage:", userData); // Debugging
-
     if (userData) {
       try {
         const parsedUserData = JSON.parse(userData);
-        console.log("Parsed userData:", parsedUserData); // Debugging
-
         if (parsedUserData && parsedUserData.data) {
           const userData = parsedUserData.data;
-          setId(String(userData.id || "")); // Convert ID to string to handle different formats
+          setId(String(userData.id || ""));
           setEmail(userData.email || "");
           setUsername(userData.username || "");
           setGender(userData.gender || "");
@@ -52,7 +48,6 @@ function EditProfile() {
       dob: data.dob,
       country: data.country,
     };
-    console.log("Request Payload:", payload);
     try {
       const response = await fetch("http://localhost:8080/edit_profile", {
         method: "POST",
@@ -84,30 +79,30 @@ function EditProfile() {
   };
 
   return (
-    <div className="editprofilecontainer">
+    <div className="editprofile-container">
       <form onSubmit={handleSubmit}>
-        <div className="title">
+        <div className="editprofile-header">
           <h1>Edit Profile</h1>
         </div>
-        <label>
-          ID:
+        <div className="editprofile-field">
+          <label>ID Pengguna</label>
           <input type="text" value={id} readOnly />
-        </label>
-        <label>
-          Email:
+        </div>
+        <div className="editprofile-field">
+          <label>Email</label>
           <input type="email" value={email} readOnly />
-        </label>
-        <label>
-          Username:
+        </div>
+        <div className="editprofile-field">
+          <label>Username</label>
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
           />
-        </label>
-        <label>
-          Gender:
+        </div>
+        <div className="editprofile-field">
+          <label>Gender</label>
           <select
             value={gender}
             onChange={(e) => setGender(e.target.value)}
@@ -118,30 +113,30 @@ function EditProfile() {
             <option value="female">Female</option>
             <option value="other">Other</option>
           </select>
-        </label>
-        <label>
-          Date of Birth:
+        </div>
+        <div className="editprofile-field">
+          <label>Date of Birth</label>
           <input
             type="date"
             value={dob}
             onChange={(e) => setDob(e.target.value)}
             required
           />
-        </label>
-        <label>
-          Country:
+        </div>
+        <div className="editprofile-field">
+          <label>Country</label>
           <input
             type="text"
             value={country}
             onChange={(e) => setCountry(e.target.value)}
             required
           />
-        </label>
-        <div className="buttons">
+        </div>
+        <div className="editprofile-buttons">
           <button type="button">
             <Link to="/home">Cancel</Link>
           </button>
-          <button type="submit">Update Profile</button>
+          <button type="submit">Save Profile</button>
         </div>
       </form>
     </div>

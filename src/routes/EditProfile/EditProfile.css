@@ -11,7 +11,7 @@ form {
   background-color: #282828;
   padding: 40px;
   border-radius: 10px;
-  width: 400px;
+  width: 500px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -72,4 +72,13 @@ button[type="button"] {
 
 button:hover {
   opacity: 0.8;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  color: #ffffff;
 }
