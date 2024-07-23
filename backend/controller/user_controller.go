@@ -199,7 +199,7 @@ func (controller *UserController) Login(ctx *gin.Context) {
     } else {
         fmt.Println("User found in cache:", cache)
         err = bcrypt.CompareHashAndPassword([]byte(cache), []byte(loginReq.Password))
-        if err == nil {
+        if err != nil {
             fmt.Println("Password comparison succeeded (cache)")
             // Assuming you have user data stored
             user := response.UserResponse{
