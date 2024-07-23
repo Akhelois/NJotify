@@ -1,4 +1,5 @@
 // import React from "react";
+import { Link } from "react-router-dom";
 import "./SettingsPage.css";
 
 function SettingsPage() {
@@ -32,19 +33,19 @@ function SettingsPage() {
         <h3>Akun</h3>
         <ul>
           <li>
-            <button className="menu-button">
+            <Link to="/order-history" className="menu-button">
               <span>Order History</span>
-            </button>
+            </Link>
           </li>
           <li>
-            <button className="menu-button">
+            <Link to="/edit-profile" className="menu-button">
               <span>Edit Profile</span>
-            </button>
+            </Link>
           </li>
           <li>
-            <button className="menu-button">
+            <Link to="/get-verified" className="menu-button">
               <span>Get Verified</span>
-            </button>
+            </Link>
           </li>
         </ul>
       </div>
@@ -53,19 +54,19 @@ function SettingsPage() {
         <h3>Keamanan dan privasi</h3>
         <ul>
           <li>
-            <button className="menu-button">
+            <Link to="/change-password" className="menu-button">
               <span>Change Password</span>
-            </button>
+            </Link>
           </li>
           <li>
-            <button className="menu-button">
+            <Link to="/notification-settings" className="menu-button">
               <span>Notification Settings</span>
-            </button>
+            </Link>
           </li>
           <li>
-            <button className="menu-button">
-              <span>Sign Out</span>
-            </button>
+            <Link to="/" className="menu-button">
+              <span>Log Out</span>
+            </Link>
           </li>
         </ul>
       </div>

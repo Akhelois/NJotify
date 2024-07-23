@@ -33,12 +33,12 @@ function Header() {
         </button>
         {dropdownOpen && (
           <div className="dropdown-menu">
-            <Link to="/profile_page" className="dropdown-item">
-              View Profile
+            <Link to="/settings" className="dropdown-item">
+              Account
             </Link>
-            <Link to="/edit_profile" className="dropdown-item">
+            {/* <Link to="/edit_profile" className="dropdown-item">
               Edit Profile
-            </Link>
+            </Link> */}
             <Link to="/" className="dropdown-item">
               Log Out
             </Link>
