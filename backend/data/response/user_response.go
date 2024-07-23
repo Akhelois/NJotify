@@ -5,7 +5,7 @@ type UserResponse struct {
 	Email          string `json:"email"`
 	Username       string `json:"username"`
 	Gender         string `json:"gender"`
-	DOB            string `json:"dob"`
+	Dob            string `json:"dob"`
 	Country        string `json:"country"`
 	Password       string `json:"password"`
 	Role           string `json:"role"`

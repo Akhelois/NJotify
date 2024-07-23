@@ -38,7 +38,7 @@ function SettingsPage() {
             </Link>
           </li>
           <li>
-            <Link to="/edit-profile" className="menu-button">
+            <Link to="/edit_profile" className="menu-button">
               <span>Edit Profile</span>
             </Link>
           </li>

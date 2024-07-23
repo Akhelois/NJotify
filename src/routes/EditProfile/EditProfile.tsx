@@ -139,7 +139,7 @@ function EditProfile() {
         </div>
         <div className="editprofile-buttons">
           <button type="button">
-            <Link to="/home">Cancel</Link>
+            <Link to="/settings">Cancel</Link>
           </button>
           <button type="submit">Save Profile</button>
         </div>

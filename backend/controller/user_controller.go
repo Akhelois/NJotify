@@ -129,7 +129,16 @@ func (controller *UserController) Login(ctx *gin.Context) {
         err = bcrypt.CompareHashAndPassword([]byte(cache), []byte(loginReq.Password))
         if err == nil {
             // Successful login
-            token, err := generateJWTToken(loginReq.Email)
+            userResponse, err := controller.userService.FindUser(loginReq.Email)
+            if err != nil {
+                ctx.JSON(http.StatusInternalServerError, response.WebResponse{
+                    Code:   http.StatusInternalServerError,
+                    Status: "Internal Server Error",
+                    Data:   "Failed to find user",
+                })
+                return
+            }
+            token, err := generateJWTToken(userResponse)
             if err != nil {
                 ctx.JSON(http.StatusInternalServerError, response.WebResponse{
                     Code:   http.StatusInternalServerError,
@@ -140,15 +149,10 @@ func (controller *UserController) Login(ctx *gin.Context) {
             }
 
             ctx.SetCookie("Authorization", token, 3600, "/", "localhost", false, true)
-            user := response.UserResponse{
-                Id: loginReq.Id,
-                Email:    loginReq.Email,
-                Password: loginReq.Password,
-            }
             ctx.JSON(http.StatusOK, response.WebResponse{
                 Code:   http.StatusOK,
                 Status: "Ok",
-                Data:   user,
+                Data:   userResponse,
             })
             return
         }
@@ -186,7 +190,7 @@ func (controller *UserController) Login(ctx *gin.Context) {
     }
 
     // Successful login
-    token, err := generateJWTToken(userResponse.Email)
+    token, err := generateJWTToken(userResponse)
     if err != nil {
         ctx.JSON(http.StatusInternalServerError, response.WebResponse{
             Code:   http.StatusInternalServerError,
@@ -204,10 +208,12 @@ func (controller *UserController) Login(ctx *gin.Context) {
     })
 }
 
-func generateJWTToken(email string) (string, error) {
+func generateJWTToken(user response.UserResponse) (string, error) {
     secret := "asihodc97tb8723d"
     claims := jwt.MapClaims{
-        "sub": email,
+        "sub": user.Email,
+        "id":  user.Id,
+        "username": user.Username,
         "exp": time.Now().Add(time.Hour * 1).Unix(),
     }
 

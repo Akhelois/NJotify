@@ -115,6 +115,7 @@ func (c *UserServiceImpl) FindUser(email string) (response.UserResponse, error) 
 
 	userResponse := response.UserResponse{
 		Id:       user.Id,
+		Username: user.Username,
 		Email:    user.Email,
 		Password: user.Password,
 	}
@@ -148,6 +149,7 @@ func (c *UserServiceImpl) Login(email string, password string) (response.UserRes
 
 	userResponse := response.UserResponse{
 		Id:       user.Id,
+		// Username: user.Username,
 		Email:    user.Email,
 		Password: user.Password,
 	}
