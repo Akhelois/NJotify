@@ -45,6 +45,16 @@ function LoginPage() {
     } finally {
       setLoading(false);
     }
+
+    const response1 = await fetch("http://localhost:8080/validate", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error("Error:", error));
+
+    console.log(response1);
   };
 
   const login = useGoogleLogin({
@@ -92,7 +102,8 @@ function LoginPage() {
             Forgot your password?
           </a>
           <p className="register-link">
-            Don't have an account? <Link to="/register">Sign up for Notify</Link>
+            Don't have an account?{" "}
+            <Link to="/register">Sign up for Notify</Link>
           </p>
         </div>
       </div>

@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/Akhelois/tpaweb/helper"
 	"gorm.io/driver/postgres"
@@ -16,7 +17,9 @@ const (
 	dbname   = "tpa_web"
 )
 
-func ConnectDB() *gorm.DB {
+var DB *gorm.DB
+
+func ConnectDB() {
 	sqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s",
 		host,
 		port,
@@ -24,13 +27,15 @@ func ConnectDB() *gorm.DB {
 		password,
 		dbname)
 
-	database, err := gorm.Open(postgres.Open(sqlInfo), &gorm.Config{})
-
+	var err error
+	DB, err = gorm.Open(postgres.Open(sqlInfo), &gorm.Config{})
 	if err != nil {
-		panic("failed to connect to database")
+		log.Fatal("failed to connect to database:", err)
 	}
 
 	helper.CheckPanic(err)
+}
 
-	return database
+func GetDB() *gorm.DB {
+	return DB
 }

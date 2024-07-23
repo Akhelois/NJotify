@@ -16,6 +16,7 @@ import (
 	"github.com/Akhelois/tpaweb/service"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
+	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/gomail.v2"
 )
@@ -30,6 +31,12 @@ func NewUserController(service service.UserService, client *redis.Client) *UserC
 		userService: service,
         client : client,
 	}
+}
+
+func (c *UserController) Validate(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "This is a protected endpoint",
+	})
 }
 
 func (controller *UserController) Create(ctx *gin.Context) {
@@ -91,85 +98,6 @@ func (controller *UserController) FindUser(ctx *gin.Context) {
     })
 }
 
-// func (controller *UserController) Login(ctx *gin.Context) {
-// 	var loginReq request.LoginRequest
-// 	err := ctx.ShouldBindJSON(&loginReq)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, response.WebResponse{
-// 			Code:   http.StatusBadRequest,
-// 			Status: "Bad Request",
-// 			Data:   err.Error(),
-// 		})
-// 		return
-// 	}
-
-// 	fmt.Println("Login attempt for email:", loginReq.Email)
-
-// 	ctxBg := context.Background()
-// 	cache, err := controller.client.Get(ctxBg, loginReq.Email).Result()
-// 	if err == redis.Nil {
-// 		fmt.Println("User not found in cache, querying database")
-// 	} else if err != nil {
-// 		fmt.Println("Error getting value from cache:", err)
-// 		ctx.JSON(http.StatusInternalServerError, response.WebResponse{
-// 			Code:   http.StatusInternalServerError,
-// 			Status: "Internal Server Error",
-// 			Data:   "Failed to retrieve cache",
-// 		})
-// 		return
-// 	} else {
-// 		fmt.Println("User found in cache:", cache)
-// 		err = bcrypt.CompareHashAndPassword([]byte(cache), []byte(loginReq.Password))
-// 		if err != nil {
-// 			fmt.Println("Password comparison succeeded (cache)")
-// 			ctx.JSON(http.StatusOK, response.WebResponse{
-// 				Code:   http.StatusOK,
-// 				Status: "Ok",
-// 				Data:   cache,
-// 			})
-// 			return
-// 		}
-// 		fmt.Println("Password comparison failed (cache):", err)
-// 	}
-
-// 	userResponse, err := controller.userService.FindUser(loginReq.Email)
-// 	if err != nil {
-// 		fmt.Println("User not found in database:", err)
-// 		ctx.JSON(http.StatusUnauthorized, response.WebResponse{
-// 			Code:   http.StatusUnauthorized,
-// 			Status: "Unauthorized",
-// 			Data:   "Invalid email or password",
-// 		})
-// 		return
-// 	}
-
-// 	err = controller.client.Set(ctxBg, loginReq.Email, userResponse.Password, 30*time.Minute).Err()
-// 	if err != nil {
-// 		fmt.Println("Failed to cache user data:", err)
-// 	} else {
-// 		fmt.Println("User data cached successfully")
-// 	}
-
-// 	fmt.Println("User found in database:", userResponse.Email)
-// 	err = bcrypt.CompareHashAndPassword([]byte(userResponse.Password), []byte(loginReq.Password))
-// 	if err != nil {
-// 		fmt.Println("Password comparison failed (database):", err)
-// 		ctx.JSON(http.StatusUnauthorized, response.WebResponse{
-// 			Code:   http.StatusUnauthorized,
-// 			Status: "Unauthorized",
-// 			Data:   "Invalid email or password",
-// 		})
-// 		return
-// 	}
-
-// 	fmt.Println("Password comparison succeeded (database)")
-// 	ctx.JSON(http.StatusOK, response.WebResponse{
-// 		Code:   http.StatusOK,
-// 		Status: "Ok",
-// 		Data:   userResponse,
-// 	})
-// }
-
 func (controller *UserController) Login(ctx *gin.Context) {
     var loginReq request.LoginRequest
     err := ctx.ShouldBindJSON(&loginReq)
@@ -199,9 +127,19 @@ func (controller *UserController) Login(ctx *gin.Context) {
     } else {
         fmt.Println("User found in cache:", cache)
         err = bcrypt.CompareHashAndPassword([]byte(cache), []byte(loginReq.Password))
-        if err != nil {
-            fmt.Println("Password comparison succeeded (cache)")
-            // Assuming you have user data stored
+        if err == nil {
+            // Successful login
+            token, err := generateJWTToken(loginReq.Email)
+            if err != nil {
+                ctx.JSON(http.StatusInternalServerError, response.WebResponse{
+                    Code:   http.StatusInternalServerError,
+                    Status: "Internal Server Error",
+                    Data:   "Failed to generate token",
+                })
+                return
+            }
+
+            ctx.SetCookie("Authorization", token, 3600, "/", "localhost", false, true)
             user := response.UserResponse{
                 Id: loginReq.Id,
                 Email:    loginReq.Email,
@@ -247,12 +185,34 @@ func (controller *UserController) Login(ctx *gin.Context) {
         return
     }
 
-    fmt.Println("Password comparison succeeded (database)")
+    // Successful login
+    token, err := generateJWTToken(userResponse.Email)
+    if err != nil {
+        ctx.JSON(http.StatusInternalServerError, response.WebResponse{
+            Code:   http.StatusInternalServerError,
+            Status: "Internal Server Error",
+            Data:   "Failed to generate token",
+        })
+        return
+    }
+
+    ctx.SetCookie("Authorization", token, 3600, "/", "localhost", false, true)
     ctx.JSON(http.StatusOK, response.WebResponse{
         Code:   http.StatusOK,
         Status: "Ok",
         Data:   userResponse,
     })
+}
+
+func generateJWTToken(email string) (string, error) {
+    secret := "asihodc97tb8723d"
+    claims := jwt.MapClaims{
+        "sub": email,
+        "exp": time.Now().Add(time.Hour * 1).Unix(),
+    }
+
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+    return token.SignedString([]byte(secret))
 }
 
 func (controller *UserController) Register(c *gin.Context) {

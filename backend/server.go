@@ -45,7 +45,8 @@ func main() {
 	}
 	fmt.Println("foo", val)
 
-	db := database.ConnectDB()
+	database.ConnectDB()
+	db := database.GetDB()
 
 	// User
 	db.AutoMigrate(&model.User{})

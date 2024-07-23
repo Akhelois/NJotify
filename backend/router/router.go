@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/Akhelois/tpaweb/controller"
+	"github.com/Akhelois/tpaweb/middleware"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -27,7 +28,7 @@ func NewRouter(userController *controller.UserController, albumController *contr
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
-	}))
+	}))	
 
 	// User
 	router.GET("/find", userController.FindAll)
@@ -42,6 +43,11 @@ func NewRouter(userController *controller.UserController, albumController *contr
 	// Album
 	router.GET("/find_album", albumController.FindAll)
 	router.POST("/albums", albumController.Create)
+
+	// Apply Middleware
+	protected := router.Group("/")
+	protected.Use(middleware.RequireAuth)
+	protected.GET("/validate", middleware.RequireAuth, userController.Validate)
 
 	return router
 }
