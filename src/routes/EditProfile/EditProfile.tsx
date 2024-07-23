@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./EditProfile.css";
 import { Link } from "react-router-dom";
+import Footer from "../../components/Footer/FooterHome";
+import Navbar from "../../components/Navbar/Navbar";
 
 function EditProfile() {
   const [id, setId] = useState<string>("");
@@ -80,6 +82,9 @@ function EditProfile() {
 
   return (
     <div className="editprofile-container">
+      <div className="navbar">
+        <Navbar />
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="editprofile-header">
           <h1>Edit Profile</h1>
@@ -139,6 +144,9 @@ function EditProfile() {
           <button type="submit">Save Profile</button>
         </div>
       </form>
+      <div className="footer">
+        <Footer />
+      </div>
     </div>
   );
 }

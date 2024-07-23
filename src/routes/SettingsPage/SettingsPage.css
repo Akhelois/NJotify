@@ -1,0 +1,79 @@
+.settings-container {
+  padding: 20px;
+  background-color: #121212;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+.premium-banner {
+  display: flex;
+  background: linear-gradient(90deg, #8a2387, #e94057, #f27121);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.premium-image {
+  width: 150px;
+  height: 150px;
+  margin-right: 20px;
+  border-radius: 10px;
+}
+
+.premium-info h2 {
+  margin: 5px 0;
+}
+
+.premium-info p {
+  margin: 10px 0;
+}
+
+.premium-button {
+  background-color: white;
+  color: #8a2387;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.premium-button:hover {
+  background-color: #f3f3f3;
+}
+
+.account-section,
+.security-section {
+  background-color: #1c1c1c;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+h3 {
+  margin: 0 0 10px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin: 10px 0;
+}
+
+.menu-button {
+  background: none;
+  color: white;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.menu-button:hover {
+  background-color: #333333;
+}
