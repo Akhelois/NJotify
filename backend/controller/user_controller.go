@@ -214,6 +214,7 @@ func generateJWTToken(user response.UserResponse) (string, error) {
         "sub": user.Email,
         "id":  user.Id,
         "username": user.Username,
+        "role": user.Role,
         "exp": time.Now().Add(time.Hour * 1).Unix(),
     }
 

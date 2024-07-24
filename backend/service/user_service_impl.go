@@ -118,6 +118,7 @@ func (c *UserServiceImpl) FindUser(email string) (response.UserResponse, error) 
 		Username: user.Username,
 		Email:    user.Email,
 		Password: user.Password,
+		Role: user.Role,
 	}
 	return userResponse, nil
 }
@@ -152,6 +153,7 @@ func (c *UserServiceImpl) Login(email string, password string) (response.UserRes
 		// Username: user.Username,
 		Email:    user.Email,
 		Password: user.Password,
+		// Role: user.Role,
 	}
 
 	fmt.Printf("Login successful for user: %+v", userResponse)
