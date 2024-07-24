@@ -1,16 +1,22 @@
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useState, useEffect } from "react";
 import "./LoginPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const nav = useNavigate();
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 1000); // Simulate a loading delay
+  }, []);
 
   const handleLogin = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -66,48 +72,112 @@ function LoginPage() {
 
   return (
     <div className="login-page">
-      <Navbar />
-      <div className="login-container">
-        <h2 className="login-title">Login to Spotify</h2>
-        <div className="google-button">
-          <button onClick={() => login()} className="google-login-button">
-            <img src="./src/assets/google.webp" alt="Google Icon" />
-            Continue with Google
-          </button>
-        </div>
-        <form className="login-form" onSubmit={handleLogin}>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="input"
+      {loading ? (
+        <div>
+          <Skeleton
+            height={60}
+            width={`100%`}
+            baseColor="#202020"
+            highlightColor="#444"
           />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="input"
+          <div className="login-container">
+            <Skeleton
+              height={40}
+              width={`60%`}
+              baseColor="#202020"
+              highlightColor="#444"
+            />
+            <div className="google-button">
+              <Skeleton
+                height={40}
+                width={`100%`}
+                baseColor="#202020"
+                highlightColor="#444"
+              />
+            </div>
+            <form className="login-form">
+              <Skeleton
+                height={40}
+                width={`100%`}
+                baseColor="#202020"
+                highlightColor="#444"
+              />
+              <Skeleton
+                height={40}
+                width={`100%`}
+                baseColor="#202020"
+                highlightColor="#444"
+              />
+              {error && <p className="error">{error}</p>}
+            </form>
+            <div className="login-footer">
+              <Skeleton
+                height={40}
+                width={`100%`}
+                baseColor="#202020"
+                highlightColor="#444"
+              />
+              <Skeleton
+                height={40}
+                width={`100%`}
+                baseColor="#202020"
+                highlightColor="#444"
+              />
+            </div>
+          </div>
+          <Skeleton
+            height={60}
+            width={`100%`}
+            baseColor="#202020"
+            highlightColor="#444"
           />
-          {error && <p className="error">{error}</p>}
-          <button type="submit" className="login-button" disabled={loading}>
-            Log In
-          </button>
-        </form>
-        <div className="login-footer">
-          <a href="/forgot_account" className="forgot-password-link">
-            Forgot your password?
-          </a>
-          <p className="register-link">
-            Don't have an account?{" "}
-            <Link to="/register">Sign up for Notify</Link>
-          </p>
         </div>
-      </div>
-      <Footer />
+      ) : (
+        <>
+          <Navbar />
+          <div className="login-container">
+            <h2 className="login-title">Login to Spotify</h2>
+            <div className="google-button">
+              <button onClick={() => login()} className="google-login-button">
+                <img src="./src/assets/google.webp" alt="Google Icon" />
+                Continue with Google
+              </button>
+            </div>
+            <form className="login-form" onSubmit={handleLogin}>
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input"
+              />
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input"
+              />
+              {error && <p className="error">{error}</p>}
+              <button type="submit" className="login-button" disabled={loading}>
+                Log In
+              </button>
+            </form>
+            <div className="login-footer">
+              <a href="/forgot_account" className="forgot-password-link">
+                Forgot your password?
+              </a>
+              <p className="register-link">
+                Don't have an account?{" "}
+                <Link to="/register">Sign up for Notify</Link>
+              </p>
+            </div>
+          </div>
+          <Footer />
+        </>
+      )}
     </div>
   );
 }
