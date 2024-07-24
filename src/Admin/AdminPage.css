@@ -1,0 +1,56 @@
+.admin-page {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.artist-list {
+  margin-top: 20px;
+}
+
+.artist-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.artist-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.artist-info {
+  flex-grow: 1;
+  text-align: left;
+  margin-left: 20px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.reject-button,
+.approve-button {
+  background: #f0f0f0;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.reject-button:hover {
+  background-color: #ffdddd;
+}
+
+.approve-button:hover {
+  background-color: #ddffdd;
+}

@@ -37,9 +37,10 @@ function LoginPage() {
 
       if (response.ok) {
         const content = await response.json();
-        console.log("Received login response:", content); // Debugging
+        console.log("Received login response:", content.data); // Debugging
         localStorage.setItem("user", JSON.stringify(content));
-        nav("/home");
+        if (content.data.role == "Listener") nav("/home");
+        if (content.data.role == "Admin") nav("/admin_page");
       } else {
         const errorText = await response.text();
         console.error(`HTTP error! Status: ${response.status} - ${errorText}`);

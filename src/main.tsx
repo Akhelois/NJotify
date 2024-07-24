@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./routes/Login/LoginPage";
+import AdminPage from "./Admin/AdminPage";
 import RegisterPage from "./routes/Register/RegisterPage";
 import HomePage from "./routes/Home/HomePage";
 import ForgotAccount from "./routes/ForgotAPassword/ForgotPassword";
@@ -22,6 +23,7 @@ root.render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LoginPage />} />
+          <Route path="/admin_page" element={<AdminPage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot_account" element={<ForgotAccount />} />
