@@ -1,70 +1,67 @@
 import { useEffect, useState } from "react";
 import "./ProfilePage.css";
+import Header from "../../components/Header/Header";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import MusicControl from "../../components/MusicControl/MusicControl";
+import FooterHome from "../../components/Footer/FooterHome";
 
 function ProfilePage() {
+  const [currentPage, setCurrentPage] = useState("profile");
   const [username, setUsername] = useState<string>("");
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
       try {
-        const response = await fetch("http://localhost:8080/find", {
-          credentials: "include",
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const result = await response.json();
-        console.log("Fetched User Data:", result);
-
-        if (result.data && result.data.length > 0) {
-          const user = result.data.find(
-            (userData: any) => userData.email === localStorage.getItem("email")
-          );
-          if (user && user.username) {
-            setUsername(user.username);
-          } else {
-            console.warn("User object does not contain a username field", user);
-            setUsername("-");
-          }
+        const parsedUserData = JSON.parse(userData);
+        if (parsedUserData && parsedUserData.data) {
+          const userData = parsedUserData.data;
+          setUsername(userData.username || "");
         } else {
-          console.warn("Result data is empty or not an array", result.data);
+          console.error("No 'data' key found in parsed userData.");
         }
       } catch (error) {
-        console.error("There was an error fetching the user data!", error);
+        console.error("Error parsing userData from localStorage:", error);
       }
-    };
-
-    fetchUserData();
+    } else {
+      console.error("No user data found in localStorage.");
+    }
   }, []);
 
   return (
     <div className="profile-page">
-      <header className="profile-header">
-        <img
-          src="./src/assets/profile.png"
-          alt="profile"
-          className="profile-pic"
-        />
-        <h1>{username || "-"}</h1>{" "}
-      </header>
-      <section className="public-playlists">
-        <h2>Public Playlists</h2>
-        <div className="playlist-grid">{/* Add playlist items here */}</div>
-      </section>
-      <section className="follow-info">
-        <div className="following">
-          <h2>Following</h2>
-          {/* Add following items here */}
+      <Sidebar setCurrentPage={setCurrentPage} />
+      <div className="main">
+        <Header />
+        <div className="profile-content">
+          <header className="profile-header">
+            <img
+              src="./src/assets/profile.png"
+              alt="profile"
+              className="profile-pic"
+            />
+            <h1>{username || "-"}</h1>
+          </header>
+          <section className="public-playlists">
+            <h2>Public Playlists</h2>
+            <div className="playlist-grid">{/* Add playlist items here */}</div>
+          </section>
+          <section className="follow-info">
+            <div className="followers">
+              <h2>Followers</h2>
+              {/* Add followers items here */}
+            </div>
+            <div className="mutual-following">
+              <h2>Mutual Following</h2>
+              {/* Add mutual following items here */}
+            </div>
+          </section>
         </div>
-        <div className="followers">
-          <h2>Followers</h2>
-          {/* Add followers items here */}
-        </div>
-        <div className="mutual-following">
-          <h2>Mutual Following</h2>
-          {/* Add mutual following items here */}
-        </div>
-      </section>
+        <FooterHome />
+      </div>
+      <div className="music-control">
+        <MusicControl />
+      </div>
     </div>
   );
 }

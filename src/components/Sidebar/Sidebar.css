@@ -17,11 +17,7 @@
 
 .sidebar-nav ul {
   list-style: none;
-}
-
-.sidebar-nav ul li a:hover {
-  text-decoration: underline;
-  color: #fff;
+  padding: 0;
 }
 
 .sidebar-nav ul li {
@@ -33,6 +29,13 @@
   color: #b3b3b3;
   font-size: 16px;
   font-weight: 600;
+  display: inline-flexbox;
+  align-items: center;
+}
+
+.sidebar-nav ul li a:hover {
+  text-decoration: underline;
+  color: #fff;
 }
 
 .sidebar-nav ul li a .icon {
@@ -40,6 +43,7 @@
   margin-right: 10px;
   margin-top: 10px;
   color: #b3b3b3;
+  align-items: center;
 }
 
 .sidebar-nav ul li a span {
