@@ -22,7 +22,9 @@ body {
   background: #181818;
   height: 100vh;
   overflow: auto;
+  margin-top: 10px;
   transition: margin-left 0.3s ease;
+  border-radius: 10px;
 }
 
 .music-control {
