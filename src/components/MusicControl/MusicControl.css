@@ -55,13 +55,14 @@
 }
 
 .progress-container {
-  width: 60vw;
-  max-width: 500px;
+  position: relative;
+  width: 400px;
+  height: 5px;
 }
 
 .progress-bar {
   width: 100%;
-  background-color: #d1d5db;
+  background-color: #d1d5db; /* Default background color */
   border-radius: 9999px;
   -webkit-appearance: none;
   appearance: none;
@@ -73,6 +74,14 @@
 .progress-bar::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
+  width: 15px;
+  height: 15px;
+  background: #065f46;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.progress-bar::-moz-range-thumb {
   width: 15px;
   height: 15px;
   background: #065f46;
@@ -95,13 +104,17 @@
   gap: 1rem;
 }
 
-.volume-bar-container .volume-bar {
+.volume-bar-container {
+  position: relative;
   width: 100px;
+  height: 5px;
+  margin-bottom: 15px;
 }
 
-.volume-bar input {
+.volume-bar {
+  position: relative;
   width: 100%;
-  background-color: #d1d5db;
+  background-color: #d1d5db; /* Default background color */
   border-radius: 9999px;
   -webkit-appearance: none;
   appearance: none;
@@ -110,9 +123,17 @@
   outline: none;
 }
 
-.volume-bar input::-webkit-slider-thumb {
+.volume-bar::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
+  width: 15px;
+  height: 15px;
+  background: #065f46;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.volume-bar::-moz-range-thumb {
   width: 15px;
   height: 15px;
   background: #065f46;

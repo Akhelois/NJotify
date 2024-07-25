@@ -100,6 +100,9 @@ const MusicControl: React.FC = () => {
     return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
   };
 
+  const progressFillWidth = duration ? (currentTime / duration) * 100 : 0;
+  const volumeFillWidth = volume * 100;
+
   return (
     <div className="player">
       <audio
@@ -140,6 +143,9 @@ const MusicControl: React.FC = () => {
               value={currentTime}
               max={duration}
               onChange={handleProgressChange}
+              style={{
+                background: `linear-gradient(to right, #1db954 ${progressFillWidth}%, #d1d5db ${progressFillWidth}%)`,
+              }}
             />
           </div>
           <p>{formatTime(duration)}</p>
@@ -157,16 +163,18 @@ const MusicControl: React.FC = () => {
           <MdOutlineCastConnected className="control-icon" />
         </div>
         <div className="volume-bar-container">
-          <div className="volume-bar">
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={volume}
-              onChange={handleVolumeChange}
-            />
-          </div>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={handleVolumeChange}
+            className="volume-bar"
+            style={{
+              background: `linear-gradient(to right, #1db954 ${volumeFillWidth}%, #d1d5db ${volumeFillWidth}%)`,
+            }}
+          />
         </div>
         <div className="right-icons">
           <CgMiniPlayer className="control-icon" />
