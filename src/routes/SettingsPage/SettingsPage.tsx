@@ -43,7 +43,7 @@ function SettingsPage() {
             </Link>
           </li>
           <li>
-            <Link to="/get-verified" className="menu-button">
+            <Link to="/get_verified_page" className="menu-button">
               <span>Get Verified</span>
             </Link>
           </li>
