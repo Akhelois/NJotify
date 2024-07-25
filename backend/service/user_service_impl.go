@@ -49,6 +49,12 @@ func (c *UserServiceImpl) Create(users request.CreateUserRequest) error {
         DOB:      users.DOB,
         Country:  users.Country,
         Password: string(hashedPassword),
+		Role: users.Role,
+		ProfilePicture: users.ProfilePicture,
+		Description: users.Description,
+		Followers: users.Followers,
+		Following: users.Following,
+		Active: false,
     }
 
     return c.UserRepository.Save(userModel)

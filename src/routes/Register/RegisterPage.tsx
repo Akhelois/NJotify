@@ -144,8 +144,8 @@ function RegisterPage() {
   return (
     <div className="register-page">
       <Navbar />
-      <h2 className="register-title">Sign up to start listening</h2>
       <div className="register-form-container">
+        <h2>Sign up to start listening</h2>
         <button onClick={() => login()} className="google-login-button">
           <img src="./src/assets/google.webp" alt="Google Icon" />
           Continue with Google

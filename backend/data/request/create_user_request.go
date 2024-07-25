@@ -15,6 +15,9 @@ type CreateUserRequest struct {
 	Password string `validate:"required,password" json:"password"`
 	Role string `validate:"required" json:"role"`
 	ProfilePicture string  `validate:"required" json:"profile_picture"`
+	Description string  `validate:"required" json:"description"`
+	Followers int `validate:"required" json:"followers"`
+	Following int `validate:"required" json:"following"`
 }
 
 var validate *validator.Validate

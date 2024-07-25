@@ -10,6 +10,9 @@ type User struct {
 	Password       string `gorm:"type:varchar(255)"`
 	Role           string `gorm:"type:varchar(255)"`
 	ProfilePicture string `gorm:"type:varchar(255)"`
+	Description    string `gorm:"varchar(255)"`
+	Followers      int    `gorm:"type:int"`
+	Following      int    `gorm:"int"`
 	Token          string `gorm:"type:varchar(255)"`
-	Active         bool   `gorm:"type:boolean"`
+	Active         bool   `gorm:"default:false"`
 }

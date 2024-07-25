@@ -10,6 +10,9 @@ type UserResponse struct {
 	Password       string `json:"password"`
 	Role           string `json:"role"`
 	ProfilePicture string `json:"profile_picture"`
+	Description    string `json:"description"`
+	Followers      int    `json:"followers"`
+	Following      int    `json:"following"`
 	Token          string `json:"token"`
 	Active         bool   `json:"active"`
 }
