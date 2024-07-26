@@ -13,6 +13,7 @@ import ProfilePage from "./routes/ProfilePage/ProfilePage";
 import EditProfilePage from "./routes/EditProfile/EditProfile";
 import SettingsPage from "./routes/SettingsPage/SettingsPage";
 import GetVerifiedPage from "./routes/GetVerifiedPage/GetVerifiedPage";
+import NotificationSettings from "./routes/NotificationSettings/NotificationSettings";
 import "./index.css";
 
 const container = document.getElementById("root");
@@ -34,6 +35,7 @@ root.render(
           <Route path="/edit_profile" element={<EditProfilePage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/get_verified_page" element={<GetVerifiedPage />} />
+          <Route path="/notification_settings" element={<NotificationSettings />} />
         </Routes>
       </BrowserRouter>
     </GoogleOAuthProvider>

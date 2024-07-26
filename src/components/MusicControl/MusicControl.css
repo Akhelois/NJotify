@@ -62,7 +62,7 @@
 
 .progress-bar {
   width: 100%;
-  background-color: #d1d5db; /* Default background color */
+  background-color: #d1d5db;
   border-radius: 9999px;
   -webkit-appearance: none;
   appearance: none;

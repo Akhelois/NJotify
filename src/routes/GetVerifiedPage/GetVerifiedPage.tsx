@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import Navbar from "../../components/Navbar/Navbar";
 
-const GetVerifiedPage = () => {
+function GetVerifiedPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const navigate = useNavigate();

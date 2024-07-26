@@ -1,0 +1,99 @@
+.notification-settings-container {
+  color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 0 auto;
+  text-align: left;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: 120px;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 30px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.settings-content {
+  padding: 25px;
+  border-radius: 8px;
+}
+
+h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #b3b3b3;
+}
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.setting-item {
+  padding: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.setting-item h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.setting-options {
+  display: flex;
+  gap: 20px;
+}
+
+.setting-options label {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.setting-options input[type="checkbox"] {
+  margin-right: 10px;
+  width: 18px;
+  height: 18px;
+  accent-color: #1db954;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cancel-button,
+.save-button {
+  background-color: #1db954;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.cancel-button {
+  background-color: #535353;
+}

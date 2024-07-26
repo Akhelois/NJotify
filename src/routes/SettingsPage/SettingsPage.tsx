@@ -54,12 +54,12 @@ function SettingsPage() {
         <h3>Keamanan dan privasi</h3>
         <ul>
           <li>
-            <Link to="/change-password" className="menu-button">
+            <Link to="/reset_password" className="menu-button">
               <span>Change Password</span>
             </Link>
           </li>
           <li>
-            <Link to="/notification-settings" className="menu-button">
+            <Link to="/notification_settings" className="menu-button">
               <span>Notification Settings</span>
             </Link>
           </li>
