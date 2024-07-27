@@ -61,6 +61,11 @@ func (c *UserServiceImpl) Create(users request.CreateUserRequest) error {
 }
 
 func (c *UserServiceImpl) Insert(users request.RegisterRequest, token string) error {
+	existingUser, errr := c.UserRepository.FindUser(users.Email)
+    if errr == nil && existingUser.Email != "" {
+        return fmt.Errorf("the email has already registered")
+    }
+
     err := c.Validate.Struct(users)
     if err != nil {
         return err
