@@ -230,6 +230,7 @@ func (controller *UserController) Register(c *gin.Context) {
     }
 
     token := generateToken()
+    registerRequest.Token = token
 
     err := controller.userService.Insert(registerRequest, token)
     if err != nil {

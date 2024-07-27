@@ -50,7 +50,7 @@ func (c *UserServiceImpl) Create(users request.CreateUserRequest) error {
         Country:  users.Country,
         Password: string(hashedPassword),
 		Role: users.Role,
-		ProfilePicture: users.ProfilePicture,
+		ProfilePicture: []byte(users.ProfilePicture),
 		Description: users.Description,
 		Followers: users.Followers,
 		Following: users.Following,

@@ -9,7 +9,7 @@ type User struct {
 	Country        string `gorm:"type:varchar(255)"`
 	Password       string `gorm:"type:varchar(255)"`
 	Role           string `gorm:"type:varchar(255)"`
-	ProfilePicture string `gorm:"type:varchar(255)"`
+	ProfilePicture []byte `gorm:"type:bytea"`
 	Description    string `gorm:"varchar(255)"`
 	Followers      int    `gorm:"type:int"`
 	Following      int    `gorm:"int"`
