@@ -4,10 +4,12 @@ import Header from "../../components/Header/Header";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import MusicControl from "../../components/MusicControl/MusicControl";
 import FooterHome from "../../components/Footer/FooterHome";
+import EditProfilePicture from "../../components/EditProfilePicture/EditProfilePicture";
 
 function ProfilePage() {
   const [currentPage, setCurrentPage] = useState("profile");
   const [username, setUsername] = useState<string>("");
+  const [isEditPopupVisible, setIsEditPopupVisible] = useState(false);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -28,6 +30,14 @@ function ProfilePage() {
     }
   }, []);
 
+  const handleProfilePicClick = () => {
+    setIsEditPopupVisible(true);
+  };
+
+  const closePopup = () => {
+    setIsEditPopupVisible(false);
+  };
+
   return (
     <div className="profile-page">
       <Sidebar setCurrentPage={setCurrentPage} />
@@ -35,11 +45,16 @@ function ProfilePage() {
         <Header />
         <div className="profile-content">
           <header className="profile-header">
-            <img
-              src="./src/assets/profile.png"
-              alt="profile"
-              className="profile-pic"
-            />
+            <button
+              className="profile-pic-button"
+              onClick={handleProfilePicClick}
+            >
+              <img
+                src="./src/assets/profile.png"
+                alt="profile"
+                className="profile-pic"
+              />
+            </button>
             <h1>{username || "-"}</h1>
           </header>
           <section className="public-playlists">
@@ -62,6 +77,7 @@ function ProfilePage() {
       <div className="music-control">
         <MusicControl />
       </div>
+      {isEditPopupVisible && <EditProfilePicture closePopup={closePopup} />}
     </div>
   );
 }
