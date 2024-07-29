@@ -32,8 +32,25 @@ const EditProfilePicture: React.FC<EditProfilePictureProps> = ({
       return;
     }
 
-    const email = localStorage.getItem("user");
-    if (!email) {
+    // Retrieve and parse email from local storage
+    const user = localStorage.getItem("user");
+    console.log("Local Storage Data:", user); // Debugging line
+
+    let email = "";
+    if (user) {
+      try {
+        const userObj = JSON.parse(user);
+        // Extract email from nested `data` object
+        email = userObj.data?.email || "";
+        console.log("Extracted Email:", email); // Debugging line
+      } catch (error) {
+        setError("Error parsing user data from local storage.");
+        return;
+      }
+    }
+
+    if (!email || !email.includes("@")) {
+      // Basic email validation
       setError("Email not found in local storage.");
       return;
     }

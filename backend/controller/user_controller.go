@@ -450,6 +450,7 @@ func (controller *UserController) EditProfilePicture(ctx *gin.Context) {
     }
 
     email := ctx.Request.FormValue("email")
+    fmt.Println("Received email:", email)
     if email == "" {
         ctx.JSON(http.StatusBadRequest, response.WebResponse{
             Code:   http.StatusBadRequest,
@@ -478,4 +479,3 @@ func (controller *UserController) EditProfilePicture(ctx *gin.Context) {
         Status: "Ok",
     })
 }
-

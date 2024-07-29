@@ -75,12 +75,15 @@ func (c *UserRepositoryImpl) UpdateUser(user model.User) error {
 }
 
 func (c *UserRepositoryImpl) UpdateProfilePicture(profilePicture []byte, email string) error {
+    fmt.Printf("Executing query: UPDATE users SET profile_picture = ? WHERE email = ?\n")
+    fmt.Printf("Parameters: ProfilePicture length = %d, Email = %s\n", len(profilePicture), email)
+    
     query := "UPDATE users SET profile_picture = ? WHERE email = ?"
     err := c.Db.Exec(query, profilePicture, email).Error
     if err != nil {
-        fmt.Println("Failed to update password:", err)
+        fmt.Println("Failed to update profile picture:", err)
     } else {
-        fmt.Println("Profil picture updated successfully for email:", email)
+        fmt.Println("Profile picture updated successfully for email:", email)
     }
     return err
 }
