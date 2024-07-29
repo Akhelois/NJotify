@@ -130,6 +130,7 @@ func (c *UserServiceImpl) FindUser(email string) (response.UserResponse, error) 
 		Email:    user.Email,
 		Password: user.Password,
 		Role: user.Role,
+		ProfilePicture: string(user.ProfilePicture),
 	}
 	return userResponse, nil
 }

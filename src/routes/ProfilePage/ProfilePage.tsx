@@ -1,41 +1,68 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ProfilePage.css";
 import Header from "../../components/Header/Header";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import MusicControl from "../../components/MusicControl/MusicControl";
 import FooterHome from "../../components/Footer/FooterHome";
 import EditProfilePicture from "../../components/EditProfilePicture/EditProfilePicture";
+import fallbackImage from "../../assets/profile.png"; // Ensure this path is correct
 
 function ProfilePage() {
   const [currentPage, setCurrentPage] = useState("profile");
   const [username, setUsername] = useState<string>("");
-  const [profilePicURL, setProfilePicURL] = useState<string>("");
+  const [profilePicURL, setProfilePicURL] = useState<string | null>(null);
   const [isEditPopupVisible, setIsEditPopupVisible] = useState(false);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
-    const savedProfilePicURL = localStorage.getItem("profilePicURL");
 
     if (userData) {
       try {
         const parsedUserData = JSON.parse(userData);
-        if (parsedUserData && parsedUserData.data) {
+        if (parsedUserData?.data) {
           const userData = parsedUserData.data;
           setUsername(userData.username || "");
-        } else {
-          console.error("No 'data' key found in parsed userData.");
+
+          const profilePic = userData.profile_picture;
+          if (profilePic) {
+            if (isBase64Image(profilePic)) {
+              setProfilePicURL(profilePic);
+            } else {
+              convertBinaryToBase64(profilePic);
+            }
+          }
         }
       } catch (error) {
         console.error("Error parsing userData from localStorage:", error);
       }
-    } else {
-      console.error("No user data found in localStorage.");
-    }
-
-    if (savedProfilePicURL) {
-      setProfilePicURL(savedProfilePicURL);
     }
   }, []);
+
+  const isBase64Image = (str: string) => {
+    const base64Pattern = /^data:image\/(png|jpeg|jpg|gif);base64,/;
+    return base64Pattern.test(str);
+  };
+
+  const convertBinaryToBase64 = (binaryData: string) => {
+    const byteNumbers = new Array(binaryData.length);
+    for (let i = 0; i < binaryData.length; i++) {
+      byteNumbers[i] = binaryData.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+
+    const blob = new Blob([byteArray], { type: "image/png" });
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      const base64String = (reader.result as string).split(",")[1];
+      if (base64String) {
+        const dataUrl = `data:image/png;base64,${base64String}`;
+        setProfilePicURL(dataUrl);
+      }
+    };
+
+    reader.readAsDataURL(blob);
+  };
 
   const handleProfilePicClick = () => {
     setIsEditPopupVisible(true);
@@ -47,6 +74,15 @@ function ProfilePage() {
 
   const handleProfilePicUpdate = (newPicURL: string) => {
     setProfilePicURL(newPicURL);
+  };
+
+  const handleImageError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>
+  ) => {
+    const target = e.currentTarget as HTMLImageElement;
+    if (target.src !== fallbackImage) {
+      target.src = fallbackImage;
+    }
   };
 
   return (
@@ -61,9 +97,10 @@ function ProfilePage() {
               onClick={handleProfilePicClick}
             >
               <img
-                src={profilePicURL || "./src/assets/profile.png"}
-                alt="profile"
+                src={profilePicURL || fallbackImage}
+                alt="Profile"
                 className="profile-pic"
+                onError={handleImageError}
               />
             </button>
             <h1>{username || "-"}</h1>
