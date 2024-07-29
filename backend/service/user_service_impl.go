@@ -204,3 +204,13 @@ func (c *UserServiceImpl) EditUser(editUserReq request.EditUserRequest) error {
 
 	return c.UserRepository.UpdateUser(userModel)
 }
+
+func (c *UserServiceImpl) EditProfilePicture(editProfilePictureReq request.EditProfilePicture) error {
+    err := c.Validate.Struct(editProfilePictureReq)
+
+    if err != nil {
+        return err
+    }
+
+    return c.UserRepository.UpdateProfilePicture([]byte(editProfilePictureReq.ProfilePicture), editProfilePictureReq.Email)
+}

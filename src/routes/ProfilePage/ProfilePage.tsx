@@ -9,10 +9,13 @@ import EditProfilePicture from "../../components/EditProfilePicture/EditProfileP
 function ProfilePage() {
   const [currentPage, setCurrentPage] = useState("profile");
   const [username, setUsername] = useState<string>("");
+  const [profilePicURL, setProfilePicURL] = useState<string>("");
   const [isEditPopupVisible, setIsEditPopupVisible] = useState(false);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
+    const savedProfilePicURL = localStorage.getItem("profilePicURL");
+
     if (userData) {
       try {
         const parsedUserData = JSON.parse(userData);
@@ -28,6 +31,10 @@ function ProfilePage() {
     } else {
       console.error("No user data found in localStorage.");
     }
+
+    if (savedProfilePicURL) {
+      setProfilePicURL(savedProfilePicURL);
+    }
   }, []);
 
   const handleProfilePicClick = () => {
@@ -36,6 +43,10 @@ function ProfilePage() {
 
   const closePopup = () => {
     setIsEditPopupVisible(false);
+  };
+
+  const handleProfilePicUpdate = (newPicURL: string) => {
+    setProfilePicURL(newPicURL);
   };
 
   return (
@@ -50,7 +61,7 @@ function ProfilePage() {
               onClick={handleProfilePicClick}
             >
               <img
-                src="./src/assets/profile.png"
+                src={profilePicURL || "./src/assets/profile.png"}
                 alt="profile"
                 className="profile-pic"
               />
@@ -77,7 +88,12 @@ function ProfilePage() {
       <div className="music-control">
         <MusicControl />
       </div>
-      {isEditPopupVisible && <EditProfilePicture closePopup={closePopup} />}
+      {isEditPopupVisible && (
+        <EditProfilePicture
+          closePopup={closePopup}
+          onProfilePicUpdate={handleProfilePicUpdate}
+        />
+      )}
     </div>
   );
 }

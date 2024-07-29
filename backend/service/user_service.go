@@ -15,4 +15,5 @@ type UserService interface {
 	Login(string, string) (response.UserResponse, error)
 	ResetPassword(req request.ResetPasswordRequest) error
 	EditUser(request.EditUserRequest) error
+	EditProfilePicture(request.EditProfilePicture) error
 }

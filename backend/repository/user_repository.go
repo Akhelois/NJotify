@@ -11,4 +11,5 @@ type UserRepository interface {
 	ActivateUser(token string) error
 	FindByToken(token string) (model.User, error)
 	UpdateUser(user model.User) error
+	UpdateProfilePicture([]byte, string) error
 }

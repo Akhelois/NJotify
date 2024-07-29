@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -423,3 +424,58 @@ func (controller *UserController) EditUser(ctx *gin.Context) {
         Status: "Ok",
     })
 }
+
+func (controller *UserController) EditProfilePicture(ctx *gin.Context) {
+    file, _, err := ctx.Request.FormFile("profile_picture")
+    if err != nil {
+        fmt.Println("file upload error:", err)
+        ctx.JSON(http.StatusBadRequest, response.WebResponse{
+            Code:   http.StatusBadRequest,
+            Status: "Bad Request",
+            Data:   "Profile picture is required",
+        })
+        return
+    }
+    defer file.Close()
+
+    fileBytes, err := ioutil.ReadAll(file)
+    if err != nil {
+        fmt.Println("file read error:", err)
+        ctx.JSON(http.StatusInternalServerError, response.WebResponse{
+            Code:   http.StatusInternalServerError,
+            Status: "Internal Server Error",
+            Data:   "Unable to read the file",
+        })
+        return
+    }
+
+    email := ctx.Request.FormValue("email")
+    if email == "" {
+        ctx.JSON(http.StatusBadRequest, response.WebResponse{
+            Code:   http.StatusBadRequest,
+            Status: "Bad Request",
+            Data:   "Email is required",
+        })
+        return
+    }
+
+    err = controller.userService.EditProfilePicture(request.EditProfilePicture{
+        Email:          email,
+        ProfilePicture: fileBytes,
+    })
+    if err != nil {
+        fmt.Println("Service error:", err)
+        ctx.JSON(http.StatusInternalServerError, response.WebResponse{
+            Code:   http.StatusInternalServerError,
+            Status: "Internal Server Error",
+            Data:   err.Error(),
+        })
+        return
+    }
+
+    ctx.JSON(http.StatusOK, response.WebResponse{
+        Code:   http.StatusOK,
+        Status: "Ok",
+    })
+}
+

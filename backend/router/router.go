@@ -34,11 +34,12 @@ func NewRouter(userController *controller.UserController, albumController *contr
 	router.GET("/find", userController.FindAll)
 	router.GET("/find_user", userController.FindUser)
 	router.POST("/users", userController.Create)
-	router.POST("/login", userController.Login)
+	router.POST("/login", userController.Login)	
 	router.POST("/register", userController.Register)
 	router.POST("/forgot_password", userController.ForgotPassword)
 	router.POST("/reset_password", userController.ResetPassword)
 	router.POST("/edit_profile", userController.EditUser)
+	router.POST("/edit_picture_profile", userController.EditProfilePicture)
 
 	// Album
 	router.GET("/find_album", albumController.FindAll)
