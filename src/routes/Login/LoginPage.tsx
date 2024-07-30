@@ -6,6 +6,7 @@ import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useCookies } from "react-cookie";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const nav = useNavigate();
+  const [cookies, setCookies] = useCookies(["Authorization"]);
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000); // Simulate a loading delay
@@ -39,6 +41,8 @@ function LoginPage() {
         const content = await response.json();
         console.log("Received login response:", content.data); // Debugging
         localStorage.setItem("user", JSON.stringify(content));
+        console.log(content.cookie);
+        setCookies("Authorization", content.cookie);
         if (content.data.role == "Listener") nav("/home");
         if (content.data.role == "Admin") nav("/admin_page");
       } else {

@@ -148,12 +148,30 @@ func (controller *UserController) Login(ctx *gin.Context) {
                 })
                 return
             }
+            // fmt.Println(token)
+            // ctx.SetCookie("Authorization", token, 3600, "/", "localhost", false, true)
+            // cookie, err2 := ctx.Cookie("Authorization")
+            
+            http.SetCookie(ctx.Writer, &http.Cookie{
+                Name: "Authorization", 
+                Value: token,
+                MaxAge: 3600,
+                Path: "/",
+                Domain: "localhost",
+                HttpOnly: true,
+            })
+        
+            cookie, err2 := ctx.Request.Cookie("Authorization")
+        
+            fmt.Println(err2)
+            fmt.Println(cookie)
 
-            ctx.SetCookie("Authorization", token, 3600, "/", "localhost", false, true)
+
             ctx.JSON(http.StatusOK, response.WebResponse{
                 Code:   http.StatusOK,
                 Status: "Ok",
                 Data:   userResponse,
+                CokiesToken: token, 
             })
             return
         }
@@ -179,34 +197,37 @@ func (controller *UserController) Login(ctx *gin.Context) {
     }
 
     fmt.Println("User found in database:", userResponse.Email)
-    err = bcrypt.CompareHashAndPassword([]byte(userResponse.Password), []byte(loginReq.Password))
-    if err != nil {
-        fmt.Println("Password comparison failed (database):", err)
-        ctx.JSON(http.StatusUnauthorized, response.WebResponse{
-            Code:   http.StatusUnauthorized,
-            Status: "Unauthorized",
-            Data:   "Invalid email or password",
-        })
-        return
-    }
+    // err = bcrypt.CompareHashAndPassword([]byte(userResponse.Password), []byte(loginReq.Password))
+    // if err != nil {
+    //     fmt.Println("Password comparison failed (database):", err)
+    //     ctx.JSON(http.StatusUnauthorized, response.WebResponse{
+    //         Code:   http.StatusUnauthorized,
+    //         Status: "Unauthorized",
+    //         Data:   "Invalid email or password",
+    //     })
+    //     return
+    // }
 
-    // Successful login
-    token, err := generateJWTToken(userResponse)
-    if err != nil {
-        ctx.JSON(http.StatusInternalServerError, response.WebResponse{
-            Code:   http.StatusInternalServerError,
-            Status: "Internal Server Error",
-            Data:   "Failed to generate token",
-        })
-        return
-    }
+    // // Successful login
+    // token, err := generateJWTToken(userResponse)
+    // if err != nil {
+    //     ctx.JSON(http.StatusInternalServerError, response.WebResponse{
+    //         Code:   http.StatusInternalServerError,
+    //         Status: "Internal Server Error",
+    //         Data:   "Failed to generate token",
+    //     })
+    //     return
+    // }
 
-    ctx.SetCookie("Authorization", token, 3600, "/", "localhost", false, true)
-    ctx.JSON(http.StatusOK, response.WebResponse{
-        Code:   http.StatusOK,
-        Status: "Ok",
-        Data:   userResponse,
-    })
+    // fmt.Println(token)
+    // ctx.SetCookie("Authorization", token, 3600, "/", "localhost", false, true)
+    
+
+    // ctx.JSON(http.StatusOK, response.WebResponse{
+    //     Code:   http.StatusOK,
+    //     Status: "Ok",
+    //     Data:   userResponse,
+    // })
 }
 
 func generateJWTToken(user response.UserResponse) (string, error) {
@@ -478,4 +499,11 @@ func (controller *UserController) EditProfilePicture(ctx *gin.Context) {
         Code:   http.StatusOK,
         Status: "Ok",
     })
+}
+
+func(c *UserController) ValCookies(ctx *gin.Context){
+    cok, err := ctx.Cookie("Authorization")
+
+    fmt.Println(err)
+    fmt.Println(cok)
 }

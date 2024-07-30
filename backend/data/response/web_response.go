@@ -1,7 +1,8 @@
 package response
 
 type WebResponse struct {
-	Code   int         `json:"Code"`
-	Status string      `json:"status"`
-	Data   interface{} `json:"data,omitempty"`
+	Code        int         `json:"Code"`
+	Status      string      `json:"status"`
+	Data        interface{} `json:"data,omitempty"`
+	CokiesToken string      `json:"cookie"`
 }
