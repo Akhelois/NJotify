@@ -10,6 +10,8 @@ function GetVerifiedPage() {
   const [preview, setPreview] = useState<string | null>(null);
   const navigate = useNavigate();
   const [role, setRole] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -19,14 +21,11 @@ function GetVerifiedPage() {
         if (parsedUserData && parsedUserData.data) {
           const userData = parsedUserData.data;
           setRole(String(userData.role || ""));
-        } else {
-          console.error("No 'data' key found in parsed userData.");
+          setUserId(userData.id);
         }
       } catch (error) {
         console.error("Error parsing userData from localStorage:", error);
       }
-    } else {
-      console.error("No user data found in localStorage.");
     }
   }, []);
 
@@ -38,8 +37,49 @@ function GetVerifiedPage() {
     }
   };
 
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!selectedFile || userId === null) {
+      console.error("Profile picture or user ID is required.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(selectedFile);
+    reader.onload = async () => {
+      const base64ProfilePicture = reader.result as string;
+      const payload = {
+        id: userId,
+        role,
+        description,
+        profile_picture: base64ProfilePicture,
+      };
+
+      console.log("Payload:", payload); // Add this line to log the payload
+
+      try {
+        const response = await fetch("http://localhost:8080/get_verified", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (response.ok) {
+          alert("Verification request submitted successfully.");
+        } else {
+          const errorData = await response.json();
+          console.error("Error submitting verification request:", errorData);
+        }
+      } catch (error) {
+        console.error("Error submitting verification request:", error);
+      }
+    };
+  };
+
   const handleBack = () => {
-    navigate(-1); // Undo
+    navigate(-1);
   };
 
   return (
@@ -73,16 +113,24 @@ function GetVerifiedPage() {
           </div>
           <div className="about-you">
             <label>About You</label>
-            <textarea placeholder="Tell us about yourself"></textarea>
+            <textarea
+              placeholder="Tell us about yourself"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            ></textarea>
           </div>
           <div className="actions">
-            <button className="cancel-button">Cancel</button>
-            <button className="verify-button">Get Verified</button>
+            <button className="cancel-button" onClick={handleBack}>
+              Cancel
+            </button>
+            <button className="verify-button" onClick={handleSubmit}>
+              Get Verified
+            </button>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default GetVerifiedPage;

@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -506,4 +507,102 @@ func(c *UserController) ValCookies(ctx *gin.Context){
 
     fmt.Println(err)
     fmt.Println(cok)
+}
+
+func (c *UserController) GetVerified(ctx *gin.Context) {
+    var getVerifiedReq request.GetVerifiedRequest
+
+    if err := ctx.ShouldBindJSON(&getVerifiedReq); err != nil {
+        ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    // Log the request to verify correct data binding
+    fmt.Println("GetVerifiedRequest:", getVerifiedReq)
+
+    verificationKey := fmt.Sprintf("verification:%d", getVerifiedReq.Id)
+    verificationData, err := json.Marshal(getVerifiedReq)
+    if err != nil {
+        ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to serialize verification request"})
+        return
+    }
+    c.client.Set(ctx, verificationKey, verificationData, 0)
+
+    ctx.JSON(http.StatusOK, gin.H{"message": "Verification request cached successfully"})
+}
+
+
+func (c *UserController) GetPendingVerifications(ctx *gin.Context) {
+	keys, err := c.client.Keys(ctx, "verification:*").Result()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch pending verifications"})
+		return
+	}
+
+	var pendingVerifications []request.GetVerifiedRequest
+	for _, key := range keys {
+		data, err := c.client.Get(ctx, key).Result()
+		if err != nil {
+			continue
+		}
+
+		var req request.GetVerifiedRequest
+		if err := json.Unmarshal([]byte(data), &req); err != nil {
+			continue
+		}
+		pendingVerifications = append(pendingVerifications, req)
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": pendingVerifications})
+}
+
+func (c *UserController) ApproveVerification(ctx *gin.Context) {
+    id, err := strconv.Atoi(ctx.Param("id"))
+    if err != nil {
+        ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid verification ID"})
+        return
+    }
+
+    verificationKey := fmt.Sprintf("verification:%d", id)
+    data, err := c.client.Get(ctx, verificationKey).Result()
+    if err != nil {
+        ctx.JSON(http.StatusNotFound, gin.H{"error": "Verification request not found"})
+        return
+    }
+
+    var getVerifiedReq request.GetVerifiedRequest
+    if err := json.Unmarshal([]byte(data), &getVerifiedReq); err != nil {
+        ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to deserialize verification request"})
+        return
+    }
+
+    // Log the request to verify correct data retrieval
+    fmt.Println("Retrieved GetVerifiedRequest:", getVerifiedReq)
+
+    // Process the verification request
+    if err := c.userService.GetVerified(getVerifiedReq); err != nil {
+        ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    // Remove the request from Redis after processing
+    c.client.Del(ctx, verificationKey)
+
+    ctx.JSON(http.StatusOK, gin.H{"message": "Verification approved successfully"})
+}
+
+func (c *UserController) RejectVerification(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid verification ID"})
+		return
+	}
+
+	verificationKey := fmt.Sprintf("verification:%d", id)
+	if err := c.client.Del(ctx, verificationKey).Err(); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete verification request"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Verification rejected successfully"})
 }

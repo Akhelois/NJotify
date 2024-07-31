@@ -12,4 +12,5 @@ type UserRepository interface {
 	FindByToken(token string) (model.User, error)
 	UpdateUser(user model.User) error
 	UpdateProfilePicture([]byte, string) error
+	GetVerified(int, []byte, string) error
 }

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/base64"
 	"fmt"
 	"time"
 
@@ -215,4 +216,19 @@ func (c *UserServiceImpl) EditProfilePicture(editProfilePictureReq request.EditP
     }
 
     return c.UserRepository.UpdateProfilePicture([]byte(editProfilePictureReq.ProfilePicture), editProfilePictureReq.Email)
+}
+
+func (c *UserServiceImpl) GetVerified(getVerifiedReq request.GetVerifiedRequest) error {
+	err := c.Validate.Struct(getVerifiedReq)
+	if err != nil {
+		return err
+	}
+
+	// Decode the base64 string to []byte
+	profilePictureData, err := base64.StdEncoding.DecodeString(string(getVerifiedReq.ProfilePicture))
+	if err != nil {
+		return fmt.Errorf("failed to decode profile picture: %v", err)
+	}
+
+	return c.UserRepository.GetVerified(getVerifiedReq.Id, profilePictureData, getVerifiedReq.Description)
 }

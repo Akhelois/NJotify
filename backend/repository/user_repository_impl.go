@@ -87,3 +87,12 @@ func (c *UserRepositoryImpl) UpdateProfilePicture(profilePicture []byte, email s
     }
     return err
 }
+
+func (c *UserRepositoryImpl) GetVerified(id int, profile_picture []byte, description string) error {
+	query := "UPDATE users SET profile_picture = ?, role = 'Artist', description = ? WHERE id = ?"
+	err := c.Db.Exec(query, profile_picture, description, id).Error
+	if err != nil {
+		fmt.Println("Failed to get verified:", err)
+	}
+	return err
+}

@@ -47,6 +47,12 @@ func NewRouter(userController *controller.UserController, albumController *contr
 	router.GET("/find_album", albumController.FindAll)
 	router.POST("/albums", albumController.Create)
 
+	// Verification
+	router.POST("/get_verified", userController.GetVerified)
+	router.POST("/approve_verification/:id", userController.ApproveVerification)
+	router.DELETE("/reject_verification/:id", userController.RejectVerification)
+	router.GET("/pending_verifications", userController.GetPendingVerifications)
+
 	// Apply Middleware
 	protected := router.Group("/")
 	// Protected routes

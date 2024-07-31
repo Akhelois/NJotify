@@ -16,4 +16,5 @@ type UserService interface {
 	ResetPassword(req request.ResetPasswordRequest) error
 	EditUser(request.EditUserRequest) error
 	EditProfilePicture(request.EditProfilePicture) error
+	GetVerified(request.GetVerifiedRequest) error
 }
