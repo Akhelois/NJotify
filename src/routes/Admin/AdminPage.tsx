@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import Navbar from "../../components/Navbar/Navbar";
 import "./AdminPage.css";
 
 interface VerificationRequest {
@@ -8,7 +9,7 @@ interface VerificationRequest {
   profilePicture: string;
 }
 
-const AdminPage: React.FC = () => {
+function AdminPage() {
   const [pendingVerifications, setPendingVerifications] = useState<
     VerificationRequest[]
   >([]);
@@ -74,6 +75,7 @@ const AdminPage: React.FC = () => {
 
   return (
     <div className="admin-page">
+      <Navbar />
       <h1>Pending Verification Requests</h1>
       <div className="requests-container">
         {pendingVerifications.map((req) => (
@@ -97,6 +99,6 @@ const AdminPage: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default AdminPage;
