@@ -72,18 +72,17 @@ func (controller *UserController) FindAll(ctx *gin.Context) {
 }
 
 func (controller *UserController) FindUser(ctx *gin.Context) {
-    var editProfileReq request.EditUserRequest
-    err := ctx.ShouldBindJSON(&editProfileReq)
-    if err != nil {
+    email := ctx.Query("email")
+    if email == "" {
         ctx.JSON(http.StatusBadRequest, response.WebResponse{
             Code:   http.StatusBadRequest,
             Status: "Bad Request",
-            Data:   err.Error(),
+            Data:   "Email query parameter is required",
         })
         return
     }
 
-    userResponse, err := controller.userService.FindUser(editProfileReq.Email)
+    userResponse, err := controller.userService.FindUser(email)
     if err != nil {
         ctx.JSON(http.StatusNotFound, response.WebResponse{
             Code:   http.StatusNotFound,

@@ -122,21 +122,27 @@ func (c *UserServiceImpl) FindAll() []response.UserResponse {
 }
 
 func (c *UserServiceImpl) FindUser(email string) (response.UserResponse, error) {
-	user, err := c.UserRepository.FindUser(email)
-	if err != nil {
-		return response.UserResponse{}, err
-	}
+    user, err := c.UserRepository.FindUser(email)
+    if err != nil {
+        return response.UserResponse{}, err
+    }
 
-	userResponse := response.UserResponse{
-		Id:       user.Id,
-		Username: user.Username,
-		Email:    user.Email,
-		Password: user.Password,
-		Role: user.Role,
-		ProfilePicture: string(user.ProfilePicture),
-		Token: user.Token,
-	}
-	return userResponse, nil
+    // Convert profile picture to base64 if it exists
+    var profilePictureBase64 string
+    if len(user.ProfilePicture) > 0 {
+        profilePictureBase64 = base64.StdEncoding.EncodeToString(user.ProfilePicture)
+    }
+
+    userResponse := response.UserResponse{
+        Id:             user.Id,
+        Username:       user.Username,
+        Email:          user.Email,
+        Password:       user.Password,
+        Role:           user.Role,
+        ProfilePicture: profilePictureBase64,
+        Token:          user.Token,
+    }
+    return userResponse, nil
 }
 
 func (service *UserServiceImpl) FindByToken(token string) (response.UserResponse, error) {

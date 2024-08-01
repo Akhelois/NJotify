@@ -14,54 +14,64 @@ function ProfilePage() {
   const [isEditPopupVisible, setIsEditPopupVisible] = useState(false);
 
   useEffect(() => {
-    const userData = localStorage.getItem("user");
-
-    if (userData) {
+    const fetchData = async () => {
       try {
-        const parsedUserData = JSON.parse(userData);
-        if (parsedUserData?.data) {
-          const userData = parsedUserData.data;
-          setUsername(userData.username || "");
+        const user = localStorage.getItem("user");
+        if (!user) {
+          console.error("User not found in localStorage");
+          return;
+        }
 
-          const profilePic = userData.profile_picture;
-          if (profilePic) {
-            if (isBase64Image(profilePic)) {
-              setProfilePicURL(profilePic);
-            } else {
-              convertBinaryToBase64(profilePic);
-            }
+        const userObj = JSON.parse(user);
+        console.log("Parsed user object from localStorage:", userObj);
+
+        if (!userObj.data || !userObj.data.email) {
+          console.error("Email not found in user object");
+          return;
+        }
+
+        const email = userObj.data.email;
+
+        const response = await fetch(
+          `http://localhost:8080/find_user?email=${encodeURIComponent(email)}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch user");
+        }
+        const data = await response.json();
+        console.log("User data from backend:", data);
+        if (data.data) {
+          setUsername(data.data.username || "Unknown");
+          if (
+            data.data.profile_picture &&
+            typeof data.data.profile_picture === "string" &&
+            isValidBase64(data.data.profile_picture)
+          ) {
+            console.log(
+              "Valid base64 string for profile picture:",
+              data.data.profile_picture
+            );
+            setProfilePicURL(
+              `data:image/jpeg;base64,${data.data.profile_picture}`
+            );
+          } else {
+            console.log("Invalid or missing base64 string for profile picture");
+            setProfilePicURL(null);
           }
         }
       } catch (error) {
-        console.error("Error parsing userData from localStorage:", error);
-      }
-    }
-  }, []);
-
-  const isBase64Image = (str: string) => {
-    const base64Pattern = /^data:image\/(png|jpeg|jpg|gif);base64,/;
-    return base64Pattern.test(str);
-  };
-
-  const convertBinaryToBase64 = (binaryData: string) => {
-    const byteNumbers = new Array(binaryData.length);
-    for (let i = 0; i < binaryData.length; i++) {
-      byteNumbers[i] = binaryData.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-
-    const blob = new Blob([byteArray], { type: "image/png" });
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      const base64String = (reader.result as string).split(",")[1];
-      if (base64String) {
-        const dataUrl = `data:image/png;base64,${base64String}`;
-        setProfilePicURL(dataUrl);
+        console.error("Error fetching user:", error);
       }
     };
+    fetchData();
+  }, []);
 
-    reader.readAsDataURL(blob);
+  const isValidBase64 = (str: string) => {
+    try {
+      return btoa(atob(str)) === str;
+    } catch (err) {
+      return false;
+    }
   };
 
   const handleProfilePicClick = () => {
