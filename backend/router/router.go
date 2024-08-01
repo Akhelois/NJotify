@@ -38,8 +38,8 @@ func NewRouter(userController *controller.UserController, albumController *contr
 	router.POST("/register", userController.Register)
 	router.POST("/forgot_password", userController.ForgotPassword)
 	router.POST("/reset_password", userController.ResetPassword)
-	// router.POST("/edit_profile", userController.EditUser)
-	// router.POST("/edit_picture_profile", userController.EditProfilePicture)
+	router.POST("/edit_profile", userController.EditUser)
+	router.POST("/edit_picture_profile", userController.EditProfilePicture)
 	
 	router.GET("/get_cookies", userController.ValCookies)
 
@@ -58,8 +58,8 @@ func NewRouter(userController *controller.UserController, albumController *contr
 	// Protected routes
 	protected.Use(middleware.RequireAuth)
 	{
-		protected.POST("/edit_profile", userController.EditUser)
-		protected.POST("/edit_picture_profile", userController.EditProfilePicture)
+		// protected.POST("/edit_profile", userController.EditUser)
+		// protected.POST("/edit_picture_profile", userController.EditProfilePicture)
 		protected.GET("/validate", middleware.RequireAuth , userController.Validate)
 	}
 	// protected.Use(middleware.RequireAuth)
