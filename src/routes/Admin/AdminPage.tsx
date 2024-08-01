@@ -4,9 +4,10 @@ import "./AdminPage.css";
 
 interface VerificationRequest {
   id: number;
-  role: string;
-  description: string;
+  name: string;
   profilePicture: string;
+  followers: number;
+  following: number;
 }
 
 function AdminPage() {
@@ -76,23 +77,35 @@ function AdminPage() {
   return (
     <div className="admin-page">
       <Navbar />
-      <h1>Pending Verification Requests</h1>
-      <div className="requests-container">
+      <div className="artist-list">
+        <h1>Admin Page</h1>
+        <h1>Verify Artist</h1>
         {pendingVerifications.map((req) => (
-          <div key={req.id} className="request-card">
-            <img src={req.profilePicture} alt="Profile" />
-            <p>
-              <strong>ID:</strong> {req.id}
-            </p>
-            <p>
-              <strong>Role:</strong> {req.role}
-            </p>
-            <p>
-              <strong>Description:</strong> {req.description}
-            </p>
+          <div key={req.id} className="artist-item">
+            <img
+              className="artist-avatar"
+              src={req.profilePicture}
+              alt={`${req.name} avatar`}
+            />
+            <div className="artist-info">
+              <p>{req.name}</p>
+              <p>
+                {req.followers} Follower · {req.following} Following
+              </p>
+            </div>
             <div className="actions">
-              <button onClick={() => handleApprove(req.id)}>Approve</button>
-              <button onClick={() => handleReject(req.id)}>Reject</button>
+              <button
+                className="reject-button"
+                onClick={() => handleReject(req.id)}
+              >
+                ✖
+              </button>
+              <button
+                className="approve-button"
+                onClick={() => handleApprove(req.id)}
+              >
+                ✔
+              </button>
             </div>
           </div>
         ))}
