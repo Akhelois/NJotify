@@ -81,40 +81,44 @@ function AdminPage() {
       <div className="artist-list">
         <h1>Admin Page</h1>
         <h1>Verify Artist</h1>
-        {pendingVerifications.map((req) => (
-          <div key={req.id} className="artist-item">
-            <img
-              className="artist-avatar"
-              src={
-                req.profilePicture
-                  ? `data:image/jpeg;base64,${req.profilePicture}`
-                  : fallbackImage
-              }
-              alt={`${req.name} avatar`}
-              onError={(e) => (e.currentTarget.src = fallbackImage)}
-            />
-            <div className="artist-info">
-              <p>{req.name}</p>
-              <p>
-                {req.followers || 0} Follower · {req.following || 0} Following
-              </p>
+        {pendingVerifications.length === 0 ? (
+          <p className="empty-message">Tidak ada data untuk diverifikasi.</p>
+        ) : (
+          pendingVerifications.map((req) => (
+            <div key={req.id} className="artist-item">
+              <img
+                className="artist-avatar"
+                src={
+                  req.profilePicture
+                    ? `data:image/jpeg;base64,${req.profilePicture}`
+                    : fallbackImage
+                }
+                alt={`${req.name} avatar`}
+                onError={(e) => (e.currentTarget.src = fallbackImage)}
+              />
+              <div className="artist-info">
+                <p>{req.name}</p>
+                <p>
+                  {req.followers || 0} Follower · {req.following || 0} Following
+                </p>
+              </div>
+              <div className="actions">
+                <button
+                  className="reject-button"
+                  onClick={() => handleReject(req.id)}
+                >
+                  ✖
+                </button>
+                <button
+                  className="approve-button"
+                  onClick={() => handleApprove(req.id)}
+                >
+                  ✔
+                </button>
+              </div>
             </div>
-            <div className="actions">
-              <button
-                className="reject-button"
-                onClick={() => handleReject(req.id)}
-              >
-                ✖
-              </button>
-              <button
-                className="approve-button"
-                onClick={() => handleApprove(req.id)}
-              >
-                ✔
-              </button>
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
