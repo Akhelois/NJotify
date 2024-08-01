@@ -3,6 +3,8 @@ package service
 import (
 	"encoding/base64"
 	"fmt"
+	"regexp"
+	"strings"
 	"time"
 
 	"github.com/Akhelois/tpaweb/data/request"
@@ -224,11 +226,19 @@ func (c *UserServiceImpl) GetVerified(getVerifiedReq request.GetVerifiedRequest)
 		return err
 	}
 
+	// Validate the ProfilePicture field
+	if !regexp.MustCompile(`^data:image/(jpeg|png|webp);base64,[a-zA-Z0-9+/=]+$`).MatchString(getVerifiedReq.ProfilePicture) {
+		return fmt.Errorf("invalid profile picture data")
+	}
+
+	// Remove the data:image/*;base64, prefix from the ProfilePicture field
+	profilePictureData := strings.Split(getVerifiedReq.ProfilePicture, ",")[1]
+
 	// Decode the base64 string to []byte
-	profilePictureData, err := base64.StdEncoding.DecodeString(string(getVerifiedReq.ProfilePicture))
+	decodedData, err := base64.StdEncoding.DecodeString(profilePictureData)
 	if err != nil {
 		return fmt.Errorf("failed to decode profile picture: %v", err)
 	}
 
-	return c.UserRepository.GetVerified(getVerifiedReq.Id, profilePictureData, getVerifiedReq.Description)
+	return c.UserRepository.GetVerified(getVerifiedReq.Id, decodedData, getVerifiedReq.Description)
 }

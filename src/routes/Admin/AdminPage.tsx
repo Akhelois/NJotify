@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
+import fallbackImage from "../../assets/profile.png";
 import "./AdminPage.css";
 
 interface VerificationRequest {
@@ -84,13 +85,18 @@ function AdminPage() {
           <div key={req.id} className="artist-item">
             <img
               className="artist-avatar"
-              src={req.profilePicture}
+              src={
+                req.profilePicture
+                  ? `data:image/jpeg;base64,${req.profilePicture}`
+                  : fallbackImage
+              }
               alt={`${req.name} avatar`}
+              onError={(e) => (e.currentTarget.src = fallbackImage)}
             />
             <div className="artist-info">
               <p>{req.name}</p>
               <p>
-                {req.followers} Follower · {req.following} Following
+                {req.followers || 0} Follower · {req.following || 0} Following
               </p>
             </div>
             <div className="actions">
