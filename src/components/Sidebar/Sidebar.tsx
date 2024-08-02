@@ -10,6 +10,8 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ setCurrentPage }) => {
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const isArtist = user?.data?.role === "artist";
   return (
     <div className="sidebar">
       <div className="sidebar-nav">
@@ -36,6 +38,13 @@ const Sidebar: React.FC<SidebarProps> = ({ setCurrentPage }) => {
               <span>Search</span>
             </a>
           </li>
+          {isArtist && (
+            <li>
+              <Link to="/your_music" onClick={() => setCurrentPage("artist")}>
+                Your Music
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
       <Library />

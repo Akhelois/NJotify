@@ -1,0 +1,120 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.your-post-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #000;
+  overflow: hidden;
+}
+
+.main {
+  margin-left: 350px;
+  background: #181818;
+  height: 100vh;
+  overflow-y: auto; /* Changed from 'overflow: auto' to 'overflow-y: auto' */
+  transition: margin-left 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .your-post-page {
+    flex-direction: column;
+  }
+
+  .main {
+    margin-left: 0;
+    margin-top: 60px;
+    height: calc(100vh - 60px);
+  }
+}
+
+.music-control {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 70px;
+  background-color: #222;
+  z-index: 1000;
+}
+
+.profile-content {
+  padding: 20px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.profile-pic-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.profile-pic {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+
+.discography {
+  margin-bottom: 40px;
+}
+
+.posts {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.post {
+  background: #181818;
+  padding: 15px;
+  border-radius: 10px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.post-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.post h2 {
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 5px;
+}
+
+.post p {
+  font-size: 14px;
+  color: #b3b3b3;
+  text-align: center;
+}
+
+h1,
+h2 {
+  margin: 0;
+}
+
+h2 {
+  margin-bottom: 10px;
+}

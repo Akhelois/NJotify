@@ -14,7 +14,8 @@ import EditProfilePage from "./routes/EditProfile/EditProfile";
 import SettingsPage from "./routes/SettingsPage/SettingsPage";
 import GetVerifiedPage from "./routes/GetVerifiedPage/GetVerifiedPage";
 import NotificationSettings from "./routes/NotificationSettings/NotificationSettings";
-import { useCookies } from "react-cookie"; 
+import YourPostPage from "./routes/YourPostPage/YourPostPage";
+import { useCookies } from "react-cookie";
 
 const container = document.getElementById("root");
 const root = createRoot(container!);
@@ -24,7 +25,7 @@ interface ProtectedRouteProps {
 }
 
 function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const [cookies] = useCookies(["Authorization"]); 
+  const [cookies] = useCookies(["Authorization"]);
 
   const auth = cookies.Authorization ? true : false;
 
@@ -46,6 +47,7 @@ root.render(
           <Route path="/forgot_account" element={<ForgotAccount />} />
           <Route path="/reset_password" element={<ResetPassword />} />
           <Route path="/activate" element={<ActivationPage />} />
+          <Route path="/your_post" element={<YourPostPage />} />
           <Route
             path="/admin_page"
             element={

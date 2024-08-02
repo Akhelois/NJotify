@@ -45,6 +45,7 @@ function LoginPage() {
         setCookies("Authorization", content.cookie);
         if (content.data.role == "Listener") nav("/home");
         if (content.data.role == "Admin") nav("/admin_page");
+        if (content.data.role == "Artist") nav("/your_post");
       } else {
         const errorText = await response.text();
         console.error(`HTTP error! Status: ${response.status} - ${errorText}`);
