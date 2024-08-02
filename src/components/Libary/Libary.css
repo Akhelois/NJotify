@@ -1,7 +1,7 @@
 .libary::after {
-  /* content: "+"; */
+  content: "+";
   float: right;
-  text-align: center;
+  text-align: right;
   border-radius: 50%;
   font-size: 15px;
 }
