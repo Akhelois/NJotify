@@ -4,7 +4,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import MusicControl from "../../components/MusicControl/MusicControl";
 import Footer from "../../components/Footer/FooterHome";
 import Header from "../../components/Header/Header";
-import fallbackImage from "../../assets/profile.png"; // Ensure this path is correct
+import fallbackImage from "../../assets/profile.png";
 
 function YourPostPage() {
   const [username, setUsername] = useState<string>("");

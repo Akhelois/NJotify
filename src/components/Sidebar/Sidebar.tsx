@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import "./Sidebar.css";
 import { AiFillHome } from "react-icons/ai";
 import { IoSearchSharp } from "react-icons/io5";
@@ -13,13 +13,24 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ setCurrentPage }) => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const isArtist = user?.data?.role === "Artist";
+  const location = useLocation();
+  const [activePage, setActivePage] = useState(location.pathname);
+
+  const handlePageChange = (page: string, path: string) => {
+    setCurrentPage(page);
+    setActivePage(path);
+  };
 
   return (
     <div className="sidebar">
       <div className="sidebar-nav">
         <ul>
           <li>
-            <Link to="/home" onClick={() => setCurrentPage("home")}>
+            <Link
+              to="/home"
+              onClick={() => handlePageChange("home", "/home")}
+              className={activePage === "/home" ? "active" : ""}
+            >
               <span className="icon">
                 <AiFillHome />
               </span>
@@ -27,7 +38,11 @@ const Sidebar: React.FC<SidebarProps> = ({ setCurrentPage }) => {
             </Link>
           </li>
           <li>
-            <a href="#" onClick={() => setCurrentPage("search")}>
+            <a
+              href="#"
+              onClick={() => handlePageChange("search", "#")}
+              className={activePage === "#" ? "active" : ""}
+            >
               <span className="icon">
                 <IoSearchSharp />
               </span>
@@ -36,7 +51,11 @@ const Sidebar: React.FC<SidebarProps> = ({ setCurrentPage }) => {
           </li>
           {isArtist && (
             <li>
-              <Link to="/your_post" onClick={() => setCurrentPage("artist")}>
+              <Link
+                to="/your_post"
+                onClick={() => handlePageChange("artist", "/your_post")}
+                className={activePage === "/your_post" ? "active" : ""}
+              >
                 <span className="icon">
                   <IoMusicalNotes />
                 </span>

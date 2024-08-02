@@ -7,7 +7,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
+  color: #fff;
   padding: 0 1rem;
 }
 
@@ -24,6 +24,10 @@
 
 .song-info p:first-child {
   font-weight: bold;
+}
+
+.song-info p {
+  margin-top: 20px;
 }
 
 .center-section {
@@ -78,7 +82,7 @@
   appearance: none;
   width: 15px;
   height: 15px;
-  background: #065f46;
+  background: #1db954;
   border-radius: 50%;
   cursor: pointer;
 }
@@ -86,7 +90,7 @@
 .progress-bar::-moz-range-thumb {
   width: 15px;
   height: 15px;
-  background: #065f46;
+  background: #1db954;
   border-radius: 50%;
   cursor: pointer;
 }
@@ -116,7 +120,7 @@
 .volume-bar {
   position: relative;
   width: 100%;
-  background-color: #d1d5db; /* Default background color */
+  background-color: #d1d5db;
   border-radius: 9999px;
   -webkit-appearance: none;
   appearance: none;
@@ -130,7 +134,7 @@
   appearance: none;
   width: 15px;
   height: 15px;
-  background: #065f46;
+  background: #1db954;
   border-radius: 50%;
   cursor: pointer;
 }
@@ -138,7 +142,7 @@
 .volume-bar::-moz-range-thumb {
   width: 15px;
   height: 15px;
-  background: #065f46;
+  background: #1db954;
   border-radius: 50%;
   cursor: pointer;
 }

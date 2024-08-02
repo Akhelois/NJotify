@@ -24,7 +24,8 @@
   padding: 10px 20px;
 }
 
-.sidebar-nav ul li a {
+.sidebar-nav ul li a,
+.sidebar-nav ul li a[href="#"] {
   text-decoration: none;
   color: #b3b3b3;
   font-size: 16px;
@@ -41,9 +42,24 @@
 .sidebar-nav ul li a .icon {
   font-size: 20px;
   margin-right: 10px;
+}
+
+.sidebar-nav ul li a:not(.active),
+.sidebar-nav ul li a[href="#"]:not(.active) {
   color: #b3b3b3;
 }
 
-.sidebar-nav ul li a span {
-  font-size: 16px;
+.sidebar-nav ul li a:not(.active) .icon,
+.sidebar-nav ul li a[href="#"]:not(.active) .icon {
+  color: #b3b3b3;
+}
+
+.sidebar-nav ul li a.active,
+.sidebar-nav ul li a[href="#"].active {
+  color: #fff;
+}
+
+.sidebar-nav ul li a.active .icon,
+.sidebar-nav ul li a[href="#"].active .icon {
+  color: #fff;
 }
