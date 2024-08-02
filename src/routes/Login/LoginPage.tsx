@@ -53,7 +53,7 @@ function LoginPage() {
       }
     } catch (error) {
       console.error("Error during fetch:", error);
-      setError("Error occurred during login. Please try again.");
+      setError("Invalid email or password. Please try again.");
     } finally {
       setLoading(false);
     }

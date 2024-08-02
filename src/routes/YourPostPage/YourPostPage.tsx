@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./YourPostPage.css";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import MusicControl from "../../components/MusicControl/MusicControl";
@@ -6,10 +7,17 @@ import Footer from "../../components/Footer/FooterHome";
 import Header from "../../components/Header/Header";
 import fallbackImage from "../../assets/profile.png";
 
+interface Album {
+  id: string;
+  title: string;
+  cover: string | null;
+}
+
 function YourPostPage() {
   const [username, setUsername] = useState<string>("");
   const [profilePicURL, setProfilePicURL] = useState<string | null>(null);
-  const [posts, setPosts] = useState<any[]>([]);
+  const [albums, setAlbums] = useState<Album[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,14 +55,15 @@ function YourPostPage() {
           }
         }
 
-        // const postsResponse = await fetch(
-        //   `http://localhost:8080/get_posts?email=${encodeURIComponent(email)}`
+        // Uncomment and handle this if you want to fetch albums data
+        // const albumsResponse = await fetch(
+        //   `http://localhost:8080/get_albums?email=${encodeURIComponent(email)}`
         // );
-        // if (!postsResponse.ok) {
-        //   throw new Error("Failed to fetch posts");
+        // if (!albumsResponse.ok) {
+        //   throw new Error("Failed to fetch albums");
         // }
-        // const postsData = await postsResponse.json();
-        // setPosts(postsData.data);
+        // const albumsData = await albumsResponse.json();
+        // setAlbums(albumsData.data);
       } catch (error) {
         console.error("Error fetching data:", error);
         setProfilePicURL(fallbackImage);
@@ -72,6 +81,10 @@ function YourPostPage() {
     }
   };
 
+  const handleCreateAlbumClick = () => {
+    navigate("/create_album_page");
+  };
+
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>
   ) => {
@@ -84,8 +97,8 @@ function YourPostPage() {
   return (
     <div className="your-post-page">
       <Sidebar
-        setCurrentPage={function (page: string): void {
-          throw new Error("Function not implemented.");
+        setCurrentPage={(page: string) => {
+          console.log("Set current page to:", page);
         }}
       />
       <div className="main">
@@ -99,6 +112,7 @@ function YourPostPage() {
               onError={handleImageError}
             />
             <div className="banner-text">
+              <h6>Verified Artist</h6>
               <h1>Hi, {username}</h1>
             </div>
           </div>
@@ -106,22 +120,24 @@ function YourPostPage() {
         <div className="profile-content">
           <div className="discography">
             <h2>Discography</h2>
-            <div className="posts">
-              {posts.length > 0 ? (
-                posts.map((post) => (
-                  <div key={post.id} className="post">
+            <div className="albums">
+              <div
+                className="album create-album"
+                onClick={handleCreateAlbumClick}
+              >
+                <div className="create-album-icon">+</div>
+              </div>
+              {albums.length > 0 &&
+                albums.map((album) => (
+                  <div key={album.id} className="album">
                     <img
-                      src={post.image}
-                      alt={post.title}
-                      className="post-image"
+                      src={album.cover || fallbackImage}
+                      alt={album.title}
+                      className="album-image"
                     />
-                    <h2>{post.title}</h2>
-                    <p>{post.description}</p>
+                    <h2>{album.title}</h2>
                   </div>
-                ))
-              ) : (
-                <p>No posts available</p>
-              )}
+                ))}
             </div>
           </div>
         </div>
