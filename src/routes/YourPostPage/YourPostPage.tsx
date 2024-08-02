@@ -3,7 +3,8 @@ import "./YourPostPage.css";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import MusicControl from "../../components/MusicControl/MusicControl";
 import Footer from "../../components/Footer/FooterHome";
-import fallbackImage from "../../assets/profile.png";
+import Header from "../../components/Header/Header";
+import fallbackImage from "../../assets/profile.png"; // Ensure this path is correct
 
 function YourPostPage() {
   const [username, setUsername] = useState<string>("");
@@ -22,37 +23,41 @@ function YourPostPage() {
         const userObj = JSON.parse(user);
         const email = userObj.data.email;
 
-        const userResponse = await fetch(
+        const response = await fetch(
           `http://localhost:8080/find_user?email=${encodeURIComponent(email)}`
         );
-        if (!userResponse.ok) {
+        if (!response.ok) {
           throw new Error("Failed to fetch user");
         }
-        const userData = await userResponse.json();
-        setUsername(userData.data.username || "Unknown");
+        const data = await response.json();
 
-        const postsResponse = await fetch(
-          `http://localhost:8080/get_posts?email=${encodeURIComponent(email)}`
-        );
-        if (!postsResponse.ok) {
-          throw new Error("Failed to fetch posts");
-        }
-        const postsData = await postsResponse.json();
-        setPosts(postsData.data);
+        if (data.data) {
+          setUsername(data.data.username || "Unknown");
 
-        if (
-          userData.data.profile_picture &&
-          typeof userData.data.profile_picture === "string" &&
-          isValidBase64(userData.data.profile_picture)
-        ) {
-          setProfilePicURL(
-            `data:image/jpeg;base64,${userData.data.profile_picture}`
-          );
-        } else {
-          setProfilePicURL(null);
+          if (
+            data.data.profile_picture &&
+            typeof data.data.profile_picture === "string" &&
+            isValidBase64(data.data.profile_picture)
+          ) {
+            setProfilePicURL(
+              `data:image/jpeg;base64,${data.data.profile_picture}`
+            );
+          } else {
+            setProfilePicURL(fallbackImage);
+          }
         }
+
+        // const postsResponse = await fetch(
+        //   `http://localhost:8080/get_posts?email=${encodeURIComponent(email)}`
+        // );
+        // if (!postsResponse.ok) {
+        //   throw new Error("Failed to fetch posts");
+        // }
+        // const postsData = await postsResponse.json();
+        // setPosts(postsData.data);
       } catch (error) {
         console.error("Error fetching data:", error);
+        setProfilePicURL(fallbackImage);
       }
     };
 
@@ -84,18 +89,21 @@ function YourPostPage() {
         }}
       />
       <div className="main">
+        <div className="header-banner">
+          <Header />
+          <div className="banner">
+            <img
+              src={profilePicURL || fallbackImage}
+              alt="Profile"
+              className="banner-image"
+              onError={handleImageError}
+            />
+            <div className="banner-text">
+              <h1>Hi, {username}</h1>
+            </div>
+          </div>
+        </div>
         <div className="profile-content">
-          <header className="profile-header">
-            <button className="profile-pic-button">
-              <img
-                src={profilePicURL || fallbackImage}
-                alt="Profile"
-                className="profile-pic"
-                onError={handleImageError}
-              />
-            </button>
-            <h1>Hi, {username}</h1>
-          </header>
           <div className="discography">
             <h2>Discography</h2>
             <div className="posts">

@@ -36,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setCurrentPage }) => {
           </li>
           {isArtist && (
             <li>
-              <Link to="/your_music" onClick={() => setCurrentPage("artist")}>
+              <Link to="/your_post" onClick={() => setCurrentPage("artist")}>
                 <span className="icon">
                   <IoMusicalNotes />
                 </span>

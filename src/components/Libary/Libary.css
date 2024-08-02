@@ -1,6 +1,4 @@
 .libary::after {
-  content: "+";
-  float: right;
   text-align: right;
   border-radius: 50%;
   font-size: 15px;
