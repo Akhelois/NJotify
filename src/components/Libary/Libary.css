@@ -1,5 +1,5 @@
 .libary::after {
-  content: "+";
+  /* content: "+"; */
   float: right;
   text-align: center;
   border-radius: 50%;

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import "./YourPostPage.css";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import MusicControl from "../../components/MusicControl/MusicControl";
-import fallbackImage from "../../assets/profile.png"; // Ensure this path is correct
+import Footer from "../../components/Footer/FooterHome";
+import fallbackImage from "../../assets/profile.png";
 
 function YourPostPage() {
   const [username, setUsername] = useState<string>("");
@@ -116,6 +117,7 @@ function YourPostPage() {
             </div>
           </div>
         </div>
+        <Footer />
       </div>
       <div className="music-control">
         <MusicControl />

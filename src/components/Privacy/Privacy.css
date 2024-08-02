@@ -1,9 +1,12 @@
+
 .privacy ul li a {
   text-decoration: none;
   color: #6c6868;
   font-size: 12px;
   font-weight: 600;
   margin: 0 5px;
+  display: inline-block;
+  flex-direction: row;
 }
 
 .privacy ul li a:hover {

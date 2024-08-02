@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./Sidebar.css";
 import { AiFillHome } from "react-icons/ai";
 import { IoSearchSharp } from "react-icons/io5";
+import { IoMusicalNotes } from "react-icons/io5";
 import Library from "../Libary/Libary";
 
 interface SidebarProps {
@@ -11,7 +12,8 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ setCurrentPage }) => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const isArtist = user?.data?.role === "artist";
+  const isArtist = user?.data?.role === "Artist";
+
   return (
     <div className="sidebar">
       <div className="sidebar-nav">
@@ -25,12 +27,6 @@ const Sidebar: React.FC<SidebarProps> = ({ setCurrentPage }) => {
             </Link>
           </li>
           <li>
-            {/* <Link to="/search" onClick={() => setCurrentPage("search")}>
-              <span className="icon">
-                <IoSearchSharp />
-              </span>
-              <span>Search</span>
-            </Link> */}
             <a href="#" onClick={() => setCurrentPage("search")}>
               <span className="icon">
                 <IoSearchSharp />
@@ -41,6 +37,9 @@ const Sidebar: React.FC<SidebarProps> = ({ setCurrentPage }) => {
           {isArtist && (
             <li>
               <Link to="/your_music" onClick={() => setCurrentPage("artist")}>
+                <span className="icon">
+                  <IoMusicalNotes />
+                </span>
                 Your Music
               </Link>
             </li>
