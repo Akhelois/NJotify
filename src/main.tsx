@@ -15,6 +15,7 @@ import SettingsPage from "./routes/SettingsPage/SettingsPage";
 import GetVerifiedPage from "./routes/GetVerifiedPage/GetVerifiedPage";
 import NotificationSettings from "./routes/NotificationSettings/NotificationSettings";
 import YourPostPage from "./routes/YourPostPage/YourPostPage";
+import CreateNewMusicPage from "./routes/CreateNewMusicPage/CreateNewMusicPage";
 import { useCookies } from "react-cookie";
 
 const container = document.getElementById("root");
@@ -48,6 +49,10 @@ root.render(
           <Route path="/reset_password" element={<ResetPassword />} />
           <Route path="/activate" element={<ActivationPage />} />
           <Route path="/your_post" element={<YourPostPage />} />
+          <Route
+            path="/create_new_music_page"
+            element={<CreateNewMusicPage />}
+          />
           <Route
             path="/admin_page"
             element={

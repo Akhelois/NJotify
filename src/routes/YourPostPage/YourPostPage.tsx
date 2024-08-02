@@ -82,7 +82,7 @@ function YourPostPage() {
   };
 
   const handleCreateAlbumClick = () => {
-    navigate("/create_album_page");
+    navigate("/create_new_music_page");
   };
 
   const handleImageError = (
