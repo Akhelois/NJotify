@@ -9,7 +9,9 @@ import Header from "../../components/Header/Header";
 const CreateNewMusicPage = () => {
   const [title, setTitle] = useState<string>("");
   const [collectionType, setCollectionType] = useState<string>("Album");
-  const [tracks, setTracks] = useState<string[]>([""]);
+  const [tracks, setTracks] = useState<{ name: string; file: File | null }[]>([
+    { name: "", file: null },
+  ]);
   const [mainImage, setMainImage] = useState<File | null>(null);
   const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
   const [trackError, setTrackError] = useState<string | null>(null);
@@ -24,15 +26,27 @@ const CreateNewMusicPage = () => {
     }
   };
 
-  const handleTrackChange = (index: number, value: string) => {
+  const handleTrackNameChange = (index: number, value: string) => {
     const newTracks = [...tracks];
-    newTracks[index] = value;
+    newTracks[index].name = value;
     setTracks(newTracks);
+  };
+
+  const handleTrackFileChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const newTracks = [...tracks];
+      newTracks[index].file = file;
+      setTracks(newTracks);
+    }
   };
 
   const addTrack = () => {
     if (isValidTrackCount(tracks.length + 1)) {
-      setTracks([...tracks, ""]);
+      setTracks([...tracks, { name: "", file: null }]);
       setTrackError(null);
     } else {
       setTrackError(
@@ -98,16 +112,16 @@ const CreateNewMusicPage = () => {
     if (!isValidTrackCount(tracks.length)) {
       switch (collectionType) {
         case "Single":
-          setTracks(Array(1).fill(""));
+          setTracks(Array(1).fill({ name: "", file: null }));
           break;
         case "EP":
-          setTracks(Array(4).fill(""));
+          setTracks(Array(4).fill({ name: "", file: null }));
           break;
         case "Album":
-          setTracks(Array(7).fill(""));
+          setTracks(Array(7).fill({ name: "", file: null }));
           break;
         default:
-          setTracks([""]);
+          setTracks([{ name: "", file: null }]);
           break;
       }
       setTrackError(null);
@@ -170,10 +184,27 @@ const CreateNewMusicPage = () => {
                 <div key={index} className="track">
                   <input
                     type="text"
-                    value={track}
-                    onChange={(e) => handleTrackChange(index, e.target.value)}
+                    placeholder="Track Name"
+                    value={track.name}
+                    onChange={(e) =>
+                      handleTrackNameChange(index, e.target.value)
+                    }
                   />
-                  <button className="upload-mp3-button">Upload MP3</button>
+                  <input
+                    type="file"
+                    accept=".mp3"
+                    onChange={(e) => handleTrackFileChange(index, e)}
+                    style={{ display: "none" }}
+                    id={`track-file-${index}`}
+                  />
+                  <button
+                    className="upload-mp3-button"
+                    onClick={() =>
+                      document.getElementById(`track-file-${index}`)?.click()
+                    }
+                  >
+                    Upload MP3
+                  </button>
                   <button
                     className="remove-track-button"
                     onClick={() => removeTrack(index)}
