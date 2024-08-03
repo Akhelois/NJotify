@@ -63,7 +63,13 @@ func main() {
 	albumService := service.NewAlbumServiceImpl(albumRepository, validate)
 	albumController := controller.NewAlbumController(albumService)
 
-	routes := router.NewRouter(userController, albumController)
+	// Track
+	db.AutoMigrate(&model.Track{})
+	trackRepository := repository.NewTrackRepositoryImpl(db)
+	trackService := service.NewTrackServiceImpl(trackRepository, validate)
+	trackController := controller.NewTrackController(trackService)
+
+	routes := router.NewRouter(userController, albumController, trackController)
 
 	server := &http.Server{
 		Addr:    ":8080",

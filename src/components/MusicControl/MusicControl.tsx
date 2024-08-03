@@ -47,7 +47,7 @@ const MusicControl: React.FC = () => {
 
   const fetchAlbumImage = async () => {
     try {
-      const response = await fetch("http://localhost:8080/find_album");
+      const response = await fetch("http://localhost:8080/find_all_album");
       if (!response.ok) {
         throw new Error("Failed to fetch album image");
       }

@@ -17,7 +17,7 @@ func SecurityHeaders() gin.HandlerFunc {
 	}
 }
 
-func NewRouter(userController *controller.UserController, albumController *controller.AlbumController) *gin.Engine {
+func NewRouter(userController *controller.UserController, albumController *controller.AlbumController, trackController *controller.TrackController) *gin.Engine {
 	router := gin.Default()
 
 	router.Use(SecurityHeaders())
@@ -44,8 +44,12 @@ func NewRouter(userController *controller.UserController, albumController *contr
 	router.GET("/get_cookies", userController.ValCookies)
 
 	// Album
-	router.GET("/find_album", albumController.FindAll)
+	router.GET("/find_all_album", albumController.FindAll)
 	router.POST("/albums", albumController.Create)
+
+	// Track
+	router.GET("/find_all_track", trackController.FindAll)
+	router.POST("/tracks", trackController.Create)
 
 	// Verification
 	router.POST("/get_verified", userController.GetVerified)

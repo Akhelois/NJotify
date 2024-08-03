@@ -27,8 +27,11 @@ func (c *AlbumServiceImpl) Create(albums request.CreateAlbumRequest) error {
 	}
 
 	albumModel := model.Album{
+		UserID: albums.UserID,
 		AlbumName:  albums.AlbumName,
-		AlbumImage: albums.AlbumImage,
+		AlbumImage: []byte(albums.AlbumImage),
+		AlbumYear: albums.AlbumYear,
+		CollectionType: albums.CollectionType,
 	}
 
 	return c.AlbumRepository.Save(albumModel)
@@ -44,8 +47,10 @@ func (c *AlbumServiceImpl) FindAll() []response.AlbumResponse {
 	for _, value := range result {
 		album := response.AlbumResponse{
 			AlbumID:    value.AlbumID,
+			UserID: value.UserID,
 			AlbumName:  value.AlbumName,
-			AlbumImage: value.AlbumImage,
+			AlbumImage: string(value.AlbumImage),
+			CollectionType: value.AlbumYear,
 		}
 
 		albums = append(albums, album)
