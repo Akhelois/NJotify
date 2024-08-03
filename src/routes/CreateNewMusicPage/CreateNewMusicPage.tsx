@@ -5,6 +5,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import MusicControl from "../../components/MusicControl/MusicControl";
 import Footer from "../../components/Footer/FooterHome";
 import Header from "../../components/Header/Header";
+import { FaCamera } from "react-icons/fa";
 
 const CreateNewMusicPage = () => {
   const [title, setTitle] = useState<string>("");
@@ -150,7 +151,9 @@ const CreateNewMusicPage = () => {
                 />
               ) : (
                 <div className="upload-placeholder">
-                  <i className="fa fa-camera" aria-hidden="true"></i>
+                  <i className="fa fa-camera" aria-hidden="true">
+                    <FaCamera size={50} />
+                  </i>
                   <p>Upload Collection Main Image</p>
                 </div>
               )}
