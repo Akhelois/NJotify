@@ -46,10 +46,12 @@ func NewRouter(userController *controller.UserController, albumController *contr
 	// Album
 	router.GET("/find_all_album", albumController.FindAll)
 	router.POST("/albums", albumController.Create)
+	router.POST("/insert_album", albumController.Insert)
 
 	// Track
 	router.GET("/find_all_track", trackController.FindAll)
 	router.POST("/tracks", trackController.Create)
+	router.POST("/insert_track", trackController.Insert)
 
 	// Verification
 	router.POST("/get_verified", userController.GetVerified)

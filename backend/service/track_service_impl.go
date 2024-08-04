@@ -6,6 +6,7 @@ import (
 	"github.com/Akhelois/tpaweb/model"
 	"github.com/Akhelois/tpaweb/repository"
 	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 )
 
 type TrackServiceImpl struct {
@@ -23,14 +24,19 @@ func NewTrackServiceImpl(trackRepository repository.TrackRepository, validate *v
 func (t *TrackServiceImpl) Create(tracks request.CreateTrackRequest) error {
 	err := t.Validate.Struct(tracks)
 	if err != nil {
-		return nil
+		return err
 	}
 
-	trackModel := model.Track {
-		AlbumID: tracks.AlbumID,
+	albumID, err := uuid.Parse(tracks.AlbumID)
+	if err != nil {
+		return err
+	}
+
+	trackModel := model.Track{
+		AlbumID:   albumID,
 		TrackName: tracks.TrackName,
 		TrackSong: []byte(tracks.TrackSong),
-		Duration: tracks.Duration,
+		Duration:  tracks.Duration,
 	}
 
 	return t.TrackRepository.Save(trackModel)
@@ -45,8 +51,8 @@ func (t *TrackServiceImpl) FindAll() []response.TrackResponse {
 	var tracks []response.TrackResponse
 	for _, value := range result {
 		track := response.TrackResponse {
-			TrackID: value.TrackID,
-			AlbumID: value.AlbumID,
+			TrackID: value.TrackID.String(),
+			AlbumID: value.AlbumID.String(),
 			TrackName: value.TrackName,
 			TrackSong: string(value.TrackSong),
 			Duration: value.Duration,
@@ -56,4 +62,26 @@ func (t *TrackServiceImpl) FindAll() []response.TrackResponse {
 	}
 
 	return tracks
+}
+
+func (t *TrackServiceImpl) Insert(tracks request.CreateTrackRequest) error {
+	err := t.Validate.Struct(tracks)
+
+	if err != nil {
+		return err
+	}
+
+	albumID, err := uuid.Parse(tracks.AlbumID)
+	if err != nil {
+		return err
+	}
+
+	trackModel := model.Track{
+		AlbumID: albumID,
+		TrackName: tracks.TrackName,
+		TrackSong: []byte(tracks.TrackSong),
+		Duration: tracks.Duration,
+	}
+
+	return t.TrackRepository.Insert(trackModel)
 }

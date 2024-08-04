@@ -6,6 +6,7 @@ import (
 	"github.com/Akhelois/tpaweb/model"
 	"github.com/Akhelois/tpaweb/repository"
 	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 )
 
 type AlbumServiceImpl struct {
@@ -20,21 +21,28 @@ func NewAlbumServiceImpl(albumRepository repository.AlbumRepository, validate *v
 	}
 }
 
-func (c *AlbumServiceImpl) Create(albums request.CreateAlbumRequest) error {
-	err := c.Validate.Struct(albums)
-	if err != nil {
-		return err
-	}
+func (c *AlbumServiceImpl) Create(album request.CreateAlbumRequest) (string, error) {
+    err := c.Validate.Struct(album)
+    if err != nil {
+        return "", err
+    }
 
-	albumModel := model.Album{
-		UserID: albums.UserID,
-		AlbumName:  albums.AlbumName,
-		AlbumImage: []byte(albums.AlbumImage),
-		AlbumYear: albums.AlbumYear,
-		CollectionType: albums.CollectionType,
-	}
+    albumID := uuid.New()
+    albumModel := model.Album{
+        AlbumID:        albumID,
+        UserID:         album.UserID,
+        AlbumName:      album.AlbumName,
+        AlbumImage:     []byte(album.AlbumImage),
+        AlbumYear:      album.AlbumYear,
+        CollectionType: album.CollectionType,
+    }
 
-	return c.AlbumRepository.Save(albumModel)
+    err = c.AlbumRepository.Save(albumModel)
+    if err != nil {
+        return "", err
+    }
+
+    return albumID.String(), nil
 }
 
 func (c *AlbumServiceImpl) FindAll() []response.AlbumResponse {
@@ -46,15 +54,32 @@ func (c *AlbumServiceImpl) FindAll() []response.AlbumResponse {
 	var albums []response.AlbumResponse
 	for _, value := range result {
 		album := response.AlbumResponse{
-			AlbumID:    value.AlbumID,
-			UserID: value.UserID,
-			AlbumName:  value.AlbumName,
-			AlbumImage: string(value.AlbumImage),
-			CollectionType: value.AlbumYear,
+			AlbumID:         value.AlbumID.String(),
+			UserID:          value.UserID,
+			AlbumName:       value.AlbumName,
+			AlbumImage:      string(value.AlbumImage),
+			CollectionType:  value.CollectionType,
 		}
 
 		albums = append(albums, album)
 	}
 
 	return albums
+}
+
+func (c *AlbumServiceImpl) Insert(album request.CreateAlbumRequest) error {
+	err := c.Validate.Struct(album)
+	if err != nil {
+		return err
+	}
+
+	albumModel := model.Album{
+		UserID:          album.UserID,
+		AlbumName:       album.AlbumName,
+		AlbumImage:      []byte(album.AlbumImage),
+		AlbumYear:       album.AlbumYear, 
+		CollectionType:  album.CollectionType,
+	}
+
+	return c.AlbumRepository.Insert(albumModel)
 }

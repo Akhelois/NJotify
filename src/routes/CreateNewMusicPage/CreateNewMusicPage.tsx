@@ -8,6 +8,7 @@ import Header from "../../components/Header/Header";
 import { FaCamera } from "react-icons/fa";
 
 const CreateNewMusicPage = () => {
+  const [id, setId] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [collectionType, setCollectionType] = useState<string>("Album");
   const [tracks, setTracks] = useState<{ name: string; file: File | null }[]>([
@@ -18,6 +19,39 @@ const CreateNewMusicPage = () => {
   const [trackError, setTrackError] = useState<string | null>(null);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const user = localStorage.getItem("user");
+        if (!user) {
+          console.error("User not found in localStorage");
+          return;
+        }
+
+        const userObj = JSON.parse(user);
+        const email = userObj.data.email;
+
+        const response = await fetch(
+          `http://localhost:8080/find_user?email=${encodeURIComponent(email)}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch user");
+        }
+        const data = await response.json();
+
+        console.log("User data:", data); // Add this line
+        if (data.data) {
+          setId(data.data.id || "Unknown");
+          console.log("ID set to:", data.data.id); // Add this line
+        }
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleMainImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -63,7 +97,12 @@ const CreateNewMusicPage = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (!id || id === "Unknown") {
+      console.error("User ID is invalid or missing.");
+      return;
+    }
+
     if (!isValidTrackCount(tracks.length)) {
       setTrackError(
         `For ${collectionType}, you need between ${getTrackLimits()} tracks.`
@@ -71,12 +110,79 @@ const CreateNewMusicPage = () => {
       return;
     }
     setTrackError(null);
-    console.log({
-      title,
-      collectionType,
-      tracks,
-      mainImage,
-    });
+
+    try {
+      // Prepare album data
+      const albumFormData = new FormData();
+      albumFormData.append("user_id", id);
+      albumFormData.append("album_name", title);
+      albumFormData.append("collection_type", collectionType);
+
+      const albumYear = new Date().getFullYear().toString();
+      albumFormData.append("album_year", albumYear);
+
+      if (mainImage) {
+        albumFormData.append("album_image", mainImage);
+      }
+
+      // Debugging: Log the form data
+      albumFormData.forEach((value, key) => {
+        console.log("Album FormData:", key, value);
+      });
+
+      // Create the album
+      const albumResponse = await fetch("http://localhost:8080/albums", {
+        method: "POST",
+        body: albumFormData,
+      });
+
+      if (!albumResponse.ok) {
+        const errorText = await albumResponse.text();
+        throw new Error(`Failed to create album: ${errorText}`);
+      }
+
+      const albumData = await albumResponse.json();
+      const albumID = albumData.data.albumID;
+
+      if (!albumID) {
+        throw new Error("Album ID not received from server.");
+      }
+
+      console.log("Album created with ID:", albumID);
+
+      // Create tracks
+      for (const track of tracks) {
+        const trackFormData = new FormData();
+        trackFormData.append("album_id", albumID);
+        trackFormData.append("track_name", track.name);
+
+        if (track.file) {
+          trackFormData.append("track_song", track.file);
+        }
+
+        // Debugging: Log track data
+        trackFormData.forEach((value, key) => {
+          console.log("Track FormData:", key, value);
+        });
+
+        const trackResponse = await fetch("http://localhost:8080/tracks", {
+          method: "POST",
+          body: trackFormData,
+        });
+
+        if (!trackResponse.ok) {
+          const errorText = await trackResponse.text();
+          throw new Error(`Failed to create track: ${errorText}`);
+        }
+
+        console.log("Track created:", await trackResponse.json());
+      }
+
+      // Navigate to the next page on successful creation
+      navigate("/your_post");
+    } catch (error) {
+      console.error("Error creating album and tracks:", error);
+    }
   };
 
   const handleCancel = () => {
@@ -151,9 +257,7 @@ const CreateNewMusicPage = () => {
                 />
               ) : (
                 <div className="upload-placeholder">
-                  <i className="fa fa-camera" aria-hidden="true">
-                    <FaCamera size={50} />
-                  </i>
+                  <FaCamera size={50} />
                   <p>Upload Collection Main Image</p>
                 </div>
               )}
@@ -172,9 +276,7 @@ const CreateNewMusicPage = () => {
               <label>Collection Type</label>
               <select
                 value={collectionType}
-                onChange={(e) => {
-                  setCollectionType(e.target.value);
-                }}
+                onChange={(e) => setCollectionType(e.target.value)}
               >
                 <option value="Album">Album</option>
                 <option value="Single">Single</option>
