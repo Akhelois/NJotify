@@ -40,10 +40,8 @@ const CreateNewMusicPage = () => {
         }
         const data = await response.json();
 
-        console.log("User data:", data); // Add this line
         if (data.data) {
           setId(data.data.id || "Unknown");
-          console.log("ID set to:", data.data.id); // Add this line
         }
       } catch (error) {
         console.error("Failed to fetch user data:", error);
@@ -62,9 +60,11 @@ const CreateNewMusicPage = () => {
   };
 
   const handleTrackNameChange = (index: number, value: string) => {
-    const newTracks = [...tracks];
-    newTracks[index].name = value;
-    setTracks(newTracks);
+    setTracks((prevTracks) => {
+      const newTracks = [...prevTracks];
+      newTracks[index] = { ...newTracks[index], name: value };
+      return newTracks;
+    });
   };
 
   const handleTrackFileChange = (
@@ -73,15 +73,17 @@ const CreateNewMusicPage = () => {
   ) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      const newTracks = [...tracks];
-      newTracks[index].file = file;
-      setTracks(newTracks);
+      setTracks((prevTracks) => {
+        const newTracks = [...prevTracks];
+        newTracks[index] = { ...newTracks[index], file: file };
+        return newTracks;
+      });
     }
   };
 
   const addTrack = () => {
     if (isValidTrackCount(tracks.length + 1)) {
-      setTracks([...tracks, { name: "", file: null }]);
+      setTracks((prevTracks) => [...prevTracks, { name: "", file: null }]);
       setTrackError(null);
     } else {
       setTrackError(
@@ -92,7 +94,7 @@ const CreateNewMusicPage = () => {
 
   const removeTrack = (index: number) => {
     if (tracks.length > 1) {
-      setTracks(tracks.filter((_, i) => i !== index));
+      setTracks((prevTracks) => prevTracks.filter((_, i) => i !== index));
       setTrackError(null);
     }
   };
