@@ -34,8 +34,8 @@ func (c *AlbumController) Create(ctx *gin.Context) {
     userIDStr := ctx.Request.FormValue("user_id")
     albumName := ctx.Request.FormValue("album_name")
     albumImage, _, err := ctx.Request.FormFile("album_image")
-    if err != nil {
-        ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+    if err != nil && albumImage == nil {
+        ctx.JSON(http.StatusBadRequest, gin.H{"error": "Album image is required"})
         return
     }
     collectionType := ctx.Request.FormValue("collection_type")

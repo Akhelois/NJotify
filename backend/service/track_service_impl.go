@@ -33,10 +33,10 @@ func (t *TrackServiceImpl) Create(tracks request.CreateTrackRequest) error {
 	}
 
 	trackModel := model.Track{
+		TrackID: uuid.New(),
 		AlbumID:   albumID,
 		TrackName: tracks.TrackName,
 		TrackSong: []byte(tracks.TrackSong),
-		Duration:  tracks.Duration,
 	}
 
 	return t.TrackRepository.Save(trackModel)
@@ -55,7 +55,6 @@ func (t *TrackServiceImpl) FindAll() []response.TrackResponse {
 			AlbumID: value.AlbumID.String(),
 			TrackName: value.TrackName,
 			TrackSong: string(value.TrackSong),
-			Duration: value.Duration,
 		}
 		
 		tracks = append(tracks, track)
@@ -80,7 +79,6 @@ func (t *TrackServiceImpl) Insert(tracks request.CreateTrackRequest) error {
 		AlbumID: albumID,
 		TrackName: tracks.TrackName,
 		TrackSong: []byte(tracks.TrackSong),
-		Duration: tracks.Duration,
 	}
 
 	return t.TrackRepository.Insert(trackModel)

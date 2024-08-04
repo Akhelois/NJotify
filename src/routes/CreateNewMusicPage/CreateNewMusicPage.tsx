@@ -117,18 +117,11 @@ const CreateNewMusicPage = () => {
       albumFormData.append("user_id", id);
       albumFormData.append("album_name", title);
       albumFormData.append("collection_type", collectionType);
-
-      const albumYear = new Date().getFullYear().toString();
-      albumFormData.append("album_year", albumYear);
+      albumFormData.append("album_year", new Date().getFullYear().toString());
 
       if (mainImage) {
         albumFormData.append("album_image", mainImage);
       }
-
-      // Debugging: Log the form data
-      albumFormData.forEach((value, key) => {
-        console.log("Album FormData:", key, value);
-      });
 
       // Create the album
       const albumResponse = await fetch("http://localhost:8080/albums", {
@@ -142,13 +135,11 @@ const CreateNewMusicPage = () => {
       }
 
       const albumData = await albumResponse.json();
-      const albumID = albumData.data.albumID;
+      const albumID = albumData.album_id;
 
       if (!albumID) {
         throw new Error("Album ID not received from server.");
       }
-
-      console.log("Album created with ID:", albumID);
 
       // Create tracks
       for (const track of tracks) {
@@ -160,11 +151,7 @@ const CreateNewMusicPage = () => {
           trackFormData.append("track_song", track.file);
         }
 
-        // Debugging: Log track data
-        trackFormData.forEach((value, key) => {
-          console.log("Track FormData:", key, value);
-        });
-
+        // Create the track
         const trackResponse = await fetch("http://localhost:8080/tracks", {
           method: "POST",
           body: trackFormData,
@@ -174,14 +161,13 @@ const CreateNewMusicPage = () => {
           const errorText = await trackResponse.text();
           throw new Error(`Failed to create track: ${errorText}`);
         }
-
-        console.log("Track created:", await trackResponse.json());
       }
 
       // Navigate to the next page on successful creation
       navigate("/your_post");
     } catch (error) {
       console.error("Error creating album and tracks:", error);
+      alert(`Error: ${error}`);
     }
   };
 

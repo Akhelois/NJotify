@@ -33,8 +33,8 @@ func (t *TrackRepositoryImpl) FindAlbum (albumID string) (model.Track, error) {
 }
 
 func (t *TrackRepositoryImpl) Insert(track model.Track) error {
-	query := "INSERT INTO tracks (album_id, track_name, track_song, duration) VALUES (?, ?, ?, ?)"
-	err := t.Db.Exec(query, track.AlbumID, track.TrackName, track.TrackSong, track.Duration).Error
+	query := "INSERT INTO tracks (album_id, track_name, track_song) VALUES (?, ?, ?, ?)"
+	err := t.Db.Exec(query, track.AlbumID, track.TrackName, track.TrackSong).Error
 	if err != nil {
 		fmt.Println("Faield to insert", err)
 	}
