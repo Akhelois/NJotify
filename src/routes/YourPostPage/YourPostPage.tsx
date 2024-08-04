@@ -71,10 +71,12 @@ function YourPostPage() {
         const albumsData = await albumsResponse.json();
         console.log("Albums data received:", albumsData);
 
-        // Handle the album response and extract the album(s)
+        // If data is an array, use it; otherwise wrap in an array
         const albumsArray = Array.isArray(albumsData.data)
           ? albumsData.data
-          : [albumsData.data]; // Wrap single album object in an array
+          : [albumsData.data]; // Wrap single object in an array
+
+        console.log("Normalized albums array:", albumsArray);
 
         // Map the response to match the Album interface
         const formattedAlbums = albumsArray.map((album: any) => ({
@@ -86,6 +88,8 @@ function YourPostPage() {
           AlbumYear: album.album_year,
           CollectionType: album.collection_type || "Unknown", // Ensure fallback value
         }));
+
+        console.log("Formatted albums:", formattedAlbums);
 
         setAlbums(formattedAlbums);
       } catch (error) {
@@ -137,7 +141,14 @@ function YourPostPage() {
               onError={handleImageError}
             />
             <div className="banner-text">
-              <h6>Verified Artist</h6>
+              <h6>
+                <img
+                  src="./src/assets/verified-icon-png.webp"
+                  alt="verified-icon"
+                  className="verified-icon"
+                />
+                Verified Artist{" "}
+              </h6>
               <h1>Hi, {username}</h1>
             </div>
           </div>

@@ -24,8 +24,8 @@ func (c *AlbumRepositoryImpl) FindAll() ([]model.Album, error) {
 	return albums, result.Error
 }
 
-func (c *AlbumRepositoryImpl) FindDischo(userID int) (model.Album, error) {
-	var album model.Album
-	result := c.Db.Where("user_id = ?", userID).Find(&album)
-	return album, result.Error
+func (c *AlbumRepositoryImpl) FindDischo(userID int) ([]model.Album, error) {
+    var albums []model.Album
+    result := c.Db.Where("user_id = ?", userID).Find(&albums)
+    return albums, result.Error
 }

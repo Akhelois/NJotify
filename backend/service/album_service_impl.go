@@ -69,26 +69,29 @@ func (c *AlbumServiceImpl) FindAll() []response.AlbumResponse {
 	return albums
 }
 
-func (c *AlbumServiceImpl) FindDischo(userID int) (response.AlbumResponse,error) {
-	album, err := c.AlbumRepository.FindDischo(userID)
-
-	if err != nil {
-        return response.AlbumResponse{}, err
+func (c *AlbumServiceImpl) FindDischo(userID int) ([]response.AlbumResponse, error) {
+    albums, err := c.AlbumRepository.FindDischo(userID)
+    if err != nil {
+        return nil, err
     }
 
-	var albumImageBase64 string
-    if len(album.AlbumImage) > 0 {
-        albumImageBase64 = base64.StdEncoding.EncodeToString(album.AlbumImage)
+    var albumResponses []response.AlbumResponse
+    for _, album := range albums {
+        var albumImageBase64 string
+        if len(album.AlbumImage) > 0 {
+            albumImageBase64 = base64.StdEncoding.EncodeToString(album.AlbumImage)
+        }
+
+        albumResponse := response.AlbumResponse{
+            AlbumID:         album.AlbumID.String(),
+            UserID:          album.UserID,
+            AlbumName:       album.AlbumName,
+            AlbumImage:      albumImageBase64,
+            AlbumYear:       album.AlbumYear,
+            CollectionType:  album.CollectionType,
+        }
+        albumResponses = append(albumResponses, albumResponse)
     }
 
-	albumResponse := response.AlbumResponse {
-		AlbumID: album.AlbumID.String(),
-		UserID: album.UserID,
-		AlbumName: album.AlbumName,
-		AlbumImage: albumImageBase64,
-		AlbumYear: album.AlbumYear,
-		CollectionType: album.CollectionType,
-	}
-
-	return albumResponse, nil
+    return albumResponses, nil
 }
