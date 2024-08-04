@@ -1,6 +1,8 @@
 package service
 
 import (
+	"encoding/base64"
+
 	"github.com/Akhelois/tpaweb/data/request"
 	"github.com/Akhelois/tpaweb/data/response"
 	"github.com/Akhelois/tpaweb/model"
@@ -67,19 +69,26 @@ func (c *AlbumServiceImpl) FindAll() []response.AlbumResponse {
 	return albums
 }
 
-func (c *AlbumServiceImpl) Insert(album request.CreateAlbumRequest) error {
-	err := c.Validate.Struct(album)
+func (c *AlbumServiceImpl) FindDischo(userID int) (response.AlbumResponse,error) {
+	album, err := c.AlbumRepository.FindDischo(userID)
+
 	if err != nil {
-		return err
+        return response.AlbumResponse{}, err
+    }
+
+	var albumImageBase64 string
+    if len(album.AlbumImage) > 0 {
+        albumImageBase64 = base64.StdEncoding.EncodeToString(album.AlbumImage)
+    }
+
+	albumResponse := response.AlbumResponse {
+		AlbumID: album.AlbumID.String(),
+		UserID: album.UserID,
+		AlbumName: album.AlbumName,
+		AlbumImage: albumImageBase64,
+		AlbumYear: album.AlbumYear,
+		CollectionType: album.CollectionType,
 	}
 
-	albumModel := model.Album{
-		UserID:          album.UserID,
-		AlbumName:       album.AlbumName,
-		AlbumImage:      []byte(album.AlbumImage),
-		AlbumYear:       album.AlbumYear, 
-		CollectionType:  album.CollectionType,
-	}
-
-	return c.AlbumRepository.Insert(albumModel)
+	return albumResponse, nil
 }

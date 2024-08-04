@@ -86,18 +86,40 @@ func (c *AlbumController) FindAll(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, webResponse)
 }
 
-func (c *AlbumController) Insert(ctx *gin.Context) {
-	var insertAlbumReq request.CreateAlbumRequest
-	if err := ctx.ShouldBindJSON(&insertAlbumReq); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "Bad Request", "data": err.Error()})
-		return
-	}
+func (c *AlbumController) FindDischo(ctx *gin.Context) {
+    userIDStr := ctx.Query("user_id")
+    if userIDStr == "" {
+        ctx.JSON(http.StatusBadRequest, response.WebResponse{
+            Code:   http.StatusBadRequest,
+            Status: "Bad Request",
+            Data:   "UserID query parameter is required",
+        })
+        return
+    }
 
-	err := c.albumService.Insert(insertAlbumReq)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"status": "Internal Server Error", "data": err.Error()})
-		return
-	}
+    userID, err := strconv.Atoi(userIDStr)
+    if err != nil {
+        ctx.JSON(http.StatusBadRequest, response.WebResponse{
+            Code:   http.StatusBadRequest,
+            Status: "Bad Request",
+            Data:   "Invalid user ID",
+        })
+        return
+    }
 
-	ctx.JSON(http.StatusOK, gin.H{"status": "Ok"})
+    albums, err := c.albumService.FindDischo(userID)
+    if err != nil {
+        ctx.JSON(http.StatusNotFound, response.WebResponse{
+            Code:   http.StatusNotFound,
+            Status: "Dischopery Not Found",
+            Data:   err.Error(),
+        })
+        return
+    }
+
+    ctx.JSON(http.StatusOK, response.WebResponse{
+        Code:   http.StatusOK,
+        Status: "Ok",
+        Data:   albums,
+    })
 }

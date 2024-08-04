@@ -8,9 +8,11 @@ import Header from "../../components/Header/Header";
 import fallbackImage from "../../assets/profile.png";
 
 interface Album {
-  id: string;
-  title: string;
-  cover: string | null;
+  AlbumID: string;
+  AlbumName: string;
+  AlbumImage: string | null;
+  AlbumYear: string;
+  CollectionType: string;
 }
 
 function YourPostPage() {
@@ -30,43 +32,66 @@ function YourPostPage() {
 
         const userObj = JSON.parse(user);
         const email = userObj.data.email;
+        const userId = userObj.data.id;
 
-        const response = await fetch(
+        // Fetch user details
+        const userResponse = await fetch(
           `http://localhost:8080/find_user?email=${encodeURIComponent(email)}`
         );
-        if (!response.ok) {
+        if (!userResponse.ok) {
           throw new Error("Failed to fetch user");
         }
-        const data = await response.json();
+        const userData = await userResponse.json();
 
-        if (data.data) {
-          setUsername(data.data.username || "Unknown");
+        if (userData.data) {
+          setUsername(userData.data.username || "Unknown");
 
           if (
-            data.data.profile_picture &&
-            typeof data.data.profile_picture === "string" &&
-            isValidBase64(data.data.profile_picture)
+            userData.data.profile_picture &&
+            typeof userData.data.profile_picture === "string" &&
+            isValidBase64(userData.data.profile_picture)
           ) {
             setProfilePicURL(
-              `data:image/jpeg;base64,${data.data.profile_picture}`
+              `data:image/jpeg;base64,${userData.data.profile_picture}`
             );
           } else {
             setProfilePicURL(fallbackImage);
           }
         }
 
-        // Uncomment and handle this if you want to fetch albums data
-        // const albumsResponse = await fetch(
-        //   `http://localhost:8080/get_albums?email=${encodeURIComponent(email)}`
-        // );
-        // if (!albumsResponse.ok) {
-        //   throw new Error("Failed to fetch albums");
-        // }
-        // const albumsData = await albumsResponse.json();
-        // setAlbums(albumsData.data);
+        // Fetch albums
+        const albumsResponse = await fetch(
+          `http://localhost:8080/find_discho?user_id=${userId}`,
+          { method: "GET" }
+        );
+
+        if (!albumsResponse.ok) {
+          throw new Error("Failed to fetch albums");
+        }
+        const albumsData = await albumsResponse.json();
+        console.log("Albums data received:", albumsData);
+
+        // Handle the album response and extract the album(s)
+        const albumsArray = Array.isArray(albumsData.data)
+          ? albumsData.data
+          : [albumsData.data]; // Wrap single album object in an array
+
+        // Map the response to match the Album interface
+        const formattedAlbums = albumsArray.map((album: any) => ({
+          AlbumID: album.album_id,
+          AlbumName: album.album_name,
+          AlbumImage: album.album_image
+            ? `data:image/jpeg;base64,${album.album_image}`
+            : null,
+          AlbumYear: album.album_year,
+          CollectionType: album.collection_type || "Unknown", // Ensure fallback value
+        }));
+
+        setAlbums(formattedAlbums);
       } catch (error) {
         console.error("Error fetching data:", error);
         setProfilePicURL(fallbackImage);
+        setAlbums([]);
       }
     };
 
@@ -127,17 +152,22 @@ function YourPostPage() {
               >
                 <div className="create-album-icon">+</div>
               </div>
-              {albums.length > 0 &&
-                albums.map((album) => (
-                  <div key={album.id} className="album">
-                    <img
-                      src={album.cover || fallbackImage}
-                      alt={album.title}
-                      className="album-image"
-                    />
-                    <h2>{album.title}</h2>
+              {albums.map((album) => (
+                <div key={album.AlbumID} className="album">
+                  <img
+                    src={album.AlbumImage || fallbackImage}
+                    alt={album.AlbumName}
+                    className="album-image"
+                    onError={handleImageError}
+                  />
+                  <div className="album-detail">
+                    <h3>{album.AlbumName}</h3>
+                    <p>
+                      {album.AlbumYear} - {album.CollectionType}
+                    </p>
                   </div>
-                ))}
+                </div>
+              ))}
             </div>
           </div>
         </div>

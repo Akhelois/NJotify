@@ -8,5 +8,5 @@ import (
 type AlbumService interface {
 	Create(request.CreateAlbumRequest) (string, error)
 	FindAll() []response.AlbumResponse
-	Insert(request.CreateAlbumRequest) error
+	FindDischo(int) (response.AlbumResponse,error)
 }

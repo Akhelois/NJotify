@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/Akhelois/tpaweb/model"
 	"gorm.io/gorm"
 )
@@ -26,12 +24,8 @@ func (c *AlbumRepositoryImpl) FindAll() ([]model.Album, error) {
 	return albums, result.Error
 }
 
-func (c *AlbumRepositoryImpl) Insert(album model.Album) error {
-	query := "INSERT INTO albums (user_id, album_name, album_image, album_year, collection_type) VALUES (?, ?, ?, ?, ?)"
-	result := c.Db.Exec(query, album.UserID, album.AlbumName, album.AlbumImage, album.AlbumYear, album.CollectionType)
-	if result.Error != nil {
-		fmt.Println(result.Error)
-		return result.Error
-	}
-	return nil
+func (c *AlbumRepositoryImpl) FindDischo(userID int) (model.Album, error) {
+	var album model.Album
+	result := c.Db.Where("user_id = ?", userID).Find(&album)
+	return album, result.Error
 }
