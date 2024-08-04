@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Sidebar.css";
 import { AiFillHome } from "react-icons/ai";
@@ -16,7 +16,12 @@ const Sidebar: React.FC<SidebarProps> = ({ setCurrentPage }) => {
   const location = useLocation();
   const [activePage, setActivePage] = useState(location.pathname);
 
+  useEffect(() => {
+    setActivePage(location.pathname);
+  }, [location]);
+
   const handlePageChange = (page: string, path: string) => {
+    console.log(`Changing page to: ${page}`);
     setCurrentPage(page);
     setActivePage(path);
   };
@@ -38,16 +43,16 @@ const Sidebar: React.FC<SidebarProps> = ({ setCurrentPage }) => {
             </Link>
           </li>
           <li>
-            <a
-              href="#"
-              onClick={() => handlePageChange("search", "#")}
-              className={activePage === "#" ? "active" : ""}
+            <Link
+              to="/search_page"
+              onClick={() => handlePageChange("search", "/search_page")}
+              className={activePage === "/search_page" ? "active" : ""}
             >
               <span className="icon">
                 <IoSearchSharp />
               </span>
               <span>Search</span>
-            </a>
+            </Link>
           </li>
           {isArtist && (
             <li>

@@ -1,12 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Search.css";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import { FaMicrophone } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import fallbackImage from "../../assets/profile.png"; // Ensure this path is correct
 
 const Search: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [profilePicURL, setProfilePicURL] = useState<string | null>(null);
+
+  // Fetch the profile picture from localStorage or API
+  useEffect(() => {
+    const fetchProfilePic = async () => {
+      try {
+        const user = localStorage.getItem("user");
+        if (!user) {
+          console.error("User not found in localStorage");
+          setProfilePicURL(fallbackImage);
+          return;
+        }
+
+        const userObj = JSON.parse(user);
+        const email = userObj.data.email;
+
+        const response = await fetch(
+          `http://localhost:8080/find_user?email=${encodeURIComponent(email)}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch user");
+        }
+        const data = await response.json();
+
+        if (
+          data.data &&
+          data.data.profile_picture &&
+          typeof data.data.profile_picture === "string" &&
+          isValidBase64(data.data.profile_picture)
+        ) {
+          setProfilePicURL(
+            `data:image/jpeg;base64,${data.data.profile_picture}`
+          );
+        } else {
+          setProfilePicURL(fallbackImage);
+        }
+      } catch (error) {
+        console.error("Error fetching profile picture:", error);
+        setProfilePicURL(fallbackImage);
+      }
+    };
+
+    fetchProfilePic();
+  }, []);
+
+  const isValidBase64 = (str: string) => {
+    try {
+      return btoa(atob(str)) === str;
+    } catch (err) {
+      return false;
+    }
+  };
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -86,7 +139,7 @@ const Search: React.FC = () => {
       <div className="profile">
         <button onClick={toggleDropdown}>
           <span>
-            <img src="./src/assets/profile.png" alt="profile" />
+            <img src={profilePicURL || fallbackImage} alt="profile" />
           </span>
         </button>
         {dropdownOpen && (
@@ -94,8 +147,8 @@ const Search: React.FC = () => {
             <Link to="/profile_page" className="dropdown-item">
               View Profile
             </Link>
-            <Link to="/edit_profile" className="dropdown-item">
-              Edit Profile
+            <Link to="/settings" className="dropdown-item">
+              Account
             </Link>
             <Link to="/" className="dropdown-item">
               Log Out

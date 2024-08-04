@@ -17,6 +17,7 @@ import NotificationSettings from "./routes/NotificationSettings/NotificationSett
 import YourPostPage from "./routes/YourPostPage/YourPostPage";
 import CreateNewMusicPage from "./routes/CreateNewMusicPage/CreateNewMusicPage";
 import AlbumPage from "./routes/AlbumPage/AlbumPage";
+import SearchPage from "./routes/SearchPage/SearchPage";
 import { useCookies } from "react-cookie";
 
 const container = document.getElementById("root");
@@ -50,6 +51,7 @@ root.render(
           <Route path="/activate" element={<ActivationPage />} />
           <Route path="/your_post" element={<YourPostPage />} />
           <Route path="/album_page" element={<AlbumPage />} />
+          <Route path="/search_page" element={<SearchPage />} />
           <Route
             path="/create_new_music_page"
             element={<CreateNewMusicPage />}
