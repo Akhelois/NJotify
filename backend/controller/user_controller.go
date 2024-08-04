@@ -501,11 +501,24 @@ func (controller *UserController) EditProfilePicture(ctx *gin.Context) {
     })
 }
 
-func(c *UserController) ValCookies(ctx *gin.Context){
-    cok, err := ctx.Cookie("Authorization")
+func (controller *UserController) ValCookies(ctx *gin.Context) {
+	cookie, err := ctx.Cookie("Authorization")
+	if err != nil {
+		fmt.Println("Error retrieving cookie:", err)
+		ctx.JSON(http.StatusUnauthorized, response.WebResponse{
+			Code:   http.StatusUnauthorized,
+			Status: "Unauthorized",
+			Data:   "Authorization cookie not found",
+		})
+		return
+	}
 
-    fmt.Println(err)
-    fmt.Println(cok)
+	fmt.Println("Authorization cookie:", cookie)
+	ctx.JSON(http.StatusOK, response.WebResponse{
+		Code:   http.StatusOK,
+		Status: "Ok",
+		Data:   "Authorization cookie found",
+	})
 }
 
 func (c *UserController) GetVerified(ctx *gin.Context) {

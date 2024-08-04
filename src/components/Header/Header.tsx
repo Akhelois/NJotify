@@ -3,11 +3,19 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Header.css";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import fallbackImage from "../../assets/profile.png";
+import { useCookies } from "react-cookie";
 
 function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profilePicURL, setProfilePicURL] = useState<string | null>(null);
+  const [cookies] = useCookies(["Authorization"]);
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    cookies.Authorization("Authorization", { path: "/", domain: "localhost" });
+
+    navigate("/");
+  };
 
   useEffect(() => {
     const fetchProfilePic = async () => {
@@ -99,7 +107,7 @@ function Header() {
             <Link to="/settings" className="dropdown-item">
               Account
             </Link>
-            <Link to="/" className="dropdown-item">
+            <Link className="dropdown-item" onClick={handleLogout}>
               Log Out
             </Link>
           </div>

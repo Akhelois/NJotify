@@ -123,3 +123,31 @@ func (c *AlbumController) FindDischo(ctx *gin.Context) {
         Data:   albums,
     })
 }
+
+func (c *AlbumController) FindAlbum(ctx *gin.Context) {
+    albumID := ctx.Query("album_id")
+    if albumID == "" {
+        ctx.JSON(http.StatusBadRequest, response.WebResponse{
+            Code:   http.StatusBadRequest,
+            Status: "Bad Request",
+            Data:   "AlbumID query parameter is required",
+        })
+        return
+    }
+
+    albumResponse, err := c.albumService.FindAlbum(albumID)
+    if err != nil {
+        ctx.JSON(http.StatusNotFound, response.WebResponse{
+            Code:   http.StatusNotFound,
+            Status: "Album Not Found",
+            Data:   err.Error(),
+        })
+        return
+    }
+
+    ctx.JSON(http.StatusOK, response.WebResponse{
+        Code:   http.StatusOK,
+        Status: "Ok",
+        Data:   albumResponse,
+    })
+}

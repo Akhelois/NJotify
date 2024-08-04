@@ -8,5 +8,5 @@ import (
 type TrackService interface {
 	Create(request.CreateTrackRequest) error
 	FindAll() []response.TrackResponse
-	Insert(request.CreateTrackRequest) error
+	FindTrackInAlbum(string) ([]response.TrackResponse, error) 
 }

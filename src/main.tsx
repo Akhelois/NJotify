@@ -16,6 +16,7 @@ import GetVerifiedPage from "./routes/GetVerifiedPage/GetVerifiedPage";
 import NotificationSettings from "./routes/NotificationSettings/NotificationSettings";
 import YourPostPage from "./routes/YourPostPage/YourPostPage";
 import CreateNewMusicPage from "./routes/CreateNewMusicPage/CreateNewMusicPage";
+import AlbumPage from "./routes/AlbumPage/AlbumPage";
 import { useCookies } from "react-cookie";
 
 const container = document.getElementById("root");
@@ -31,7 +32,7 @@ function ProtectedRoute({ children }: ProtectedRouteProps) {
   const auth = cookies.Authorization ? true : false;
 
   if (!auth) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return children;
@@ -43,12 +44,12 @@ root.render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot_account" element={<ForgotAccount />} />
           <Route path="/reset_password" element={<ResetPassword />} />
           <Route path="/activate" element={<ActivationPage />} />
           <Route path="/your_post" element={<YourPostPage />} />
+          <Route path="/album_page" element={<AlbumPage />} />
           <Route
             path="/create_new_music_page"
             element={<CreateNewMusicPage />}

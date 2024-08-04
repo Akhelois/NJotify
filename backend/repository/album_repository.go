@@ -8,4 +8,5 @@ type AlbumRepository interface {
 	Save(album model.Album) error
 	FindAll() ([] model.Album, error)
 	FindDischo(int) ([]model.Album, error)
+	FindAlbum(string) (model.Album, error)
 }

@@ -29,3 +29,9 @@ func (c *AlbumRepositoryImpl) FindDischo(userID int) ([]model.Album, error) {
     result := c.Db.Where("user_id = ?", userID).Find(&albums)
     return albums, result.Error
 }
+
+func  (c *AlbumRepositoryImpl) FindAlbum(albumID string) (model.Album, error) {
+	var albums model.Album
+	result := c.Db.Where("album_id = ?", albumID).Find(&albums)
+	return albums, result.Error
+}

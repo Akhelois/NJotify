@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/Akhelois/tpaweb/model"
 	"gorm.io/gorm"
 )
@@ -32,12 +30,8 @@ func (t *TrackRepositoryImpl) FindAlbum (albumID string) (model.Track, error) {
 	return track, result.Error
 }
 
-func (t *TrackRepositoryImpl) Insert(track model.Track) error {
-	query := "INSERT INTO tracks (album_id, track_name, track_song) VALUES (?, ?, ?, ?)"
-	err := t.Db.Exec(query, track.AlbumID, track.TrackName, track.TrackSong).Error
-	if err != nil {
-		fmt.Println("Faield to insert", err)
-	}
-
-	return err
+func (t *TrackRepositoryImpl) FindTrackInAlbum(albumID string) ([]model.Track, error) {
+	var tracks []model.Track
+	result := t.Db.Where("album_id = ?", albumID).Find(&tracks)
+	return tracks, result.Error
 }

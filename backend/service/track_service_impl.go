@@ -1,6 +1,8 @@
 package service
 
 import (
+	"encoding/base64"
+
 	"github.com/Akhelois/tpaweb/data/request"
 	"github.com/Akhelois/tpaweb/data/response"
 	"github.com/Akhelois/tpaweb/model"
@@ -63,23 +65,27 @@ func (t *TrackServiceImpl) FindAll() []response.TrackResponse {
 	return tracks
 }
 
-func (t *TrackServiceImpl) Insert(tracks request.CreateTrackRequest) error {
-	err := t.Validate.Struct(tracks)
-
+func (t *TrackServiceImpl) FindTrackInAlbum(albumID string) ([]response.TrackResponse, error)  {
+	tracks, err := t.TrackRepository.FindTrackInAlbum(albumID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	albumID, err := uuid.Parse(tracks.AlbumID)
-	if err != nil {
-		return err
+	var trackResponses []response.TrackResponse
+	for _, track := range tracks {
+		var trackSongBase64 string
+		if len(track.TrackSong) > 0 {
+			trackSongBase64 = base64.StdEncoding.EncodeToString(track.TrackSong)
+		}
+
+		trackResponse := response.TrackResponse {
+			TrackID: track.TrackID.String(),
+			AlbumID: track.AlbumID.String(),
+			TrackName: track.TrackName,
+			TrackSong: trackSongBase64,
+		}
+		trackResponses =append(trackResponses, trackResponse)
 	}
 
-	trackModel := model.Track{
-		AlbumID: albumID,
-		TrackName: tracks.TrackName,
-		TrackSong: []byte(tracks.TrackSong),
-	}
-
-	return t.TrackRepository.Insert(trackModel)
+	return trackResponses, nil
 }

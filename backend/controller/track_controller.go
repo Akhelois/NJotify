@@ -81,18 +81,40 @@ func (t *TrackController) FindAll(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, webResponse)
 }
 
-func (t *TrackController) Insert(ctx *gin.Context) {
-	var insertTrackReq request.CreateTrackRequest
-	if err := ctx.ShouldBindJSON(&insertTrackReq); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "Bad Request", "data": err.Error()})
-        return
+func (t *TrackController) FindTrackInAlbum(ctx *gin.Context) {
+	albumIDStr := ctx.Query("album_id")
+	if albumIDStr == "" {
+		ctx.JSON(http.StatusBadRequest, response.WebResponse{
+			Code:   http.StatusBadRequest,
+			Status: "Bad Request",
+			Data:   "AlbumID query parameter is required",
+		})
+		return
 	}
 
-	err1 := t.trackService.Insert(insertTrackReq)
-	if err1 != nil {
-        ctx.JSON(http.StatusInternalServerError, gin.H{"status": "Internal Server Error", "data": err1.Error()})
-        return
-    }
+	albumID, err := uuid.Parse(albumIDStr)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, response.WebResponse{
+			Code:   http.StatusBadRequest,
+			Status: "Bad Request",
+			Data:   "Invalid album ID",
+		})
+		return
+	}
 
-    ctx.JSON(http.StatusOK, gin.H{"status": "Ok"})
+	tracks, err := t.trackService.FindTrackInAlbum(albumID.String())
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, response.WebResponse{
+			Code:   http.StatusNotFound,
+			Status: "Album Not Found",
+			Data:   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response.WebResponse{
+		Code:   http.StatusOK,
+		Status: "Ok",
+		Data:   tracks,
+	})
 }
