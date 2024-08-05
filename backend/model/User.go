@@ -12,7 +12,7 @@ type User struct {
 	ProfilePicture []byte `gorm:"type:bytea"`
 	Description    string `gorm:"varchar(255)"`
 	Followers      int    `gorm:"type:int"`
-	Following      int    `gorm:"int"`
+	Following      int    `gorm:"type:int"`
 	Token          string `gorm:"type:varchar(255)"`
 	Active         bool   `gorm:"default:false"`
 }
