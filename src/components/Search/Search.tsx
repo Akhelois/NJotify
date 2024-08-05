@@ -15,9 +15,10 @@ type Album = {
 
 interface SearchProps {
   setAlbums: (albums: Album[]) => void;
+  setQuery: (query: string) => void;
 }
 
-const Search: React.FC<SearchProps> = ({ setAlbums }) => {
+const Search: React.FC<SearchProps> = ({ setAlbums, setQuery }) => {
   const [searchText, setSearchText] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profilePicURL, setProfilePicURL] = useState<string | null>(null);
@@ -100,16 +101,17 @@ const Search: React.FC<SearchProps> = ({ setAlbums }) => {
         );
       }
       const data = await response.json();
-      setAlbums(data.Data || []);
+      setAlbums(data.data || []);
     } catch (error) {
       console.error("Failed to fetch albums", error);
     }
   };
 
-  const debouncedFetchAlbums = useCallback(debounce(fetchAlbums, 300), []);
+  const debouncedFetchAlbums = useCallback(debounce(fetchAlbums, 1000), []);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
+    setQuery(e.target.value); // Update the query state in the parent component
     debouncedFetchAlbums(e.target.value); // Fetch albums with debounce
   };
 
@@ -143,6 +145,7 @@ const Search: React.FC<SearchProps> = ({ setAlbums }) => {
         const data = await response.json();
         if (data.transcription) {
           setSearchText(data.transcription);
+          setQuery(data.transcription); // Update the query state in the parent component
           fetchAlbums(data.transcription); // Fetch albums based on transcription
         } else {
           console.error("Transcription error:", data.error);

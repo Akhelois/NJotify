@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/Akhelois/tpaweb/model"
 	"gorm.io/gorm"
 )
@@ -36,8 +38,15 @@ func  (c *AlbumRepositoryImpl) FindAlbum(albumID string) (model.Album, error) {
 	return albums, result.Error
 }
 
-func (c *AlbumRepositoryImpl) FindAlbumName (albumName string) ([]model.Album, error) {
-	var albums []model.Album
-	result := c.Db.Where("album_name = ?", albumName).Find(&albums)
-	return albums, result.Error
+func (c *AlbumRepositoryImpl) FindAlbumName(albumName string) ([]model.Album, error) {
+    var albums []model.Album
+    fmt.Println("Searching for albums with name:", albumName)
+    // result := c.Db.Where("album_name LIKE ?", "%"+albumName+"%").Find(&albums)
+	result := c.Db.Where("LOWER(album_name) LIKE LOWER(?)", "%"+albumName+"%").Find(&albums)
+    if result.Error != nil {
+        fmt.Println("Error while searching for albums:", result.Error)
+    } else {
+        fmt.Println("Albums found:", albums)
+    }
+    return albums, result.Error
 }

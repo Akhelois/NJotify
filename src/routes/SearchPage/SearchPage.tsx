@@ -34,27 +34,46 @@ function SearchPage() {
   }, []);
 
   useEffect(() => {
-    fetchAlbums(query);
+    if (query) {
+      fetchAlbums(query);
+    }
   }, [query]);
 
   const fetchAlbums = async (query: string) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/find_album?album_name=${encodeURIComponent(query)}`
+        `http://localhost:8080/find_album_name?album_name=${encodeURIComponent(query)}`
       );
       if (!response.ok) {
         throw new Error(`Failed to fetch albums: ${response.statusText}`);
       }
       const data = await response.json();
-      setAlbums(data.Data || []);
+      console.log("API response data:", data); // Log the entire response
+
+      if (data.data) {
+        setAlbums(data.data);
+        console.log("Albums set:", data.data);
+      } else {
+        setAlbums([]); // Set an empty array if no albums are found
+        console.log("No albums found for query:", query);
+      }
     } catch (error) {
       console.error("Failed to fetch albums", error);
+      setAlbums([]); // Set an empty array on error
     }
   };
 
   useEffect(() => {
     console.log("Current Page:", currentPage);
   }, [currentPage]);
+
+  useEffect(() => {
+    console.log("Albums state:", albums);
+  }, [albums]);
+
+  useEffect(() => {
+    console.log("Query state:", query);
+  }, [query]);
 
   return (
     <div className="search-page">
@@ -84,7 +103,9 @@ function SearchPage() {
         <>
           <Sidebar setCurrentPage={setCurrentPage} />
           <div className="main">
-            {currentPage === "search" && <Search setAlbums={setAlbums} />}
+            {currentPage === "search" && (
+              <Search setAlbums={setAlbums} setQuery={setQuery} />
+            )}
             <AlbumList albums={albums} />
             <FooterHome />
           </div>
