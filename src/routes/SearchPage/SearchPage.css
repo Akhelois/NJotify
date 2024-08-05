@@ -3,6 +3,26 @@
   min-height: 100vh;
 }
 
+@media (max-width: 768px) {
+  .search-page {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+  }
+
+  .main {
+    padding: 10px;
+  }
+
+  .music-control {
+    padding: 5px;
+    box-shadow: none;
+  }
+}
+
 .sidebar-skeleton,
 .music-control-skeleton,
 .footer-skeleton,

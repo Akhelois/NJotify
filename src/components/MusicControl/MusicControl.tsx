@@ -16,7 +16,11 @@ import { TbMicrophone2 } from "react-icons/tb";
 import { CgMiniPlayer } from "react-icons/cg";
 import "./MusicControl.css";
 
-const MusicControl: React.FC = () => {
+interface MusicControlProps {
+  toggleQueue: () => void;
+}
+
+const MusicControl: React.FC<MusicControlProps> = ({ toggleQueue }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -157,7 +161,7 @@ const MusicControl: React.FC = () => {
         <div className="right-icons">
           <AiOutlinePlaySquare className="control-icon" />
           <TbMicrophone2 className="control-icon" />
-          <MdQueueMusic className="control-icon" />
+          <MdQueueMusic className="control-icon" onClick={toggleQueue} />
           <MdSpeaker className="control-icon" />
           <div className="control-icon">{volumeIcon}</div>
           <MdOutlineCastConnected className="control-icon" />

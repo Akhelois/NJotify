@@ -1,0 +1,103 @@
+.track-page {
+  display: flex;
+  height: 100vh;
+  background-color: #121212;
+  color: #fff;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.track-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.track-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.track-cover img {
+  width: 180px;
+  height: 180px;
+  border-radius: 4px;
+  margin-right: 20px;
+}
+
+.track-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.track-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.track-artist {
+  font-size: 18px;
+  color: #b3b3b3;
+}
+
+.track-year {
+  font-size: 16px;
+  color: #b3b3b3;
+}
+
+.popular-tracks {
+  margin-top: 30px;
+}
+
+.popular-tracks h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.popular-tracks ul {
+  list-style: none;
+  padding: 0;
+}
+
+.popular-tracks li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 16px;
+}
+
+.popular-tracks li span:last-child {
+  color: #b3b3b3;
+}
+
+.music-control {
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 240px);
+  background-color: #181818;
+  padding: 20px;
+  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.queue-container {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 300px;
+  background-color: #181818;
+  overflow-y: auto;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.shrink .main {
+  margin-right: 300px;
+}

@@ -7,10 +7,16 @@ import Playlist from "../../components/Playlist/Playlist";
 import FooterHome from "../../components/Footer/FooterHome";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import Queue from "../../components/Queue/Queue";
 
 function HomePage() {
   const [currentPage, setCurrentPage] = useState("home");
   const [loading, setLoading] = useState(true);
+  const [showQueue, setShowQueue] = useState(false);
+
+  const toggleQueue = () => {
+    setShowQueue(!showQueue);
+  };
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000); // Simulate a loading delay
@@ -49,8 +55,13 @@ function HomePage() {
             <FooterHome />
           </div>
           <div className="music-control">
-            <MusicControl />
+            <MusicControl toggleQueue={toggleQueue} />
           </div>
+          {showQueue && (
+            <div className="queue-container">
+              <Queue />
+            </div>
+          )}
         </>
       )}
     </div>

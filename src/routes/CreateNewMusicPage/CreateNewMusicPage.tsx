@@ -19,6 +19,11 @@ const CreateNewMusicPage = () => {
   const [trackError, setTrackError] = useState<string | null>(null);
 
   const navigate = useNavigate();
+  const [showQueue, setShowQueue] = useState(false);
+
+  const toggleQueue = () => {
+    setShowQueue(!showQueue);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -326,7 +331,7 @@ const CreateNewMusicPage = () => {
         </div>
         <Footer />
       </div>
-      <MusicControl />
+      <MusicControl toggleQueue={toggleQueue} />
     </div>
   );
 };

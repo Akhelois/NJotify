@@ -7,6 +7,7 @@ import FooterHome from "../../components/Footer/FooterHome";
 // import AlbumList from "../../components/TrackList/TrackList";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import Queue from "../../components/Queue/Queue";
 
 type Album = {
   albumID: number;
@@ -20,6 +21,11 @@ function SearchPage() {
   const [currentPage, setCurrentPage] = useState("search");
   const [loading, setLoading] = useState(true);
   const [albums, setAlbums] = useState<Album[]>([]);
+  const [showQueue, setShowQueue] = useState(false);
+
+  const toggleQueue = () => {
+    setShowQueue(!showQueue);
+  };
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
@@ -73,8 +79,13 @@ function SearchPage() {
             <FooterHome />
           </div>
           <div className="music-control">
-            <MusicControl />
+            <MusicControl toggleQueue={toggleQueue} />
           </div>
+          {showQueue && (
+            <div className="queue-container">
+              <Queue />
+            </div>
+          )}
         </>
       )}
     </div>

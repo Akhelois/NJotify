@@ -6,6 +6,7 @@ import MusicControl from "../../components/MusicControl/MusicControl";
 import Footer from "../../components/Footer/FooterHome";
 import Header from "../../components/Header/Header";
 import fallbackImage from "../../assets/profile.png";
+import Queue from "../../components/Queue/Queue";
 
 interface Album {
   AlbumID: string;
@@ -28,6 +29,11 @@ function YourPostPage() {
   const [profilePicURL, setProfilePicURL] = useState<string | null>(null);
   const [albums, setAlbums] = useState<Album[]>([]);
   const navigate = useNavigate();
+  const [showQueue, setShowQueue] = useState(false);
+
+  const toggleQueue = () => {
+    setShowQueue(!showQueue);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -201,8 +207,13 @@ function YourPostPage() {
         <Footer />
       </div>
       <div className="music-control">
-        <MusicControl />
+        <MusicControl toggleQueue={toggleQueue} />
       </div>
+      {showQueue && (
+        <div className="queue-container">
+          <Queue />
+        </div>
+      )}
     </div>
   );
 }

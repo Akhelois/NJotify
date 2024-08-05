@@ -32,6 +32,11 @@ const AlbumPage: React.FC = () => {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
   const [error] = useState<string | null>(null);
+  const [showQueue, setShowQueue] = useState(false);
+
+  const toggleQueue = () => {
+    setShowQueue(!showQueue);
+  };
 
   useEffect(() => {
     const fetchAlbumAndTracks = async () => {
@@ -113,7 +118,7 @@ const AlbumPage: React.FC = () => {
           <FooterHome />
         </div>
         <div className="music-control">
-          <MusicControl />
+          <MusicControl toggleQueue={toggleQueue} />
         </div>
       </div>
     );
@@ -131,7 +136,7 @@ const AlbumPage: React.FC = () => {
           <FooterHome />
         </div>
         <div className="music-control">
-          <MusicControl />
+          <MusicControl toggleQueue={toggleQueue} />
         </div>
       </div>
     );
@@ -170,7 +175,7 @@ const AlbumPage: React.FC = () => {
         <FooterHome />
       </div>
       <div className="music-control">
-        <MusicControl />
+        <MusicControl toggleQueue={toggleQueue} />
       </div>
     </div>
   );

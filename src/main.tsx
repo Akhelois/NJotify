@@ -18,6 +18,7 @@ import YourPostPage from "./routes/YourPostPage/YourPostPage";
 import CreateNewMusicPage from "./routes/CreateNewMusicPage/CreateNewMusicPage";
 import AlbumPage from "./routes/AlbumPage/AlbumPage";
 import SearchPage from "./routes/SearchPage/SearchPage";
+import TrackPage from "./routes/TrackPage/TrackPage";
 import { useCookies } from "react-cookie";
 
 const container = document.getElementById("root");
@@ -54,6 +55,7 @@ root.render(
           <Route path="/search_page" element={<SearchPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/profile_page" element={<ProfilePage />} />
+          <Route path="/track_page" element={<TrackPage />} />
           <Route
             path="/create_new_music_page"
             element={<CreateNewMusicPage />}
