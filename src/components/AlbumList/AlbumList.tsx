@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./AlbumList.css";
 
 type Album = {
@@ -14,6 +15,12 @@ type AlbumListProps = {
 };
 
 const AlbumList: React.FC<AlbumListProps> = ({ albums }) => {
+  const navigate = useNavigate();
+
+  const handleAlbumClick = (albumId: string) => {
+    navigate(`/album_page/${albumId}`);
+  };
+
   if (albums.length === 0) {
     return <div className="no-albums">No found</div>;
   }
@@ -21,7 +28,11 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums }) => {
   return (
     <div className="albums">
       {albums.map((album) => (
-        <div key={album.album_id} className="album">
+        <div
+          key={album.album_id}
+          className="album"
+          onClick={() => handleAlbumClick(album.album_id)}
+        >
           <img
             src={`data:image/jpeg;base64,${album.album_image}`}
             alt={album.album_name}
