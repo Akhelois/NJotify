@@ -56,6 +56,12 @@ root.render(
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/profile_page" element={<ProfilePage />} />
           <Route path="/track_page" element={<TrackPage />} />
+          <Route path="/edit_profile" element={<EditProfilePage />} />
+          <Route path="/get_verified_page" element={<GetVerifiedPage />} />
+          <Route
+            path="/notification_settings"
+            element={<NotificationSettings />}
+          />
           <Route
             path="/create_new_music_page"
             element={<CreateNewMusicPage />}
@@ -73,30 +79,6 @@ root.render(
             element={
               <ProtectedRoute>
                 <HomePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/edit_profile"
-            element={
-              <ProtectedRoute>
-                <EditProfilePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/get_verified_page"
-            element={
-              <ProtectedRoute>
-                <GetVerifiedPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/notification_settings"
-            element={
-              <ProtectedRoute>
-                <NotificationSettings />
               </ProtectedRoute>
             }
           />

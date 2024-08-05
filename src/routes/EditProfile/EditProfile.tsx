@@ -1,3 +1,4 @@
+// EditProfile.jsx
 import React, { useState, useEffect } from "react";
 import "./EditProfile.css";
 import { Link } from "react-router-dom";
@@ -82,9 +83,7 @@ function EditProfile() {
 
   return (
     <div className="editprofile-container">
-      <div className="navbar">
-        <Navbar />
-      </div>
+      <Navbar />
       <form onSubmit={handleSubmit}>
         <div className="editprofile-header">
           <h1>Edit Profile</h1>
@@ -144,9 +143,7 @@ function EditProfile() {
           <button type="submit">Save Profile</button>
         </div>
       </form>
-      <div className="footer">
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 }
