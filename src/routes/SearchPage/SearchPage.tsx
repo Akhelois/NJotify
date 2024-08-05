@@ -113,7 +113,7 @@ function SearchPage() {
             {currentPage === "search" && (
               <Search setAlbums={setAlbums} setQuery={setQuery} />
             )}
-            <AlbumList albums={albums} />
+            <AlbumList albums={albums} showMoreLink="/show_more_page" />
             <FooterHome />
           </div>
           <div className="music-control">

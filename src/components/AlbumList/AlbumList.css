@@ -1,8 +1,31 @@
+.album-list-container {
+  position: relative;
+}
+
+.show-more-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10px;
+}
+
+.show-more-link {
+  color: #1db954;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.show-more-link:hover {
+  text-decoration: underline;
+}
+
 .albums {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   justify-content: flex-start;
+  margin-top: 30px; /* Add margin-top to avoid overlap with the Show More link */
 }
 
 .album {

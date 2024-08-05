@@ -107,7 +107,7 @@ const Search: React.FC<SearchProps> = ({ setAlbums, setQuery }) => {
     }
   };
 
-  const debouncedFetchAlbums = useCallback(debounce(fetchAlbums, 3000), []);
+  const debouncedFetchAlbums = useCallback(debounce(fetchAlbums, 30000), []);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);

@@ -20,6 +20,7 @@ import AlbumPage from "./routes/AlbumPage/AlbumPage";
 import SearchPage from "./routes/SearchPage/SearchPage";
 import TrackPage from "./routes/TrackPage/TrackPage";
 import Advertisement from "./components/Advertisement/Advertisement";
+import ShowMorePage from "./routes/ShowMorePage/ShowMorePage";
 import { useCookies } from "react-cookie";
 
 const container = document.getElementById("root");
@@ -60,6 +61,7 @@ root.render(
           <Route path="/edit_profile" element={<EditProfilePage />} />
           <Route path="/get_verified_page" element={<GetVerifiedPage />} />
           <Route path="/ad" element={<Advertisement />} />
+          <Route path="/show_more_page" element={<ShowMorePage />} />
           <Route
             path="/notification_settings"
             element={<NotificationSettings />}
