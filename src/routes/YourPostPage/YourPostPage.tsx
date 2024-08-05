@@ -15,6 +15,14 @@ interface Album {
   CollectionType: string;
 }
 
+interface AlbumApiResponse {
+  album_id: string;
+  album_name: string;
+  album_image: string | null;
+  album_year: string;
+  collection_type: string | null;
+}
+
 function YourPostPage() {
   const [username, setUsername] = useState<string>("");
   const [profilePicURL, setProfilePicURL] = useState<string | null>(null);
@@ -72,14 +80,14 @@ function YourPostPage() {
         console.log("Albums data received:", albumsData);
 
         // If data is an array, use it; otherwise wrap in an array
-        const albumsArray = Array.isArray(albumsData.data)
+        const albumsArray: AlbumApiResponse[] = Array.isArray(albumsData.data)
           ? albumsData.data
           : [albumsData.data]; // Wrap single object in an array
 
         console.log("Normalized albums array:", albumsArray);
 
         // Map the response to match the Album interface
-        const formattedAlbums = albumsArray.map((album: any) => ({
+        const formattedAlbums: Album[] = albumsArray.map((album) => ({
           AlbumID: album.album_id,
           AlbumName: album.album_name,
           AlbumImage: album.album_image
@@ -131,8 +139,8 @@ function YourPostPage() {
         }}
       />
       <div className="main">
+        <Header />
         <div className="header-banner">
-          <Header />
           <div className="banner">
             <img
               src={profilePicURL || fallbackImage}
@@ -171,7 +179,7 @@ function YourPostPage() {
                     className="album-image"
                     onError={handleImageError}
                   />
-                  <div className="album-detail">
+                  <div className="album-details">
                     <h3>{album.AlbumName}</h3>
                     <p>
                       {album.AlbumYear} - {album.CollectionType}
