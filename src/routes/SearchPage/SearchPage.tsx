@@ -24,6 +24,8 @@ function SearchPage() {
   const [showQueue, setShowQueue] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedTrack, setSelectedTrack] = useState<string>("");
+  const [albumImage] = useState<string | null>(null);
+  const [albumName] = useState<string>("");
 
   const toggleQueue = () => {
     setShowQueue(!showQueue);
@@ -118,6 +120,8 @@ function SearchPage() {
             <MusicControl
               toggleQueue={toggleQueue}
               selectedTrack={selectedTrack}
+              albumName={albumName}
+              albumImage={albumImage}
             />
           </div>
           {showQueue && (

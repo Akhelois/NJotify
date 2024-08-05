@@ -17,6 +17,9 @@ const CreateNewMusicPage = () => {
   const [mainImage, setMainImage] = useState<File | null>(null);
   const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
   const [trackError, setTrackError] = useState<string | null>(null);
+  const [selectedTrack] = useState<string>("");
+  const [albumImage] = useState<string | null>(null);
+  const [albumName] = useState<string>("");
 
   const navigate = useNavigate();
   const [showQueue, setShowQueue] = useState(false);
@@ -331,7 +334,12 @@ const CreateNewMusicPage = () => {
         </div>
         <Footer />
       </div>
-      <MusicControl toggleQueue={toggleQueue} />
+      <MusicControl
+        toggleQueue={toggleQueue}
+        selectedTrack={selectedTrack}
+        albumName={albumName}
+        albumImage={albumImage}
+      />
     </div>
   );
 };

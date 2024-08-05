@@ -1,7 +1,10 @@
 .player {
   position: fixed;
   bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
+  max-width: 2024px; /* Sesuaikan ukuran maksimum sesuai kebutuhan Anda */
   height: 90px;
   background-color: #000;
   display: flex;
@@ -9,6 +12,8 @@
   align-items: center;
   color: #fff;
   padding: 0 1rem;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5); /* Tambahkan shadow untuk kontras */
+  z-index: 1000;
 }
 
 .player img {
@@ -152,10 +157,22 @@
 }
 
 @media (max-width: 768px) {
-  .music-control {
+  .player {
     flex-direction: column;
-    padding: 5px;
-    box-shadow: none;
+    align-items: center;
+    height: auto;
+    padding: 10px 0;
+  }
+
+  .center-section {
+    order: 1;
+    flex: 1;
+  }
+
+  .left-section,
+  .right-section {
+    order: 2;
+    justify-content: center;
   }
 }
 

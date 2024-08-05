@@ -34,6 +34,8 @@ const AlbumPage: React.FC = () => {
   const [error] = useState<string | null>(null);
   const [showQueue, setShowQueue] = useState(false);
   const [selectedTrack, setSelectedTrack] = useState<string>("");
+  const [albumImage, setAlbumImage] = useState<string | null>(null);
+  const [albumName, setAlbumName] = useState<string>("");
 
   const toggleQueue = () => {
     setShowQueue(!showQueue);
@@ -73,6 +75,17 @@ const AlbumPage: React.FC = () => {
 
     fetchAlbumAndTracks();
   }, [albumID]);
+
+  useEffect(() => {
+    if (album) {
+      if (album.album_image && isValidBase64(album.album_image)) {
+        setAlbumImage(`data:image/jpeg;base64,${album.album_image}`);
+      } else {
+        setAlbumImage(fallbackImage);
+      }
+      setAlbumName(album.album_name);
+    }
+  }, [album]);
 
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>
@@ -126,6 +139,8 @@ const AlbumPage: React.FC = () => {
           <MusicControl
             toggleQueue={toggleQueue}
             selectedTrack={selectedTrack}
+            albumImage={albumImage}
+            albumName={albumName}
           />
         </div>
       </div>
@@ -147,6 +162,8 @@ const AlbumPage: React.FC = () => {
           <MusicControl
             toggleQueue={toggleQueue}
             selectedTrack={selectedTrack}
+            albumImage={albumImage}
+            albumName={albumName}
           />
         </div>
       </div>
@@ -186,7 +203,12 @@ const AlbumPage: React.FC = () => {
         <FooterHome />
       </div>
       <div className="music-control">
-        <MusicControl toggleQueue={toggleQueue} selectedTrack={selectedTrack} />
+        <MusicControl
+          toggleQueue={toggleQueue}
+          selectedTrack={selectedTrack}
+          albumImage={albumImage}
+          albumName={albumName}
+        />
       </div>
     </div>
   );

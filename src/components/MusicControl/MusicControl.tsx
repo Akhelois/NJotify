@@ -18,12 +18,16 @@ import "./MusicControl.css";
 
 interface MusicControlProps {
   toggleQueue: () => void;
-  selectedTrack: string; // Add the selected track prop
+  selectedTrack: string; // Track selected for playback
+  albumImage: string | null; // Album image for display
+  albumName: string; // Album name as song title
 }
 
 const MusicControl: React.FC<MusicControlProps> = ({
   toggleQueue,
   selectedTrack,
+  albumImage,
+  albumName,
 }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -31,7 +35,6 @@ const MusicControl: React.FC<MusicControlProps> = ({
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.5);
   const [volumeIcon, setVolumeIcon] = useState(<FaVolumeLow />);
-  const [albumImage, setAlbumImage] = useState<string | null>(null);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -111,9 +114,9 @@ const MusicControl: React.FC<MusicControlProps> = ({
 
       {/* Left section */}
       <div className="hidden-lg flex-row left-section">
-        {albumImage && <img className="w-12" src={albumImage} alt="Song" />}
+        {albumImage && <img className="w-12" src={albumImage} alt="Album" />}
         <div className="song-info">
-          <p>SongName</p>
+          <p>{albumName}</p>
           <p>SongDescription</p>
         </div>
       </div>

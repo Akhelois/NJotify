@@ -14,6 +14,8 @@ function HomePage() {
   const [loading, setLoading] = useState(true);
   const [showQueue, setShowQueue] = useState(false);
   const [selectedTrack] = useState<string>("");
+  const [albumImage] = useState<string | null>(null);
+  const [albumName] = useState<string>("");
 
   const toggleQueue = () => {
     setShowQueue(!showQueue);
@@ -59,6 +61,8 @@ function HomePage() {
             <MusicControl
               toggleQueue={toggleQueue}
               selectedTrack={selectedTrack}
+              albumName={albumName}
+              albumImage={albumImage}
             />
           </div>
           {showQueue && (

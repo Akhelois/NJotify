@@ -14,6 +14,8 @@ function ProfilePage() {
   const [isEditPopupVisible, setIsEditPopupVisible] = useState(false);
   const [showQueue, setShowQueue] = useState(false);
   const [selectedTrack] = useState<string>("");
+  const [albumImage] = useState<string | null>(null);
+  const [albumName] = useState<string>("");
 
   const toggleQueue = () => {
     setShowQueue(!showQueue);
@@ -139,7 +141,12 @@ function ProfilePage() {
         <FooterHome />
       </div>
       <div className="music-control">
-        <MusicControl toggleQueue={toggleQueue} selectedTrack={selectedTrack} />
+        <MusicControl
+          toggleQueue={toggleQueue}
+          selectedTrack={selectedTrack}
+          albumName={albumName}
+          albumImage={albumImage}
+        />
       </div>
       {isEditPopupVisible && (
         <EditProfilePicture
