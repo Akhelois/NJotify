@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import "./ResetPassword.css";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 interface FormData {
   password: string;
@@ -28,10 +30,12 @@ function ResetPassword() {
     password: false,
     confirmPassword: false,
   });
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
 
   useEffect(() => {
     validateForm();
+    setLoading(false);
   }, [formData]);
 
   const handleInputChange = (event: SyntheticEvent) => {
@@ -122,44 +126,54 @@ function ResetPassword() {
       <Navbar />
       <h2 className="reset-password-title">Reset Password</h2>
       <div className="reset-password-form-container">
-        <form className="reset-password-form" onSubmit={handleSubmit}>
-          <input
-            type="password"
-            name="password"
-            placeholder="New Password"
-            aria-label="New Password"
-            value={formData.password}
-            onChange={handleInputChange}
-            className={`input ${validations.password ? "valid" : "invalid"}`}
-          />
-          {errors.password && (
-            <p
-              className={`validation-message ${validations.password ? "valid" : ""}`}
-            >
-              {errors.password}
-            </p>
-          )}
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm New Password"
-            aria-label="Confirm New Password"
-            value={formData.confirmPassword}
-            onChange={handleInputChange}
-            className={`input ${validations.confirmPassword ? "valid" : "invalid"}`}
-          />
-          {errors.confirmPassword && (
-            <p
-              className={`validation-message ${validations.confirmPassword ? "valid" : ""}`}
-            >
-              {errors.confirmPassword}
-            </p>
-          )}
-          {errors.general && <p className="error">{errors.general}</p>}
-          <button type="submit" className="reset-password-button">
-            Reset Password
-          </button>
-        </form>
+        {loading ? (
+          <Skeleton height={300} />
+        ) : (
+          <form className="reset-password-form" onSubmit={handleSubmit}>
+            <input
+              type="password"
+              name="password"
+              placeholder="New Password"
+              aria-label="New Password"
+              value={formData.password}
+              onChange={handleInputChange}
+              className={`input ${validations.password ? "valid" : "invalid"}`}
+            />
+            {errors.password && (
+              <p
+                className={`validation-message ${
+                  validations.password ? "valid" : ""
+                }`}
+              >
+                {errors.password}
+              </p>
+            )}
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm New Password"
+              aria-label="Confirm New Password"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              className={`input ${
+                validations.confirmPassword ? "valid" : "invalid"
+              }`}
+            />
+            {errors.confirmPassword && (
+              <p
+                className={`validation-message ${
+                  validations.confirmPassword ? "valid" : ""
+                }`}
+              >
+                {errors.confirmPassword}
+              </p>
+            )}
+            {errors.general && <p className="error">{errors.general}</p>}
+            <button type="submit" className="reset-password-button">
+              Reset Password
+            </button>
+          </form>
+        )}
       </div>
       <Footer />
     </div>

@@ -7,6 +7,8 @@ import Footer from "../../components/Footer/FooterHome";
 import Header from "../../components/Header/Header";
 import fallbackImage from "../../assets/profile.png";
 import Queue from "../../components/Queue/Queue";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 interface Album {
   AlbumID: string;
@@ -28,6 +30,7 @@ function YourPostPage() {
   const [username, setUsername] = useState<string>("");
   const [profilePicURL, setProfilePicURL] = useState<string | null>(null);
   const [albums, setAlbums] = useState<Album[]>([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [showQueue, setShowQueue] = useState(false);
   const [selectedTrack] = useState<string>("");
@@ -113,6 +116,8 @@ function YourPostPage() {
         console.error("Error fetching data:", error);
         setProfilePicURL(fallbackImage);
         setAlbums([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -146,81 +151,126 @@ function YourPostPage() {
 
   return (
     <div className="your-post-page">
-      <Sidebar
-        setCurrentPage={(page: string) => {
-          console.log("Set current page to:", page);
-        }}
-      />
-      <div className="main">
-        <Header />
-        <div className="header-banner">
-          <div className="banner">
-            <img
-              src={profilePicURL || fallbackImage}
-              alt="Profile"
-              className="banner-image"
-              onError={handleImageError}
+      {loading ? (
+        <div>
+          <Skeleton
+            height={60}
+            width={`100%`}
+            baseColor="#202020"
+            highlightColor="#444"
+          />
+          <div className="main">
+            <Skeleton
+              height={40}
+              width={`100%`}
+              baseColor="#202020"
+              highlightColor="#444"
             />
-            <div className="banner-text">
-              <h6>
+            <Skeleton
+              height={300}
+              width={`100%`}
+              baseColor="#202020"
+              highlightColor="#444"
+            />
+            <Skeleton
+              height={40}
+              width={`100%`}
+              baseColor="#202020"
+              highlightColor="#444"
+            />
+            <Skeleton
+              height={200}
+              width={`100%`}
+              baseColor="#202020"
+              highlightColor="#444"
+            />
+          </div>
+          <Skeleton
+            height={60}
+            width={`100%`}
+            baseColor="#202020"
+            highlightColor="#444"
+          />
+        </div>
+      ) : (
+        <>
+          <Sidebar
+            setCurrentPage={(page: string) => {
+              console.log("Set current page to:", page);
+            }}
+          />
+          <div className="main">
+            <Header />
+            <div className="header-banner">
+              <div className="banner">
                 <img
-                  src="./src/assets/verified-icon-png.webp"
-                  alt="verified-icon"
-                  className="verified-icon"
+                  src={profilePicURL || fallbackImage}
+                  alt="Profile"
+                  className="banner-image"
+                  onError={handleImageError}
                 />
-                Verified Artist{" "}
-              </h6>
-              <h1>Hi, {username}</h1>
-            </div>
-          </div>
-        </div>
-        <div className="profile-content">
-          <div className="discography">
-            <h2>Discography</h2>
-            <div className="albums">
-              <div
-                className="album create-album"
-                onClick={handleCreateAlbumClick}
-              >
-                <div className="create-album-icon">+</div>
-              </div>
-              {albums.map((album) => (
-                <div
-                  key={album.AlbumID}
-                  className="album"
-                  onClick={() => handleAlbumClick(album.AlbumID)}
-                >
-                  <img
-                    src={album.AlbumImage || fallbackImage}
-                    alt={album.AlbumName}
-                    className="album-image"
-                    onError={handleImageError}
-                  />
-                  <div className="album-details">
-                    <h3>{album.AlbumName}</h3>
-                    <p>
-                      {album.AlbumYear} - {album.CollectionType}
-                    </p>
-                  </div>
+                <div className="banner-text">
+                  <h6>
+                    <img
+                      src="./src/assets/verified-icon-png.webp"
+                      alt="verified-icon"
+                      className="verified-icon"
+                    />
+                    Verified Artist{" "}
+                  </h6>
+                  <h1>Hi, {username}</h1>
                 </div>
-              ))}
+              </div>
             </div>
+            <div className="profile-content">
+              <div className="discography">
+                <h2>Discography</h2>
+                <div className="albums">
+                  <div
+                    className="album create-album"
+                    onClick={handleCreateAlbumClick}
+                  >
+                    <div className="create-album-icon">+</div>
+                  </div>
+                  {albums.map((album) => (
+                    <div
+                      key={album.AlbumID}
+                      className="album"
+                      onClick={() => handleAlbumClick(album.AlbumID)}
+                    >
+                      <img
+                        src={album.AlbumImage || fallbackImage}
+                        alt={album.AlbumName}
+                        className="album-image"
+                        onError={handleImageError}
+                      />
+                      <div className="album-details">
+                        <h3>{album.AlbumName}</h3>
+                        <p>
+                          {album.AlbumYear} - {album.CollectionType}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <Footer />
           </div>
-        </div>
-        <Footer />
-      </div>
-      <div className="music-control">
-        <MusicControl
-          toggleQueue={toggleQueue}
-          selectedTrack={selectedTrack}
-          albumName={albumName}
-          albumImage={albumImage}
-        />
-      </div>
-      {showQueue && (
-        <div className="queue-container">
-          <Queue />
-        </div>
+          <div className="music-control">
+            <MusicControl
+              toggleQueue={toggleQueue}
+              selectedTrack={selectedTrack}
+              albumName={albumName}
+              albumImage={albumImage}
+            />
+          </div>
+          {showQueue && (
+            <div className="queue-container">
+              <Queue />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

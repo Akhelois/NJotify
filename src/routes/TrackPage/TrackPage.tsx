@@ -72,12 +72,7 @@ function TrackPage() {
         <FooterHome />
       </div>
       <div className="music-control">
-        <MusicControl
-          toggleQueue={toggleQueue}
-          selectedTrack={selectedTrack}
-          albumName={albumName}
-          albumImage={albumImage}
-        />
+        
       </div>
       {showQueue && (
         <div className="queue-container">
