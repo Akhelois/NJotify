@@ -11,17 +11,18 @@ body {
 
 .album-page {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   min-height: 100vh;
   background-color: #000;
   overflow: hidden;
 }
 
 .main {
+  flex: 1;
   margin-left: 350px;
   background: #181818;
   height: 100vh;
-  overflow: auto;
+  overflow-y: auto;
   transition: margin-left 0.3s ease;
 }
 
@@ -61,28 +62,21 @@ body {
   color: white;
 }
 
-.album-grid {
+.album-details-container {
   display: flex;
-  flex-wrap: wrap;
   gap: 20px;
 }
 
-.album-card {
-  background: #f8f8f8;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+.album-image {
   width: 200px;
-}
-
-.album-card img {
-  width: 100%;
   height: 200px;
   object-fit: cover;
+  border-radius: 10px;
 }
 
 .album-details {
   padding: 10px;
+  color: white;
 }
 
 .album-details h3 {
@@ -92,5 +86,5 @@ body {
 
 .album-details p {
   margin: 5px 0;
-  color: #666;
+  color: #b3b3b3;
 }

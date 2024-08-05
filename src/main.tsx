@@ -50,8 +50,10 @@ root.render(
           <Route path="/reset_password" element={<ResetPassword />} />
           <Route path="/activate" element={<ActivationPage />} />
           <Route path="/your_post" element={<YourPostPage />} />
-          <Route path="/album_page" element={<AlbumPage />} />
+          <Route path="/album_page/:albumID" element={<AlbumPage />} />
           <Route path="/search_page" element={<SearchPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/profile_page" element={<ProfilePage />} />
           <Route
             path="/create_new_music_page"
             element={<CreateNewMusicPage />}
@@ -73,26 +75,10 @@ root.render(
             }
           />
           <Route
-            path="/profile_page"
-            element={
-              <ProtectedRoute>
-                <ProfilePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
             path="/edit_profile"
             element={
               <ProtectedRoute>
                 <EditProfilePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <SettingsPage />
               </ProtectedRoute>
             }
           />

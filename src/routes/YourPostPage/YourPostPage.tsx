@@ -131,6 +131,10 @@ function YourPostPage() {
     }
   };
 
+  const handleAlbumClick = (albumId: string) => {
+    navigate(`/album_page/${albumId}`);
+  };
+
   return (
     <div className="your-post-page">
       <Sidebar
@@ -172,7 +176,11 @@ function YourPostPage() {
                 <div className="create-album-icon">+</div>
               </div>
               {albums.map((album) => (
-                <div key={album.AlbumID} className="album">
+                <div
+                  key={album.AlbumID}
+                  className="album"
+                  onClick={() => handleAlbumClick(album.AlbumID)}
+                >
                   <img
                     src={album.AlbumImage || fallbackImage}
                     alt={album.AlbumName}

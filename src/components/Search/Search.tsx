@@ -147,7 +147,7 @@ const Search: React.FC = () => {
             <Link to="/profile_page" className="dropdown-item">
               View Profile
             </Link>
-            <Link to="/settings" className="dropdown-item">
+            <Link to="/settings" className="dropdown-item" target="_blank">
               Account
             </Link>
             <Link to="/" className="dropdown-item">

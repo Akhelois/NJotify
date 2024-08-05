@@ -4,7 +4,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import MusicControl from "../../components/MusicControl/MusicControl";
 import Search from "../../components/Search/Search";
 import FooterHome from "../../components/Footer/FooterHome";
-import AlbumList from "../../components/AlbumList/AlbumList";
+// import AlbumList from "../../components/TrackList/TrackList";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
@@ -69,7 +69,7 @@ function SearchPage() {
           <Sidebar setCurrentPage={setCurrentPage} />
           <div className="main">
             {currentPage === "search" && <Search />}
-            <AlbumList albums={albums} />
+            {/* <AlbumList albums={albums} /> */}
             <FooterHome />
           </div>
           <div className="music-control">

@@ -395,17 +395,17 @@ func (controller *UserController) ResetPassword(ctx *gin.Context) {
         return
     }
 
-    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
-    if err != nil {
-        ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
-        return
-    }
+    // hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+    // if err != nil {
+    //     ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
+    //     return
+    // }
 
-    fmt.Printf("ResetPassword: new hashed password: %s\n", hashedPassword)
+    // fmt.Printf("ResetPassword: new hashed password: %s\n", hashedPassword)
 
-    err = controller.userService.ResetPassword(request.ResetPasswordRequest{
+    err := controller.userService.ResetPassword(request.ResetPasswordRequest{
         Email:    req.Email,
-        Password: string(hashedPassword),
+        Password: req.Password,
     })
     if err != nil {
         ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update password"})
