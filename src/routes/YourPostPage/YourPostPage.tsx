@@ -30,6 +30,7 @@ function YourPostPage() {
   const [albums, setAlbums] = useState<Album[]>([]);
   const navigate = useNavigate();
   const [showQueue, setShowQueue] = useState(false);
+  const [selectedTrack] = useState<string>("");
 
   const toggleQueue = () => {
     setShowQueue(!showQueue);
@@ -207,7 +208,7 @@ function YourPostPage() {
         <Footer />
       </div>
       <div className="music-control">
-        <MusicControl toggleQueue={toggleQueue} />
+        <MusicControl toggleQueue={toggleQueue} selectedTrack={selectedTrack} />
       </div>
       {showQueue && (
         <div className="queue-container">

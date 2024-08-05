@@ -18,9 +18,13 @@ import "./MusicControl.css";
 
 interface MusicControlProps {
   toggleQueue: () => void;
+  selectedTrack: string; // Add the selected track prop
 }
 
-const MusicControl: React.FC<MusicControlProps> = ({ toggleQueue }) => {
+const MusicControl: React.FC<MusicControlProps> = ({
+  toggleQueue,
+  selectedTrack,
+}) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -28,10 +32,6 @@ const MusicControl: React.FC<MusicControlProps> = ({ toggleQueue }) => {
   const [volume, setVolume] = useState(0.5);
   const [volumeIcon, setVolumeIcon] = useState(<FaVolumeLow />);
   const [albumImage, setAlbumImage] = useState<string | null>(null);
-
-  useEffect(() => {
-    // fetchAlbumImage("");
-  }, []);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -49,21 +49,14 @@ const MusicControl: React.FC<MusicControlProps> = ({ toggleQueue }) => {
     }
   }, [volume]);
 
-  // const fetchAlbumImage = async (albumID: string) => {
-  //   try {
-  //     const response = await fetch(
-  //       `http://localhost:8080/find_album?album_id=${encodeURIComponent(albumID)}`
-  //     );
-  //     if (!response.ok) {
-  //       throw new Error(`Failed to fetch album image: ${response.statusText}`);
-  //     }
-  //     const data = await response.json();
-  //     return data.albumImage;
-  //   } catch (error) {
-  //     console.error("Error fetching album image:", error);
-  //     throw error;
-  //   }
-  // };
+  useEffect(() => {
+    if (audioRef.current && selectedTrack) {
+      const audioSource = `data:audio/mpeg;base64,${selectedTrack}`;
+      audioRef.current.src = audioSource;
+      audioRef.current.play();
+      setIsPlaying(true);
+    }
+  }, [selectedTrack]);
 
   const handlePlayPause = () => {
     if (audioRef.current) {
@@ -112,7 +105,6 @@ const MusicControl: React.FC<MusicControlProps> = ({ toggleQueue }) => {
     <div className="player">
       <audio
         ref={audioRef}
-        src="./src/assets/song/Starboy.mp3"
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleDurationChange}
       ></audio>

@@ -33,6 +33,7 @@ const AlbumPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error] = useState<string | null>(null);
   const [showQueue, setShowQueue] = useState(false);
+  const [selectedTrack, setSelectedTrack] = useState<string>("");
 
   const toggleQueue = () => {
     setShowQueue(!showQueue);
@@ -94,6 +95,10 @@ const AlbumPage: React.FC = () => {
     }
   };
 
+  const handleTrackSelect = (trackSong: string) => {
+    setSelectedTrack(trackSong);
+  };
+
   if (loading) {
     return (
       <div className="album-page">
@@ -118,7 +123,10 @@ const AlbumPage: React.FC = () => {
           <FooterHome />
         </div>
         <div className="music-control">
-          <MusicControl toggleQueue={toggleQueue} />
+          <MusicControl
+            toggleQueue={toggleQueue}
+            selectedTrack={selectedTrack}
+          />
         </div>
       </div>
     );
@@ -136,7 +144,10 @@ const AlbumPage: React.FC = () => {
           <FooterHome />
         </div>
         <div className="music-control">
-          <MusicControl toggleQueue={toggleQueue} />
+          <MusicControl
+            toggleQueue={toggleQueue}
+            selectedTrack={selectedTrack}
+          />
         </div>
       </div>
     );
@@ -170,12 +181,12 @@ const AlbumPage: React.FC = () => {
               <p>{album?.album_year}</p>
             </div>
           </div>
-          <TrackList tracks={tracks} />
+          <TrackList tracks={tracks} onTrackSelect={handleTrackSelect} />
         </div>
         <FooterHome />
       </div>
       <div className="music-control">
-        <MusicControl toggleQueue={toggleQueue} />
+        <MusicControl toggleQueue={toggleQueue} selectedTrack={selectedTrack} />
       </div>
     </div>
   );

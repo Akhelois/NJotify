@@ -23,6 +23,7 @@ function SearchPage() {
   const [albums, setAlbums] = useState<Album[]>([]);
   const [showQueue, setShowQueue] = useState(false);
   const [query, setQuery] = useState("");
+  const [selectedTrack, setSelectedTrack] = useState<string>("");
 
   const toggleQueue = () => {
     setShowQueue(!showQueue);
@@ -75,6 +76,10 @@ function SearchPage() {
     console.log("Query state:", query);
   }, [query]);
 
+  const handleTrackSelect = (trackSong: string) => {
+    setSelectedTrack(trackSong);
+  };
+
   return (
     <div className="search-page">
       {loading ? (
@@ -110,7 +115,10 @@ function SearchPage() {
             <FooterHome />
           </div>
           <div className="music-control">
-            <MusicControl toggleQueue={toggleQueue} />
+            <MusicControl
+              toggleQueue={toggleQueue}
+              selectedTrack={selectedTrack}
+            />
           </div>
           {showQueue && (
             <div className="queue-container">

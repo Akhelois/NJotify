@@ -10,13 +10,18 @@ type Track = {
 
 type TrackListProps = {
   tracks: Track[];
+  onTrackSelect: (trackSong: string) => void;
 };
 
-const TrackList: React.FC<TrackListProps> = ({ tracks }) => {
+const TrackList: React.FC<TrackListProps> = ({ tracks, onTrackSelect }) => {
   return (
     <div className="track-list">
       {tracks.map((track) => (
-        <div key={track.track_id} className="track">
+        <div
+          key={track.track_id}
+          className="track"
+          onClick={() => onTrackSelect(track.track_song)}
+        >
           <div className="track-info">
             <h3>{track.track_name}</h3>
             <audio controls>

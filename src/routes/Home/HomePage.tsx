@@ -13,6 +13,7 @@ function HomePage() {
   const [currentPage, setCurrentPage] = useState("home");
   const [loading, setLoading] = useState(true);
   const [showQueue, setShowQueue] = useState(false);
+  const [selectedTrack] = useState<string>("");
 
   const toggleQueue = () => {
     setShowQueue(!showQueue);
@@ -55,7 +56,10 @@ function HomePage() {
             <FooterHome />
           </div>
           <div className="music-control">
-            <MusicControl toggleQueue={toggleQueue} />
+            <MusicControl
+              toggleQueue={toggleQueue}
+              selectedTrack={selectedTrack}
+            />
           </div>
           {showQueue && (
             <div className="queue-container">

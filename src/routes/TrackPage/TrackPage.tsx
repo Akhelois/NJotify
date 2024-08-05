@@ -10,6 +10,7 @@ import Queue from "../../components/Queue/Queue";
 function TrackPage() {
   const [currentPage, setCurrentPage] = useState("home");
   const [showQueue, setShowQueue] = useState(false);
+  const [selectedTrack] = useState<string>("");
 
   const toggleQueue = () => {
     setShowQueue(!showQueue);
@@ -69,7 +70,7 @@ function TrackPage() {
         <FooterHome />
       </div>
       <div className="music-control">
-        <MusicControl toggleQueue={toggleQueue} />
+        <MusicControl toggleQueue={toggleQueue} selectedTrack={selectedTrack} />
       </div>
       {showQueue && (
         <div className="queue-container">
