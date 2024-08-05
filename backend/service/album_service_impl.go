@@ -24,27 +24,27 @@ func NewAlbumServiceImpl(albumRepository repository.AlbumRepository, validate *v
 }
 
 func (c *AlbumServiceImpl) Create(album request.CreateAlbumRequest) (string, error) {
-    err := c.Validate.Struct(album)
-    if err != nil {
-        return "", err
-    }
+	err := c.Validate.Struct(album)
+	if err != nil {
+		return "", err
+	}
 
-    albumID := uuid.New()
-    albumModel := model.Album{
-        AlbumID:        albumID,
-        UserID:         album.UserID,
-        AlbumName:      album.AlbumName,
-        AlbumImage:     []byte(album.AlbumImage),
-        AlbumYear:      album.AlbumYear,
-        CollectionType: album.CollectionType,
-    }
+	albumID := uuid.New()
+	albumModel := model.Album{
+		AlbumID:        albumID,
+		UserID:         album.UserID,
+		AlbumName:      album.AlbumName,
+		AlbumImage:     []byte(album.AlbumImage),
+		AlbumYear:      album.AlbumYear,
+		CollectionType: album.CollectionType,
+	}
 
-    err = c.AlbumRepository.Save(albumModel)
-    if err != nil {
-        return "", err
-    }
+	err = c.AlbumRepository.Save(albumModel)
+	if err != nil {
+		return "", err
+	}
 
-    return albumID.String(), nil
+	return albumID.String(), nil
 }
 
 func (c *AlbumServiceImpl) FindAll() []response.AlbumResponse {
@@ -59,8 +59,9 @@ func (c *AlbumServiceImpl) FindAll() []response.AlbumResponse {
 			AlbumID:         value.AlbumID.String(),
 			UserID:          value.UserID,
 			AlbumName:       value.AlbumName,
-			AlbumImage:      string(value.AlbumImage),
+			AlbumImage:      base64.StdEncoding.EncodeToString(value.AlbumImage),
 			CollectionType:  value.CollectionType,
+			AlbumYear:       value.AlbumYear,
 		}
 
 		albums = append(albums, album)
@@ -70,51 +71,62 @@ func (c *AlbumServiceImpl) FindAll() []response.AlbumResponse {
 }
 
 func (c *AlbumServiceImpl) FindDischo(userID int) ([]response.AlbumResponse, error) {
-    albums, err := c.AlbumRepository.FindDischo(userID)
-    if err != nil {
-        return nil, err
-    }
+	albums, err := c.AlbumRepository.FindDischo(userID)
+	if err != nil {
+		return nil, err
+	}
 
-    var albumResponses []response.AlbumResponse
-    for _, album := range albums {
-        var albumImageBase64 string
-        if len(album.AlbumImage) > 0 {
-            albumImageBase64 = base64.StdEncoding.EncodeToString(album.AlbumImage)
-        }
+	var albumResponses []response.AlbumResponse
+	for _, album := range albums {
+		albumResponse := response.AlbumResponse{
+			AlbumID:         album.AlbumID.String(),
+			UserID:          album.UserID,
+			AlbumName:       album.AlbumName,
+			AlbumImage:      base64.StdEncoding.EncodeToString(album.AlbumImage),
+			CollectionType:  album.CollectionType,
+			AlbumYear:       album.AlbumYear,
+		}
+		albumResponses = append(albumResponses, albumResponse)
+	}
 
-        albumResponse := response.AlbumResponse{
-            AlbumID:         album.AlbumID.String(),
-            UserID:          album.UserID,
-            AlbumName:       album.AlbumName,
-            AlbumImage:      albumImageBase64,
-            AlbumYear:       album.AlbumYear,
-            CollectionType:  album.CollectionType,
-        }
-        albumResponses = append(albumResponses, albumResponse)
-    }
-
-    return albumResponses, nil
+	return albumResponses, nil
 }
 
 func (c *AlbumServiceImpl) FindAlbum(albumID string) (response.AlbumResponse, error) {
 	album, err := c.AlbumRepository.FindAlbum(albumID)
-    if err != nil {
+	if err != nil {
 		return response.AlbumResponse{}, err
 	}
 
-	var albumImageBase64 string
-    if len(album.AlbumImage) > 0 {
-        albumImageBase64 = base64.StdEncoding.EncodeToString(album.AlbumImage)
-    }
-
-	albumResponse := response.AlbumResponse {
-		AlbumID: album.AlbumID.String(),
-		UserID: album.UserID,
-		AlbumName: album.AlbumName,
-		AlbumImage: albumImageBase64,
-		AlbumYear: album.AlbumYear,
+	albumResponse := response.AlbumResponse{
+		AlbumID:        album.AlbumID.String(),
+		UserID:         album.UserID,
+		AlbumName:      album.AlbumName,
+		AlbumImage:     base64.StdEncoding.EncodeToString(album.AlbumImage),
+		AlbumYear:      album.AlbumYear,
 		CollectionType: album.CollectionType,
 	}
 	return albumResponse, nil
+}
 
+func (c *AlbumServiceImpl) FindAlbumName(albumName string) ([]response.AlbumResponse, error) {
+	albums, err := c.AlbumRepository.FindAlbumName(albumName)
+	if err != nil {
+		return nil, err
+	}
+
+	var albumResponses []response.AlbumResponse
+	for _, album := range albums {
+		albumResponse := response.AlbumResponse{
+			AlbumID:        album.AlbumID.String(),
+			UserID:         album.UserID,
+			AlbumName:      album.AlbumName,
+			AlbumImage:     base64.StdEncoding.EncodeToString(album.AlbumImage),
+			CollectionType: album.CollectionType,
+			AlbumYear:      album.AlbumYear,
+		}
+		albumResponses = append(albumResponses, albumResponse)
+	}
+
+	return albumResponses, nil
 }

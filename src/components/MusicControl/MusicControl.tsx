@@ -30,7 +30,7 @@ const MusicControl: React.FC<MusicControlProps> = ({ toggleQueue }) => {
   const [albumImage, setAlbumImage] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchAlbumImage();
+    fetchAlbumImage("");
   }, []);
 
   useEffect(() => {
@@ -49,18 +49,19 @@ const MusicControl: React.FC<MusicControlProps> = ({ toggleQueue }) => {
     }
   }, [volume]);
 
-  const fetchAlbumImage = async () => {
+  const fetchAlbumImage = async (albumID: string) => {
     try {
-      const response = await fetch("http://localhost:8080/find_album");
+      const response = await fetch(
+        `http://localhost:8080/find_album?album_id=${encodeURIComponent(albumID)}`
+      );
       if (!response.ok) {
-        throw new Error("Failed to fetch album image");
+        throw new Error(`Failed to fetch album image: ${response.statusText}`);
       }
       const data = await response.json();
-      if (data.data && data.data.length > 0) {
-        setAlbumImage(`data:image/jpeg;base64,${data.data[0].album_image}`);
-      }
+      return data.albumImage;
     } catch (error) {
       console.error("Error fetching album image:", error);
+      throw error;
     }
   };
 

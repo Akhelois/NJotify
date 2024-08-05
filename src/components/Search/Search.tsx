@@ -1,16 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./Search.css";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import { FaMicrophone } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import fallbackImage from "../../assets/profile.png"; // Ensure this path is correct
+import fallbackImage from "../../assets/profile.png";
 
-const Search: React.FC = () => {
+type Album = {
+  album_id: string;
+  album_image: string;
+  album_name: string;
+  album_year: number;
+  collection_type: string;
+};
+
+interface SearchProps {
+  setAlbums: (albums: Album[]) => void;
+}
+
+const Search: React.FC<SearchProps> = ({ setAlbums }) => {
   const [searchText, setSearchText] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profilePicURL, setProfilePicURL] = useState<string | null>(null);
 
-  // Fetch the profile picture from localStorage or API
   useEffect(() => {
     const fetchProfilePic = async () => {
       try {
@@ -33,9 +44,7 @@ const Search: React.FC = () => {
         const data = await response.json();
 
         if (
-          data.data &&
-          data.data.profile_picture &&
-          typeof data.data.profile_picture === "string" &&
+          data.data?.profile_picture &&
           isValidBase64(data.data.profile_picture)
         ) {
           setProfilePicURL(
@@ -65,6 +74,45 @@ const Search: React.FC = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
+  const debounce = (func: Function, delay: number) => {
+    let timer: number | undefined;
+    return (...args: any[]) => {
+      if (timer !== undefined) {
+        clearTimeout(timer);
+      }
+      timer = window.setTimeout(() => func(...args), delay);
+    };
+  };
+
+  const fetchAlbums = async (query: string) => {
+    try {
+      if (!query.trim()) {
+        setAlbums([]);
+        return;
+      }
+      const response = await fetch(
+        `http://localhost:8080/find_album_name?album_name=${encodeURIComponent(query)}`
+      );
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `Failed to fetch albums: ${response.statusText} - ${errorText}`
+        );
+      }
+      const data = await response.json();
+      setAlbums(data.Data || []);
+    } catch (error) {
+      console.error("Failed to fetch albums", error);
+    }
+  };
+
+  const debouncedFetchAlbums = useCallback(debounce(fetchAlbums, 300), []);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+    debouncedFetchAlbums(e.target.value); // Fetch albums with debounce
+  };
+
   const handleAudioInput = async () => {
     try {
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -73,19 +121,14 @@ const Search: React.FC = () => {
       }
 
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
       const mediaRecorder = new MediaRecorder(stream);
-
       const audioChunks: BlobPart[] = [];
       mediaRecorder.ondataavailable = (event) => {
         audioChunks.push(event.data);
       };
 
       mediaRecorder.start();
-
-      setTimeout(() => {
-        mediaRecorder.stop();
-      }, 5000);
+      setTimeout(() => mediaRecorder.stop(), 5000);
 
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunks, { type: "audio/flac" });
@@ -100,6 +143,7 @@ const Search: React.FC = () => {
         const data = await response.json();
         if (data.transcription) {
           setSearchText(data.transcription);
+          fetchAlbums(data.transcription); // Fetch albums based on transcription
         } else {
           console.error("Transcription error:", data.error);
         }
@@ -129,7 +173,7 @@ const Search: React.FC = () => {
           type="text"
           placeholder="Search for songs, artists, etc."
           value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+          onChange={handleSearch}
         />
         <button className="audio-input-btn" onClick={handleAudioInput}>
           <FaMicrophone />
@@ -137,21 +181,23 @@ const Search: React.FC = () => {
       </div>
 
       <div className="profile">
-        <button onClick={toggleDropdown}>
-          <span>
-            <img src={profilePicURL || fallbackImage} alt="profile" />
-          </span>
-        </button>
+        <div className="profile-menu" onClick={toggleDropdown}>
+          <img
+            src={profilePicURL || fallbackImage}
+            alt="Profile"
+            className="profile-picture"
+          />
+        </div>
         {dropdownOpen && (
           <div className="dropdown-menu">
-            <Link to="/profile_page" className="dropdown-item">
-              View Profile
-            </Link>
-            <Link to="/settings" className="dropdown-item" target="_blank">
-              Account
+            <Link to="/profile" className="dropdown-item">
+              Profile
             </Link>
             <Link to="/" className="dropdown-item">
-              Log Out
+              Home
+            </Link>
+            <Link to="/login" className="dropdown-item">
+              Logout
             </Link>
           </div>
         )}

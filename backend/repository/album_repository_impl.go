@@ -35,3 +35,9 @@ func  (c *AlbumRepositoryImpl) FindAlbum(albumID string) (model.Album, error) {
 	result := c.Db.Where("album_id = ?", albumID).Find(&albums)
 	return albums, result.Error
 }
+
+func (c *AlbumRepositoryImpl) FindAlbumName (albumName string) ([]model.Album, error) {
+	var albums []model.Album
+	result := c.Db.Where("album_name = ?", albumName).Find(&albums)
+	return albums, result.Error
+}

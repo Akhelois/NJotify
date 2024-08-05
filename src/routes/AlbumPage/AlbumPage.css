@@ -58,14 +58,14 @@ body {
   margin-bottom: 20px;
 }
 
-.album-image {
-  width: 400px;
-  height: 400px;
+.album-details-container .album-image {
+  width: 200px;
+  height: 200px;
   object-fit: cover;
   border-radius: 10px;
 }
 
-.album-details {
+.album-details .album-details {
   flex: 1;
   margin-top: 320px;
   padding: 10px;

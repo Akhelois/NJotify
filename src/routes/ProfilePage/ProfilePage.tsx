@@ -12,6 +12,11 @@ function ProfilePage() {
   const [username, setUsername] = useState<string>("");
   const [profilePicURL, setProfilePicURL] = useState<string | null>(null);
   const [isEditPopupVisible, setIsEditPopupVisible] = useState(false);
+  const [showQueue, setShowQueue] = useState(false);
+
+  const toggleQueue = () => {
+    setShowQueue(!showQueue);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -133,7 +138,7 @@ function ProfilePage() {
         <FooterHome />
       </div>
       <div className="music-control">
-        <MusicControl />
+        <MusicControl toggleQueue={toggleQueue} />
       </div>
       {isEditPopupVisible && (
         <EditProfilePicture

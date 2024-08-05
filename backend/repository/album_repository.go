@@ -9,4 +9,5 @@ type AlbumRepository interface {
 	FindAll() ([] model.Album, error)
 	FindDischo(int) ([]model.Album, error)
 	FindAlbum(string) (model.Album, error)
+	FindAlbumName(string) ([]model.Album, error)
 }

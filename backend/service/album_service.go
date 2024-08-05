@@ -10,4 +10,5 @@ type AlbumService interface {
 	FindAll() []response.AlbumResponse
 	FindDischo(int) ([]response.AlbumResponse,error)
 	FindAlbum(string) (response.AlbumResponse, error)
+	FindAlbumName(string) ([]response.AlbumResponse, error)
 }

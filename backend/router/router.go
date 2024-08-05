@@ -48,6 +48,7 @@ func NewRouter(userController *controller.UserController, albumController *contr
 	router.POST("/albums", albumController.Create)
 	router.GET("/find_discho", albumController.FindDischo)
 	router.GET("/find_album", albumController.FindAlbum)
+	router.GET("/find_album_name", albumController.FindAlbumName)
 
 	// Track
 	router.GET("/find_all_track", trackController.FindAll)
