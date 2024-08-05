@@ -8,7 +8,7 @@ import FooterHome from "../../components/Footer/FooterHome";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import TrackList from "../../components/TrackList/TrackList";
-import fallbackImage from "../../assets/google.webp"; // Ensure this path is correct
+import fallbackImage from "../../assets/google.webp";
 
 interface Track {
   track_id: string;
@@ -38,7 +38,6 @@ const AlbumPage: React.FC = () => {
       const id = albumID || "";
 
       try {
-        // Fetch album data
         const albumResponse = await fetch(
           `http://localhost:8080/find_album?album_id=${encodeURIComponent(id)}`
         );
@@ -49,7 +48,6 @@ const AlbumPage: React.FC = () => {
         setAlbum(albumData.data);
         console.log("Album Data:", albumData.data);
 
-        // Fetch track data
         const trackResponse = await fetch(
           `http://localhost:8080/find_track_in_album?album_id=${encodeURIComponent(id)}`
         );
@@ -61,7 +59,7 @@ const AlbumPage: React.FC = () => {
         console.log("Track Data:", trackData.data);
       } catch (error) {
         console.error("Error fetching album or tracks:", error);
-        // setError(error);
+        // setError(error.message);
       } finally {
         setLoading(false);
       }
@@ -70,7 +68,6 @@ const AlbumPage: React.FC = () => {
     fetchAlbumAndTracks();
   }, [albumID]);
 
-  // Handle image loading error
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>
   ) => {
@@ -80,13 +77,10 @@ const AlbumPage: React.FC = () => {
     }
   };
 
-  // Handle album image click
   const handleAlbumImageClick = () => {
-    // Implement the desired functionality when album image is clicked
     console.log("Album image clicked");
   };
 
-  // Validate base64 string
   const isValidBase64 = (str: string) => {
     try {
       return btoa(atob(str)) === str;
@@ -107,12 +101,12 @@ const AlbumPage: React.FC = () => {
                 <Skeleton width={200} />
               </h1>
             </header>
-            <section className="album-grid">
-              <Skeleton height={200} width={200} />
+            <section className="album-details-container">
+              <Skeleton height={300} width={300} />
               <div className="album-details">
-                <Skeleton height={20} width={150} />
-                <Skeleton height={15} width={100} />
-                <Skeleton height={15} width={100} />
+                <Skeleton height={30} width={150} />
+                <Skeleton height={20} width={100} />
+                <Skeleton height={20} width={100} />
               </div>
             </section>
           </div>
@@ -143,7 +137,6 @@ const AlbumPage: React.FC = () => {
     );
   }
 
-  // Log the album data and base64 image string for debugging
   console.log("Album:", album);
   console.log("Base64 Image:", album?.album_image);
 
@@ -153,9 +146,6 @@ const AlbumPage: React.FC = () => {
       <div className="main">
         <Header />
         <div className="album-content">
-          <header className="album-header">
-            <h1>{album?.album_name}</h1>
-          </header>
           <div className="album-details-container">
             <img
               src={
@@ -170,9 +160,9 @@ const AlbumPage: React.FC = () => {
             />
 
             <div className="album-details">
+              <p>{album?.collection_type}</p>
               <h3>{album?.album_name}</h3>
               <p>{album?.album_year}</p>
-              <p>{album?.collection_type}</p>
             </div>
           </div>
           <TrackList tracks={tracks} />

@@ -17,8 +17,6 @@ const TrackList: React.FC<TrackListProps> = ({ tracks }) => {
     <div className="track-list">
       {tracks.map((track) => (
         <div key={track.track_id} className="track">
-          {" "}
-          {/* Updated key prop */}
           <div className="track-info">
             <h3>{track.track_name}</h3>
             <audio controls>
